@@ -1,0 +1,41 @@
+import { useNavigate } from "react-router-dom";
+
+
+const NavBar = () =>{
+    const navigate = useNavigate();
+    return(<div style={{"position":"fixed",backgroundColor:"white",width:"100%",border:"solid black", borderWidth:"0 0 1px 0",}}>
+            <style>
+                {`
+                    text:hover {
+                        color:red;
+                        text-decoration:underline;
+                        cursor:pointer;
+                    }
+                `}
+            </style>
+        
+        <nav style={{display: "flex",alignItems:"center",minHeight:"10vh",}}>
+        <div style={{display:"flex",width:"100%"}}>
+        <div style={{"flex":1}}>
+            <img style={{"height":"10vh"}} src="https://media.istockphoto.com/id/1382305677/vector/finance-logo-vector-illustration-in-trendy.jpg?s=612x612&w=0&k=20&c=37WbXhqdKzvIq7kmltVoGZaBHcUE_Mhll23cyQpgij8="></img>
+            
+        </div>
+        <div style={{flex:"1",alignContent:"center",}}>
+        <div style={{"textAlign":"right"}}>
+        <text style={{margin:"0 10px"}}>Home</text>
+        <text style={{margin:"0 10px"}}>About US</text>
+        <text style={{margin:"0 10px"}} onClick={()=>{navigate('/CustomerLogin')}}>Customer Login</text>
+        <text style={{margin:"0 10px"}}>Employee Login</text>
+        <text style={{margin:"0 10px"}}>ATM</text>
+        </div>
+        </div>
+        </div>
+        
+        </nav>
+
+        
+        </div>)
+}   
+
+
+export default NavBar;
