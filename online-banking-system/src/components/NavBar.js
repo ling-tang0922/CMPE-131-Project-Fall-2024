@@ -26,7 +26,7 @@ const NavBar = () =>{
         <text style={{margin:"0 10px"}}>About US</text>
         <text style={{margin:"0 10px"}} onClick={()=>{navigate('/CustomerLogin')}}>Customer Login</text>
         <text style={{margin:"0 10px"}}>Employee Login</text>
-        <text style={{margin:"0 10px"}}>ATM</text>
+        <text style={{margin:"0 10px"}} onClick={()=>{navigate('/ATMLoginForm')}}>ATM</text>
         </div>
         </div>
         </div>
