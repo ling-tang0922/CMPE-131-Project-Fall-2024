@@ -7,6 +7,7 @@ import '@aws-amplify/ui-react/styles.css';
 import CustomerLogin from './files/CustomerLogin';
 import ATMLoginForm from './files/ATMLoginForm';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import CustomerDashboard from './files/CustomerDashBoard';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,6 +16,7 @@ root.render(
     <Routes>
     <Route path="/" element={<LandingPage />} />
     <Route path="/CustomerLogin" element={<CustomerLogin />} />
+    <Route path='/dashboard' element={<CustomerDashboard/>} />
     <Route path="/ATMLoginForm" element={<ATMLoginForm />} />
     
     </Routes>
