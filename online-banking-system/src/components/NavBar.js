@@ -17,7 +17,7 @@ const NavBar = () =>{
         <nav style={{display: "flex",alignItems:"center",minHeight:"10vh",}}>
         <div style={{display:"flex",width:"100%"}}>
         <div style={{"flex":1}}>
-            <img style={{"height":"10vh"}} src="https://media.istockphoto.com/id/1382305677/vector/finance-logo-vector-illustration-in-trendy.jpg?s=612x612&w=0&k=20&c=37WbXhqdKzvIq7kmltVoGZaBHcUE_Mhll23cyQpgij8="></img>
+            <img style={{"height":"10vh"}} src="logo_131_1.png"></img>
             
         </div>
         <div style={{flex:"1",alignContent:"center",}}>
