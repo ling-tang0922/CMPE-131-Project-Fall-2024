@@ -6,7 +6,12 @@ const NavBar = () => {
         <div style={{ position: "fixed", backgroundColor: "white", width: "100%", border: "solid black", borderWidth: "0 0 1px 0" }}>
             <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: "10vh", padding: "0 20px" }}>
                 <div style={{ flex: "1", display: "flex", alignItems: "center" }}>
-                    <img style={{ height: "10vh" }} src="logo_131_1.png" alt="Logo" />
+                <img 
+                    style={{ height: "10vh", cursor: "pointer" }} 
+                    src="logo_131_1.png" 
+                    alt="Logo" 
+                    onClick={() => navigate('/')} 
+                />
                 </div>
                 <div style={{ flex: "1", textAlign: "right" }}>
                     <span style={{ margin: "0 10px", cursor: "pointer" }} onClick={() => navigate('/')}>Home</span>

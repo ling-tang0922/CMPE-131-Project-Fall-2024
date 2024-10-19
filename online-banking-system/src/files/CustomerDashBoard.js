@@ -54,7 +54,7 @@ const CustomerDashboard = () => {
                                     backgroundColor: "white",
                                     boxShadow: "0 2px 10px #FFFFFF",
                                     zIndex: 1,
-                                    minWidth: "150px"
+                                    minWidth: "150px",
                                 }}
                             >
                             <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>

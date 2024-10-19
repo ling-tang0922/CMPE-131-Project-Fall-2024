@@ -25,10 +25,6 @@ const LandingPage = () =>{
         <NavBar>
         </NavBar>
         <div style={{"margin":"10vh 0 0 0"}}>
-        
-        
-
-       
         <div>
             <div style = {containerStyles}>
                 <ImageSlider slides = {slides}/>
