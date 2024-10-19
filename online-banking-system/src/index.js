@@ -16,7 +16,7 @@ root.render(
     <Routes>
     <Route path="/" element={<LandingPage />} />
     <Route path="/CustomerLogin" element={<CustomerLogin />} />
-    <Route path='/dashboard' element={<CustomerDashboard/>} />
+    <Route path="/dashboard" element={<CustomerDashboard/>} />
     <Route path="/ATMLoginForm" element={<ATMLoginForm />} />
     
     </Routes>

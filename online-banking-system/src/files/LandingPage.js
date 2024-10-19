@@ -1,23 +1,40 @@
 import WindowWrapper from "../components/WindowWrapper";
 import NavBar from "../components/NavBar";
-
+import ImageSlider from "../components/ImageSlider";
 
 const LandingPage = () =>{
+
+    const slides = [
+        {url: "http://localhost:3000/image-1.jpg", title: "Beach"},
+        {url: "http://localhost:3000/image-2.jpg", title: "Boat"},
+        {url: "http://localhost:3000/image-3.jpg", title: "Forest"},
+        {url: "http://localhost:3000/image-4.jpg", title: "City"},
+        {url: "http://localhost:3000/image-5.jpg", title: "Italy"}
+        
+    ]
+
+    const containerStyles = {
+        height: "400px",
+        width: "100%",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center"
+    };
 
     return(<WindowWrapper>
         <NavBar>
         </NavBar>
         <div style={{"margin":"10vh 0 0 0"}}>
         
-        <div style={{
-            backgroundImage: "url('https://ichef.bbci.co.uk/news/1536/cpsprodpb/b0cf/live/dfecbe50-5e25-11ef-9235-a933a7aa305c.jpg.webp')",
-            height: "400px",
-            width: "100%",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center"
-        }}>  
+        
+
+       
+        <div>
+            <div style = {containerStyles}>
+                <ImageSlider slides = {slides}/>
+            </div>
         </div>
+
         <div style={{"display":"flex","minHeight":"300px",flexDirection:"row", boxSizing: "border-box",margin:"10px"}}>
         <div style={{flex:"1",marginRight:"20px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",}}>Information</div>
         <div style={{flex:"1",marginRight:"20px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",}}>Information</div>
