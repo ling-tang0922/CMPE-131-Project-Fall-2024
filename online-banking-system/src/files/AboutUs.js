@@ -3,7 +3,6 @@ import WindowWrapper from "../components/WindowWrapper";
 import NavBar from "../components/NavBar";
 import './AboutUs.css';
 
-
 const AboutUs = () => {
     return (
             <WindowWrapper>

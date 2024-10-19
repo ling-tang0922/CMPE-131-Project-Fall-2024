@@ -8,7 +8,7 @@ const WindowWrapper = ({ children, showSideNav = false }) => {
           display: "flex",
           width: "100vw",
           fontFamily: "Roboto",
-          backgroundColor: "#FFFFFF"
+          backgroundColor: "#FBF6EE"
       }}>
           <div style={{ flex: 1 }}>
               <div style={{ display: "flex", flexDirection: "row" }}>

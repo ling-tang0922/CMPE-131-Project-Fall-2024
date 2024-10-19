@@ -14,11 +14,10 @@ const NavBar = () => {
                 />
                 </div>
                 <div style={{ flex: "1", textAlign: "right" }}>
-                    <span style={{ margin: "0 10px", cursor: "pointer" }} onClick={() => navigate('/')}>Home</span>
-                    <span style={{ margin: "0 10px", cursor: "pointer" }} onClick={() => navigate('/AboutUs')}>About Us</span>
-                    <span style={{ margin: "0 10px", cursor: "pointer" }} onClick={() => navigate('/CustomerLogin')}>Customer Login</span>
-                    <span style={{ margin: "0 10px", cursor: "pointer" }} onClick={() => navigate('/EmployeeLogin')}>Employee Login</span>
-                    <span style={{ margin: "0 10px", cursor: "pointer" }} onClick={() => navigate('/ATMLoginForm')}>ATM</span>
+                    <span style={{ margin: "0 15px", cursor: "pointer", fontSize: "18px" }} onClick={() => navigate('/AboutUs')}>About Us</span>
+                    <span style={{ margin: "0 15px", cursor: "pointer", fontSize: "18px" }} onClick={() => navigate('/CustomerLogin')}>Customer Login</span>
+                    <span style={{ margin: "0 15px", cursor: "pointer", fontSize: "18px" }} onClick={() => navigate('/EmployeeLogin')}>Employee Login</span>
+                    <span style={{ margin: "0 15px", cursor: "pointer", fontSize: "18px"}} onClick={() => navigate('/ATMLoginForm')}>ATM</span>
                 </div>
             </nav>
         </div>

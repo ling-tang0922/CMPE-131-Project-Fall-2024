@@ -2,7 +2,7 @@ import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody } fro
 import WindowWrapper from "../components/WindowWrapper";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill, faUpload, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 const CustomerDashboard = () => {
@@ -32,11 +32,19 @@ const CustomerDashboard = () => {
         };
     }, []);
 
+    // Sample data
+    const transactions = [
+        { dateTime: '2024-10-01 01:30', type: 'Deposit', amount: '+$200' },
+        { dateTime: '2024-10-05 14:03', type: 'Withdrawal', amount: '-$50' },
+        { dateTime: '2024-10-10 07:00', type: 'Deposit', amount: '+$100' },
+        { dateTime: '2024-10-12 16:45', type: 'Transfer', amount: '-$150' },
+    ];
+
     return (
         <WindowWrapper showSideNav={true}>
-            <div style={{ height: "100vh", padding: "20px", display: "flex", flexDirection: "column" }}>
+            <div style={{ height: "100vh", padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ flex: "0 0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <p style={{ fontSize: "40px", marginBottom: "20px" }}>Welcome Back, First Last!</p>
+                    <p style={{ fontSize: "40px", marginBottom: "20px", color: "#57C43F" }}>Welcome Back, First Last!</p>
                     <div style={{ position: "relative", marginRight: "20px", marginBottom: "10px" }}>
                         <img 
                             id="profile-pic"
@@ -49,6 +57,7 @@ const CustomerDashboard = () => {
                             <div 
                                 id="dropdown" 
                                 style={{
+                                    borderRadius: "10%",
                                     position: "absolute",
                                     right: 0,
                                     backgroundColor: "white",
@@ -57,24 +66,24 @@ const CustomerDashboard = () => {
                                     minWidth: "150px",
                                 }}
                             >
-                            <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>
-                                <li 
-                                    style={{ padding: "10px", cursor: "pointer" }} 
-                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#57C43F'} 
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                    onClick={() => navigate('/accountsettings')}
-                                >
-                                Account Settings
-                                </li>
-                                <li 
-                                    style={{ padding: "10px", cursor: "pointer" }} 
-                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#57C43F'} 
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                    onClick={() => navigate('/')}
-                                >
-                                    Log Out
-                                </li>
-                            </ul>
+                                <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+                                    <li 
+                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }} 
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'} 
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                        onClick={() => navigate('/accountsettings')}
+                                    >
+                                        Account Settings
+                                    </li>
+                                    <li 
+                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }} 
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'} 
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                        onClick={() => navigate('/')}
+                                    >
+                                        Log Out
+                                    </li>
+                                </ul>
                             </div>
                         )}
                     </div>
@@ -91,11 +100,11 @@ const CustomerDashboard = () => {
                                     minHeight: "200px",
                                     boxShadow: "0 4px 10px #AAAAAA",
                                     flex: "1",
-                                    minWidth: "200px",
+                                    width: "150px",
                                     margin: "5px",
                                     padding: "20px",
                                     borderRadius: "10px",
-                                    backgroundColor: "#F8F4EF",
+                                    backgroundColor: "#FFFFFF",
                                     transition: "transform 0.2s",
                                     cursor: "pointer"
                                 }}
@@ -137,7 +146,10 @@ const CustomerDashboard = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                         <h2>Transaction History</h2>
-                        <Table highlightOnHover={true}>
+                        <Table 
+                            highlightOnHover={true} 
+                            style={{ backgroundColor: '#FFFFFF', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 10px #AAAAAA' }}
+                        >
                             <TableHead>
                                 <TableRow>
                                     <TableCell as="th">Date and Time</TableCell>
@@ -146,24 +158,22 @@ const CustomerDashboard = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {/* Sample Data Rows */}
-                                <TableRow>
-                                    <TableCell>-</TableCell>
-                                    <TableCell>-</TableCell>
-                                    <TableCell>-</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>-</TableCell>
-                                    <TableCell>-</TableCell>
-                                    <TableCell>-</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>-</TableCell>
-                                    <TableCell>-</TableCell>
-                                    <TableCell>-</TableCell>
-                                </TableRow>
+                                {transactions.slice(0, 3).map((transaction, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{transaction.dateTime}</TableCell>
+                                        <TableCell>{transaction.type}</TableCell>
+                                        <TableCell>{transaction.amount}</TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
+                        <Button 
+                            style={{ marginTop: "10px", backgroundColor: "#57C43F", color: "white", borderRadius: "20px" }} 
+                            onClick={() => navigate('/transactionHistory')}
+                        >
+                            See More 
+                            <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: "5px" }} />
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -172,3 +182,4 @@ const CustomerDashboard = () => {
 }
 
 export default CustomerDashboard;
+
