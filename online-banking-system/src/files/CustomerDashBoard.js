@@ -1,30 +1,88 @@
 import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody } from "@aws-amplify/ui-react";
 import WindowWrapper from "../components/WindowWrapper";
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const CustomerDashboard = () => {
+    const navigate = useNavigate();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggleDropdown = () => {
+        setDropdownOpen(prev => !prev);
+    };
+
+    const closeDropdown = () => {
+        setDropdownOpen(false);
+    };
+
+    const clickOutside = (event) => {
+        const dropdown = document.getElementById('dropdown');
+        const profilePic = document.getElementById('profile-pic');
+        if (dropdown && !dropdown.contains(event.target) && !profilePic.contains(event.target)) {
+            closeDropdown();
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('click', clickOutside);
+        return () => {
+            window.removeEventListener('click', clickOutside);
+        };
+    }, []);
+
     return (
         <WindowWrapper showSideNav={true}>
             <div style={{ height: "100vh", padding: "20px", display: "flex", flexDirection: "column" }}>
-                <div style={{ flex: "0 0 auto" }}>
+                <div style={{ flex: "0 0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <p style={{ fontSize: "40px", marginBottom: "20px" }}>Welcome Back, First Last!</p>
-                    <Divider />
-                    <img 
-                        src="logo_131_1.png"
-                        alt= "logo"
-                        style={{
-                            position: "absolute",
-                            top: "5px", 
-                            right: "20px",
-                            width: "170px",
-                            height: "auto",
-                        }}
-                    />
+                    <div style={{ position: "relative", marginRight: "20px", marginBottom: "10px" }}>
+                        <img 
+                            id="profile-pic"
+                            src="default.png" 
+                            alt="User Profile" 
+                            style={{ height: "48px", width: "48px", borderRadius: "50%", cursor: "pointer" }} 
+                            onClick={toggleDropdown} 
+                        />
+                        {dropdownOpen && (
+                            <div 
+                                id="dropdown" 
+                                style={{
+                                    position: "absolute",
+                                    right: 0,
+                                    backgroundColor: "white",
+                                    boxShadow: "0 2px 10px #FFFFFF",
+                                    zIndex: 1,
+                                    minWidth: "150px"
+                                }}
+                            >
+                            <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+                                <li 
+                                    style={{ padding: "10px", cursor: "pointer" }} 
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#57C43F'} 
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                    onClick={() => navigate('/accountsettings')}
+                                >
+                                Account Settings
+                                </li>
+                                <li 
+                                    style={{ padding: "10px", cursor: "pointer" }} 
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#57C43F'} 
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                    onClick={() => navigate('/')}
+                                >
+                                    Log Out
+                                </li>
+                            </ul>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 
+                <Divider />
+                <Divider />
+
                 <div style={{ display: "flex", flex: 1, marginTop: "20px" }}>
                     <div style={{ flex: 1, marginRight: "20px" }}>
                         <div style={{ minHeight: "300px", margin: "20px 10px", fontSize: "1.5em", padding: "10px" }}>
@@ -58,7 +116,6 @@ const CustomerDashboard = () => {
                                 </div>
                             </div>
                         </div>
-                        <h2 style={{ marginTop: "10px", fontFamily: 'Arial, sans-serif', color: "#333" }}>Deposit</h2> 
                         <div style={{ display: "flex" }}>
                             <div style={{ flex: 1, marginRight: "10px" }}>
                                 <h3><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBill} />Deposit Cash</h3>

@@ -43,40 +43,40 @@ const LandingPage = () =>{
         <div style={{"margin":"10px"}}>
         <div style={{margin:"20px 0px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",display:"flex",flexDirection:"row"}}>
             <div style={{"flex":"1",height:"100%",}}>
-                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s"></img>
+                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s" alt ="1"></img>
             </div>
             <div style={{"flex":"2"}}></div>
         </div>
         <div style={{margin:"20px 0px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",display:"flex",flexDirection:"row"}}>
         <div style={{"flex":"2"}}></div>
             <div style={{"flex":"1",height:"100%", }}>
-                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s"></img>
+                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s" alt ="2"></img>
             </div>
             
         </div>
         <div style={{margin:"20px 0px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",display:"flex",flexDirection:"row"}}>
             <div style={{"flex":"1",height:"100%", }}>
-                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s"></img>
+                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s" alt ="3"></img>
             </div>
             <div style={{"flex":"2"}}></div>
         </div>
         <div style={{margin:"20px 0px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",display:"flex",flexDirection:"row"}}>
         <div style={{"flex":"2"}}></div>
             <div style={{"flex":"1",height:"100%", }}>
-                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s"></img>
+                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s" alt ="4"></img>
             </div>
             
         </div>
         <div style={{margin:"20px 0px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",display:"flex",flexDirection:"row"}}>
             <div style={{"flex":"1",height:"100%", }}>
-                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s"></img>
+                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s" alt ="5"></img>
             </div>
             <div style={{"flex":"2"}}></div>
         </div>
         <div style={{margin:"20px 0px",boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)",display:"flex",flexDirection:"row"}}>
         <div style={{"flex":"2"}}></div>
             <div style={{"flex":"1",height:"100%", }}>
-                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s"></img>
+                <img style={{objectFit: "cover",height:"100%",width:"100%"}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQROxNeobSXYoNRS0Q05773BHuOcK_ilTrcdg&s" alt ="6"></img>
             </div>
             
         </div>

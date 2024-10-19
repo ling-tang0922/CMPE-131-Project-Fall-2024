@@ -26,9 +26,7 @@ const SideNav = () => {
           <MenuItem  style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faHouse} />Dashboard</MenuItem>
           <MenuItem style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faUpload} />Deposit Check</MenuItem>
           <MenuItem style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faMoneyBillTransfer} />Transfer Money</MenuItem>
-          <MenuItem style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faClockRotateLeft} />Transaction History</MenuItem>  
-          <MenuItem style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faGear} />Account Settings</MenuItem>   
-          <MenuItem style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faDoorOpen} />Log Out</MenuItem>            
+          <MenuItem style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faClockRotateLeft} />Transaction History</MenuItem>         
         </Menu>
         
 
