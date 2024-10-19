@@ -1,103 +1,117 @@
-import { Button, Divider, Table, TableCell, TableHead, TableRow,TableBody } from "@aws-amplify/ui-react";
+import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody } from "@aws-amplify/ui-react";
 import WindowWrapper from "../components/WindowWrapper";
+import React from "react";
 
-import React,{useState,useEffect} from "react";
-import SideNav from "../components/SideNav";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMoneyBill,faUpload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMoneyBill, faUpload } from "@fortawesome/free-solid-svg-icons";
 
-const CustomerDashboard = () =>{
-
-    return (<WindowWrapper showSideNav={true}>
-        <div style={{"height":"100vh"}}>
-            <p style={{fontSize:"2em"}}>Welcome Back Customer Name!</p>
-            <Divider/>
-            <div style={{minHeight:"300px",margin:"20px 10px",fontSize:"1.5em",padding:"10px"}}
-            >My Account
-            <div style={{"display":"flex"}}>
-            <div style={{
-                minHeight: "200px",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)", // Enhanced shadow
-                flex: "1",
-                minWidth: "200px",
-                margin: "5px",
-                padding: "20px", // Increased padding for better spacing
-                borderRadius: "8px", // Rounded corners
-                backgroundColor: "#ffffff", // White background for contrast
-                transition: "transform 0.2s", // Smooth transition for hover effect
-                cursor: "pointer" // Pointer cursor for interactivity
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"} // Hover effect
-            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"} // Reset hover effect
-            >
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div>Savings Account</div>
-                    <div>***456</div>
+const CustomerDashboard = () => {
+    return (
+        <WindowWrapper showSideNav={true}>
+            <div style={{ height: "100vh", padding: "20px", display: "flex", flexDirection: "column" }}>
+                <div style={{ flex: "0 0 auto" }}>
+                    <p style={{ fontSize: "40px", marginBottom: "20px" }}>Welcome Back, First Last!</p>
+                    <Divider />
+                    <img 
+                        src="logo_131_1.png"
+                        alt= "logo"
+                        style={{
+                            position: "absolute",
+                            top: "5px", 
+                            right: "20px",
+                            width: "170px",
+                            height: "auto",
+                        }}
+                    />
                 </div>
-                <div style={{ fontSize: "0.7em", marginTop: "5px" }}>Balance: $4200</div>
-            </div>
-
-                 </div>
-            </div>
-            <h2>Deposit Cash</h2>
-            <div style={{display:"flex"}}>
-                <div style={{"flex":1}}>
-                    <h3><FontAwesomeIcon style={{ margin: "0 10"}} icon={faMoneyBill} />Deposit Bills
-                    </h3>
-                    <div>1. Enter amount.<br/>2.Verify and Acknowledge</div>
-                    <Button style={{ backgroundColor: 'black', color: 'white' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary">Add Cash!</Button>
+                
+                <div style={{ display: "flex", flex: 1, marginTop: "20px" }}>
+                    <div style={{ flex: 1, marginRight: "20px" }}>
+                        <div style={{ minHeight: "300px", margin: "20px 10px", fontSize: "1.5em", padding: "10px" }}>
+                            <div style={{ display: "flex" }}>
+                                <div style={{
+                                    minHeight: "200px",
+                                    boxShadow: "0 4px 10px #AAAAAA",
+                                    flex: "1",
+                                    minWidth: "200px",
+                                    margin: "5px",
+                                    padding: "20px",
+                                    borderRadius: "10px",
+                                    backgroundColor: "#F8F4EF",
+                                    transition: "transform 0.2s",
+                                    cursor: "pointer"
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
+                                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                                >
+                                    <div style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        borderRadius: "5px",
+                                        padding: "10px",
+                                    }}>
+                                        <div style={{ fontSize: "30px", fontWeight: "bold" }}>Account Balance:</div>
+                                        <div style={{ fontSize: "30px", fontWeight: "bold" }}>***456</div>
+                                    </div>
+                                    <div style={{ fontSize: "70px", fontWeight: "bold", marginTop: "15px", color: "#57C43F"}}>$4200.00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 style={{ marginTop: "10px", fontFamily: 'Arial, sans-serif', color: "#333" }}>Deposit</h2> 
+                        <div style={{ display: "flex" }}>
+                            <div style={{ flex: 1, marginRight: "10px" }}>
+                                <h3><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBill} />Deposit Cash</h3>
+                                <div>1. Enter the amount.<br />2. Verify and acknowledge.</div>
+                                <Button style={{ backgroundColor: '#57C43F', color: 'white', borderRadius: '20px', padding: '10px 20px', transition: 'background-color 0.3s' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary" 
+                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = "#45A030"}
+                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = "#57C43F"}
+                                >Add Cash!</Button>
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <h3><FontAwesomeIcon style={{ margin: "0 10" }} icon={faUpload} />Deposit Check</h3>
+                                <div>1. Upload PNG files of front and back of the check.<br />2. Verify the amount.</div>
+                                <Button style={{ backgroundColor: '#57C43F', color: 'white', borderRadius: '20px', padding: '10px 20px', transition: 'background-color 0.3s' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary" 
+                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = "#45A030"}
+                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = "#57C43F"}
+                                >Upload Check!</Button>
+                             </div>
+                        </div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <h2>Transaction History</h2>
+                        <Table highlightOnHover={true}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell as="th">Date and Time</TableCell>
+                                    <TableCell as="th">Transaction Type</TableCell>
+                                    <TableCell as="th">Amount</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {/* Sample Data Rows */}
+                                <TableRow>
+                                    <TableCell>-</TableCell>
+                                    <TableCell>-</TableCell>
+                                    <TableCell>-</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>-</TableCell>
+                                    <TableCell>-</TableCell>
+                                    <TableCell>-</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>-</TableCell>
+                                    <TableCell>-</TableCell>
+                                    <TableCell>-</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
                 </div>
-                <div style={{"flex":1}}><h3><FontAwesomeIcon style={{ margin: "0 10"}} icon={faUpload} />Deposit Cheque</h3>
-                <div>1. Upload the cheque.<br/>2. Verify Amount</div>
-                <Button style={{ backgroundColor: 'black', color: 'white' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary">Upload Cheque!</Button>
-
-                </div>
             </div>
-            <h2>Transaction History</h2>
-            <Table highlightOnHover={true}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell as="th">TimeStamp</TableCell>
-                        <TableCell as="th">Transaction Type</TableCell>
-                        <TableCell as="th">Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                <TableRow>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                        <TableCell>-</TableCell>
-                    </TableRow>
-
-                </TableBody>
-            </Table>
-        </div>
-
-    </WindowWrapper>)
+        </WindowWrapper>
+    );
 }
+
 export default CustomerDashboard;

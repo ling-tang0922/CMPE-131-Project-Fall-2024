@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+
+.about-text {
+    flex: 1; 
+    text-align: left; 
+}
+
+.about-text h2 {
+    color: #57C43F;
+    font-size: 75px;
+    font-weight: 800;
+}
+
+.about-text p {
+    font-size: 20px;
+    margin-top: 1.563rem;
+    color: #000000;
+}
+
+.picture {
+    max-width: 35rem;
+    border-radius: 5px;
+    margin-right: 1rem;
+}
