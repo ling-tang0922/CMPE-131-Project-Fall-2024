@@ -10,6 +10,7 @@ import ATMLoginForm from './files/ATMLoginForm';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CustomerDashboard from './files/CustomerDashBoard';
 import TransactionPage from './files/TransactionPage';
+import ATMDashboard from './files/ATMDashboard';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,6 +22,7 @@ root.render(
     <Route path="/CustomerLogin" element={<CustomerLogin />} />
     <Route path="/Dashboard" element={<CustomerDashboard/>} />
     <Route path="/ATMLoginForm" element={<ATMLoginForm />} />
+    <Route path="/ATMDashboard" element={<ATMDashboard />} />
     <Route path="/TransactionHistory" element={<TransactionPage />} />
     
     </Routes>
