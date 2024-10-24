@@ -11,6 +11,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CustomerDashboard from './files/CustomerDashBoard';
 import TransactionPage from './files/TransactionPage';
 import ATMDashboard from './files/ATMDashboard';
+import DepositCash from './files/DepositBills';
+import TransferFunds from './files/TransferFunds';
+import UploadCheque from './files/UploadCheque';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -24,7 +27,11 @@ root.render(
     <Route path="/ATMLoginForm" element={<ATMLoginForm />} />
     <Route path="/ATMDashboard" element={<ATMDashboard />} />
     <Route path="/TransactionHistory" element={<TransactionPage />} />
-    
+    <Route path="/DepositBills" element={<DepositCash />} />
+    <Route path="/transferFunds" element={<TransferFunds />} />
+    <Route path="/uploadCheque" element={<UploadCheque />} />
+
+
     </Routes>
   </Router>
   

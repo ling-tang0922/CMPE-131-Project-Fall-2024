@@ -4,11 +4,11 @@ const WindowWrapper = ({ children, showSideNav = false }) => {
   return (
       <div style={{
           margin: "0px",
-          height: "100vh",
+          minHeight: "100vh",
           display: "flex",
           width: "100vw",
           fontFamily: "Roboto",
-          backgroundColor: "#FBF6EE"
+        //   backgroundColor: "#FBF6EE"
       }}>
           <div style={{ flex: 1 }}>
               <div style={{ display: "flex", flexDirection: "row" }}>
