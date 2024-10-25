@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const NavBar = () => {
     const navigate = useNavigate();
     return (
-        <div style={{ position: "fixed", backgroundColor: "white", width: "100%", border: "solid black", borderWidth: "0 0 1px 0" }}>
+        <div style={{ position: "fixed", backgroundColor: "#CBF3C6", width: "100%"}}>
             <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: "10vh", padding: "0 20px" }}>
                 <div style={{ flex: "1", display: "flex", alignItems: "center" }}>
                 <img 

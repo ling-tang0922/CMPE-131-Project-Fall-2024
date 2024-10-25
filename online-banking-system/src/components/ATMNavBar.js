@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const ATMNavBar = () => {
     const navigate = useNavigate();
     return (
-        <div style={{ position: "fixed", top: 0, backgroundColor: "white", width: "100%", border: "solid black", borderWidth: "0 0 1px 0", zIndex: 1000 }}>
+        <div style={{ position: "fixed", top: 0, backgroundColor: "#CBF3C6", width: "100%", zIndex: 1000 }}>
             <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: "10vh", padding: "0 20px" }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <img 

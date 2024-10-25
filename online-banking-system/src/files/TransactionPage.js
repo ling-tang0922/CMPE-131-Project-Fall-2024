@@ -14,7 +14,7 @@ const TransactionPage = () => {
     return (
         <WindowWrapper showSideNav={true}>
             <div className="transaction-container">
-                <h1>Transaction History (wip)</h1>
+                <h1>Transaction History</h1>
                 <table>
                     <thead>
                         <tr>

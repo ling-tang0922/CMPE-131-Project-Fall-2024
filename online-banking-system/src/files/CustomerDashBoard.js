@@ -2,7 +2,7 @@ import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody, Text
 import WindowWrapper from "../components/WindowWrapper";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill, faUpload, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill, faUpload, faArrowRight, faMoneyBillTransfer} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
 const CustomerDashboard = () => {
@@ -44,13 +44,13 @@ const CustomerDashboard = () => {
         <WindowWrapper showSideNav={true}>
             <div style={{ height: "100%", padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ flex: "0 0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <p style={{ fontSize: "40px", marginBottom: "20px", color: "#57C43F" }}>Welcome Back, First Last!</p>
+                    <p style={{ fontSize: "35px", marginBottom: "20px", color: "#57C43F", fontWeight: "bold"}}>Welcome Back, First Last!</p>
                     <div style={{ position: "relative", marginRight: "20px", marginBottom: "10px" }}>
                         <img 
                             id="profile-pic"
                             src="default.png" 
                             alt="User Profile" 
-                            style={{ height: "48px", width: "48px", borderRadius: "50%", cursor: "pointer" }} 
+                            style={{ height: "50px", width: "50px", borderRadius: "50%", cursor: "pointer" }} 
                             onClick={toggleDropdown} 
                         />
                         {dropdownOpen && (
@@ -92,53 +92,55 @@ const CustomerDashboard = () => {
                 <Divider />
                 <Divider />
         <div>
-            <div style={{minHeight:"300px",margin:"20px 10px",fontSize:"1.5em",padding:"10px"}}
-            >My Account
+            <div style={{minHeight:"300px",margin:"20px 10px",fontSize:"25px",padding:"10px"}}
+            >@username's Account
             <div style={{"display":"flex",flexDirection:"column"}}>
             <div style={{
                 minHeight: "200px",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)", // Enhanced shadow
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
                 flex: "1",
                 minWidth: "200px",
                 margin: "5px",
-                padding: "20px", // Increased padding for better spacing
-                borderRadius: "8px", // Rounded corners
-                backgroundColor: "#ffffff", // White background for contrast
-                transition: "transform 0.2s", // Smooth transition for hover effect
-                cursor: "pointer" // Pointer cursor for interactivity
+                padding: "20px",
+                borderRadius: "8px", 
+                backgroundColor: "#ffffff", 
+                transition: "transform 0.2s",
+                cursor: "pointer" 
             }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"} // Hover effect
-            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"} // Reset hover effect
+            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"} 
+            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
             >
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div><FontAwesomeIcon icon={faBuildingColumns}/>Account Balance</div>
+                    <div><FontAwesomeIcon icon={faBuildingColumns}/> Account Balance</div>
                     <div>***456</div>
                 </div>
                 <div style={{justifyContent:"flex-end"}}>
-                    <Text fontSize={"xxl"} marginLeft={"10px"}>$4200</Text>
+                    <Text fontSize={"60px"} marginLeft={"10px"} fontWeight={"bold"} color= "#57C43F">$4200.00</Text>
                 </div>
             </div>
 
                  </div>
             </div>
-            <h2>Deposit Cash</h2>
-            <div style={{display:"flex"}}>
+            {/* <h2 style={{"marginTop":'5em'}}>Depositing</h2> */}
+            <div style={{display:"flex", textAlign: "center"}}>
                 <div style={{"flex":1}}>
-                    <h3><FontAwesomeIcon style={{ margin: "0 10"}} icon={faMoneyBill} />Deposit Bills
-                    </h3>
-                    <div>1. Enter amount.<br/>2.Verify and Acknowledge</div>
+                    <h2><FontAwesomeIcon style={{ margin: "0 10"}} icon={faMoneyBill} />Deposit Bills
+                    </h2>
+                    <div>1. Enter amount.<br/>2. Verify and Acknowledge.</div>
                     <Button onClick={()=>{navigate('/DepositBills')}} style={{ backgroundColor: 'black', color: 'white' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary">Add Cash!</Button>
                 </div>
-                <div style={{"flex":1}}><h3><FontAwesomeIcon style={{ margin: "0 10"}} icon={faUpload} />Deposit Cheque</h3>
-                <div>1. Upload the cheque.<br/>2. Verify Amount</div>
-                <Button onClick={()=>{navigate('/uploadCheque')}} style={{ backgroundColor: 'black', color: 'white' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary">Upload Cheque!</Button>
+                <div style={{"flex":1}}>
+                    <h2><FontAwesomeIcon style={{ margin: "0 10"}} icon={faUpload} />Deposit Check
+                    </h2>
+                <div>1. Upload the check.<br/>2. Verify the amount.</div>
+                <Button onClick={()=>{navigate('/uploadCheque')}} style={{ backgroundColor: 'black', color: 'white' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary">Upload Check!</Button>
 
             </div>
             
         </div>
         </div>
-        <h2 style={{"marginTop":'5em'}}>Transfer funds</h2>
-            <div style={{"margin":"10px 0"}}>
+        <h2 style={{"marginTop":'50px'}}><FontAwesomeIcon style={{ margin: "0 10"}} icon={faMoneyBillTransfer}></FontAwesomeIcon>Transfer Funds</h2>
+            <div style={{"margin":"10px 0", textAlign: "center"}}>
                 Easily transfer funds in just a few clicks! Use the shortcut below to send money instantly:
                 <br/>
                 <strong>Recipient: </strong>

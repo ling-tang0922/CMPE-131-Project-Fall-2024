@@ -6,7 +6,6 @@ const ATMLoginForm = () => {
     const [accountNumber, setAccountNumber] = useState('');
     const [accountPin, setAccountPin] = useState('');
     const [focusedField, setFocusedField] = useState('accountNumber'); 
-
     const handleKeyPress = (num) => {
         if (focusedField === 'accountPin') {
             if (accountPin.length < 4) {
