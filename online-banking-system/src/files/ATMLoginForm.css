@@ -51,9 +51,6 @@ button {
   margin: 5px 0; 
 }
 
-button:hover {
-  background-color: gray;
-}
 
 .keypad {
   display: grid;
