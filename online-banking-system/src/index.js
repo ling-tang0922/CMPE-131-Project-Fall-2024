@@ -14,6 +14,7 @@ import ATMDashboard from './files/ATMDashboard';
 import DepositCash from './files/DepositBills';
 import TransferFunds from './files/TransferFunds';
 import UploadCheque from './files/UploadCheque';
+import EmployeeLogin from './files/EmployeeLogin';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -23,6 +24,7 @@ root.render(
     <Route path="/" element={<LandingPage />} />
     <Route path="/AboutUs" element={<AboutUs/>} />
     <Route path="/CustomerLogin" element={<CustomerLogin />} />
+    <Route path="/EmployeeLogin" element={<EmployeeLogin />} />
     <Route path="/Dashboard" element={<CustomerDashboard/>} />
     <Route path="/ATMLoginForm" element={<ATMLoginForm />} />
     <Route path="/ATMDashboard" element={<ATMDashboard />} />

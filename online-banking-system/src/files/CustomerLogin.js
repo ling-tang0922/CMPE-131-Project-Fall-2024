@@ -92,7 +92,7 @@ const CustomerLogin = () => {
                       <Label htmlFor="first_name">Phone Number:</Label>
                       <Input placeholder="Enter Phone Number" name="username" />
                       <Button variation="primary" colorTheme="success">
-                        Login
+                        Sign Up 
                       </Button>
                     </Flex>{" "}
                   </div>

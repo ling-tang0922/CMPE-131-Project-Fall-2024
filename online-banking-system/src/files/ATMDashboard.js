@@ -5,7 +5,7 @@ import './ATMDashboard.css';
 const ATMDashboard = () => {
     const [amount, setAmount] = useState('');
     const [message, setMessage] = useState('');
-    const [balance, setBalance] = useState(5000); // Default balance
+    const [balance, setBalance] = useState(5000); 
 
     const handleWithdraw = (e) => {
         e.preventDefault();
@@ -17,18 +17,18 @@ const ATMDashboard = () => {
         } else if (amountNum > balance) {
             setMessage("Insufficient funds.");
         } else {
-            setBalance(balance - amountNum); // Update balance
+            setBalance(balance - amountNum); 
             setMessage(`You have withdrawn $${amountNum}. Your new balance is $${(balance - amountNum).toFixed(2)}.`);
-            setAmount(''); // Clear input field
+            setAmount(''); 
         }
     };
 
     const handleKeyPress = (num) => {
-        setAmount(prev => prev + num); // Concatenate number to amount
+        setAmount(prev => prev + num); 
     };
 
     const handleBackspace = () => {
-        setAmount(amount.slice(0, -1)); // Remove the last digit
+        setAmount(amount.slice(0, -1)); 
     };
 
     return (
@@ -42,7 +42,7 @@ const ATMDashboard = () => {
                         type="text"
                         placeholder="Enter amount to withdraw"
                         value={amount}
-                        readOnly /* Make the input read-only so users can only input via keypad */
+                        readOnly 
                     />
                 </div>
                 <button type="submit">Withdraw</button>
