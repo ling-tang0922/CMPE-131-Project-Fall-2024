@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faUpload, faArrowRight, faMoneyBillTransfer} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
+
 const CustomerDashboard = () => {
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -91,105 +92,92 @@ const CustomerDashboard = () => {
                 
                 <Divider />
                 <Divider />
-        <div>
-            <div style={{minHeight:"300px",margin:"20px 10px",fontSize:"25px",padding:"10px"}}
-            >@username's Account
-            <div style={{"display":"flex",flexDirection:"column"}}>
-            <div style={{
-                minHeight: "200px",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-                flex: "1",
-                minWidth: "200px",
-                margin: "5px",
-                padding: "20px",
-                borderRadius: "8px", 
-                backgroundColor: "#ffffff", 
-                transition: "transform 0.2s",
-                cursor: "pointer" 
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"} 
-            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-            >
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div><FontAwesomeIcon icon={faBuildingColumns}/> Account Balance</div>
-                    <div>***456</div>
+                <div style={{ minHeight: "300px", margin: "20px 10px", fontSize: "25px", padding: "10px" }}>
+                    @username's Account
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div style={{
+                            minHeight: "200px",
+                            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+                            flex: "1",
+                            minWidth: "200px",
+                            margin: "5px",
+                            padding: "20px",
+                            borderRadius: "8px", 
+                            backgroundColor: "#ffffff", 
+                            transition: "transform 0.2s",
+                            cursor: "pointer" 
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"} 
+                        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                        >
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <div><FontAwesomeIcon icon={faBuildingColumns}/> Account Balance</div>
+                                <div>***456</div>
+                            </div>
+                            <div style={{ justifyContent: "flex-end" }}>
+                                <Text fontSize={"60px"} marginLeft={"10px"} fontWeight={"bold"} color= "#57C43F">$4200.00</Text>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div style={{justifyContent:"flex-end"}}>
-                    <Text fontSize={"60px"} marginLeft={"10px"} fontWeight={"bold"} color= "#57C43F">$4200.00</Text>
+
+                {/* Horizontal alignment of features */}
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", textAlign: "center" }}>
+                    <div style={{ flex: 1, margin: "0 10px" }}>
+                        <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBill} />Deposit Bills</h2>
+                        <div>1. Enter amount.<br/>2. Verify and Acknowledge.</div>
+                        <Button onClick={() => { navigate('/DepositBills'); }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Add Cash!</Button>
+                    </div>
+                    <div style={{ flex: 1, margin: "0 10px" }}>
+                        <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faUpload} />Deposit Check</h2>
+                        <div>1. Upload the check.<br/>2. Verify the amount.</div>
+                        <Button onClick={() => { navigate('/uploadCheque'); }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Upload Check!</Button>
+                    </div>
+                    <div style={{ flex: 1, margin: "0 10px" }}>
+                        <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBillTransfer} />Transfer Funds</h2>
+                        <div>Easily transfer funds in just a few clicks! Use the shortcut below to send money instantly:</div>
+                        <strong>Recipient: </strong> Enter recipient's phone number.
+                        <br/>
+                        <strong>Amount: </strong> Enter the desired amount to transfer.
+                        <Button onClick={() => { navigate('/transferFunds'); }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Get Started!</Button>
+                    </div>
+                </div>
+
+                <div style={{ display: "flex", flex: 1, marginTop: "20px" }}>
+                    <div style={{ flex: 1 }}>
+                        <h2>Transaction History</h2>
+                        <Table 
+                            highlightOnHover={true} 
+                            style={{ backgroundColor: '#FFFFFF', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 10px #AAAAAA' }}
+                        >
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell as="th">Date and Time</TableCell>
+                                    <TableCell as="th">Transaction Type</TableCell>
+                                    <TableCell as="th">Amount</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactions.slice(0, 3).map((transaction, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{transaction.dateTime}</TableCell>
+                                        <TableCell>{transaction.type}</TableCell>
+                                        <TableCell>{transaction.amount}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <Button 
+                            style={{ margin: "10px 0px", backgroundColor: "black", color: "white"}} 
+                            onClick={() => navigate('/transactionHistory')}
+                        >
+                            View Full History
+                        </Button>
+                    </div>
                 </div>
             </div>
-
-                 </div>
-            </div>
-            {/* <h2 style={{"marginTop":'5em'}}>Depositing</h2> */}
-            <div style={{display:"flex", textAlign: "center"}}>
-                <div style={{"flex":1}}>
-                    <h2><FontAwesomeIcon style={{ margin: "0 10"}} icon={faMoneyBill} />Deposit Bills
-                    </h2>
-                    <div>1. Enter amount.<br/>2. Verify and Acknowledge.</div>
-                    <Button onClick={()=>{navigate('/DepositBills')}} style={{ backgroundColor: 'black', color: 'white' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary">Add Cash!</Button>
-                </div>
-                <div style={{"flex":1}}>
-                    <h2><FontAwesomeIcon style={{ margin: "0 10"}} icon={faUpload} />Deposit Check
-                    </h2>
-                <div>1. Upload the check.<br/>2. Verify the amount.</div>
-                <Button onClick={()=>{navigate('/uploadCheque')}} style={{ backgroundColor: 'black', color: 'white' }} margin="20px 0" width={"50%"} colorTheme="success" variation="primary">Upload Check!</Button>
-
-            </div>
-            
-        </div>
-        </div>
-        <h2 style={{"marginTop":'50px'}}><FontAwesomeIcon style={{ margin: "0 10"}} icon={faMoneyBillTransfer}></FontAwesomeIcon>Transfer Funds</h2>
-            <div style={{"margin":"10px 0", textAlign: "center"}}>
-                Easily transfer funds in just a few clicks! Use the shortcut below to send money instantly:
-                <br/>
-                <strong>Recipient: </strong>
-                Enter recipient's phone number.
-                <br/>
-                <strong>Amount: </strong> Enter the desired amount to transfer.
-                <div>
-                    <Button onClick={()=>{navigate('/transferFunds')}} style={{ backgroundColor: 'black', color: 'white'}} margin="20px 0" width={"25%"} colorTheme="success" variation="primary">Get Started!</Button>
-                </div>
-            </div>
-            <div style={{ display: "flex", flex: 1, marginTop: "20px" }}>
-
-            <div style={{ flex: 1 }}>
-    <h2>Transaction History</h2>
-    <Table 
-        highlightOnHover={true} 
-        style={{ backgroundColor: '#FFFFFF', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 10px #AAAAAA' }}
-    >
-        <TableHead>
-            <TableRow>
-                <TableCell as="th">Date and Time</TableCell>
-                <TableCell as="th">Transaction Type</TableCell>
-                <TableCell as="th">Amount</TableCell>
-            </TableRow>
-        </TableHead>
-        <TableBody>
-            {transactions.slice(0, 3).map((transaction, index) => (
-                <TableRow key={index}>
-                    <TableCell>{transaction.dateTime}</TableCell>
-                    <TableCell>{transaction.type}</TableCell>
-                    <TableCell>{transaction.amount}</TableCell>
-                </TableRow>
-            ))}
-        </TableBody>
-    </Table>
-    <Button 
-        style={{ margin: "10px 0px", backgroundColor: "black", color: "white"}} 
-        onClick={() => navigate('/transactionHistory')}
-    >
-        See More 
-        <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: "5px" }} />
-    </Button>
-</div>
-</div>
-
-        </div>
-
-    </WindowWrapper>)
-}
+        </WindowWrapper>
+    );
+};
 
 export default CustomerDashboard;
-
