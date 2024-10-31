@@ -121,7 +121,7 @@ const CustomerDashboard = () => {
                     </div>
                 </div>
 
-                {/* Horizontal alignment of features */}
+                
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", textAlign: "center" }}>
                     <div style={{ flex: 1, margin: "0 10px" }}>
                         <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBill} />Deposit Bills</h2>
