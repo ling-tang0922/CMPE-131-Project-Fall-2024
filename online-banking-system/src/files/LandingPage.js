@@ -35,7 +35,7 @@ const LandingPage = () => {
     };
 
     const featureTitleStyle = {
-        fontSize: "24px",
+        fontSize: "45px",
         fontWeight: "bold",
         color: "green",
         marginBottom: "10px",
@@ -43,7 +43,7 @@ const LandingPage = () => {
     };
 
     const featureDescStyle = {
-        fontSize: "16px",
+        fontSize: "33px",
         color: "#555",
         textAlign: "center",
         marginTop: "0"
