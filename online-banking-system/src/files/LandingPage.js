@@ -1,15 +1,28 @@
+import React, { useEffect } from 'react';
 import WindowWrapper from "../components/WindowWrapper";
 import NavBar from "../components/NavBar";
 import ImageSlider from "../components/ImageSlider";
 
 const LandingPage = () => {
     const slides = [
-        { url: "http://localhost:3000/image-1.jpg", title: "Beach" },
-        { url: "http://localhost:3000/image-2.jpg", title: "Boat" },
-        { url: "http://localhost:3000/image-3.jpg", title: "Forest" },
-        { url: "http://localhost:3000/image-4.jpg", title: "City" },
-        { url: "http://localhost:3000/image-5.jpg", title: "Italy" }
+        { url: "http://localhost:3000/image-1.jpg", title: "Experience Banking Anywhere", description: "Access your account and manage finances from the comfort of your favorite beach." },
+        { url: "http://localhost:3000/image-2.jpg", title: "Sailing Through Your Finances", description: "Enjoy seamless fund transfers and payments on-the-go, wherever life takes you." },
+        { url: "http://localhost:3000/image-3.jpg", title: "Nature Meets Technology", description: "Our app simplifies your financial journey, helping you stay connected and in control." },
+        { url: "http://localhost:3000/image-4.jpg", title: "Urban Banking Made Easy", description: "Experience hassle-free banking in the city that never sleeps—anytime, anywhere." },
+        { url: "http://localhost:3000/image-5.jpg", title: "Travel with Confidence", description: "Manage your finances internationally—transfer funds and check your balance wherever you are." }
     ];
+    
+
+    const loadFont = () => {
+        const link = document.createElement("link");
+        link.href = "https://fonts.cdnfonts.com/css/segoe-ui-variable";
+        link.rel = "stylesheet";
+        document.head.appendChild(link);
+    };
+
+    useEffect(() => {
+        loadFont();
+    }, []);
 
     const containerStyles = {
         height: "400px",
@@ -115,6 +128,7 @@ const LandingPage = () => {
 }
 
 export default LandingPage;
+
 
 
 
