@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  CiUser,
-  CiLock,
-  CiMail,
-  CiSquareChevRight,
-  CiSquareChevLeft,
-} from "react-icons/ci";
+import { CiUser, CiLock, CiMail, CiSquareChevRight } from "react-icons/ci";
 import WindowWrapper from "../components/WindowWrapper";
 import {
   Input,
