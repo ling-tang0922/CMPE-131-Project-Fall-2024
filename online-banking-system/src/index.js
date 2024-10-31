@@ -15,7 +15,7 @@ import DepositCash from './files/DepositBills';
 import TransferFunds from './files/TransferFunds';
 import UploadCheque from './files/UploadCheque';
 import EmployeeLogin from './files/EmployeeLogin';
-
+import EmployeeDashboard from './files/EmployeeDashboard';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -32,7 +32,7 @@ root.render(
     <Route path="/DepositBills" element={<DepositCash />} />
     <Route path="/transferFunds" element={<TransferFunds />} />
     <Route path="/uploadCheque" element={<UploadCheque />} />
-
+    <Route path="/EmployeeDashboard" element={<EmployeeDashboard/>} />
 
     </Routes>
   </Router>

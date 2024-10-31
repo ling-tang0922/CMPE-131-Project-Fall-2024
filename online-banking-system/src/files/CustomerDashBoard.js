@@ -2,7 +2,7 @@ import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody, Text
 import WindowWrapper from "../components/WindowWrapper";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill, faUpload, faArrowRight, faMoneyBillTransfer} from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill, faUpload, faMoneyBillTransfer} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
 
@@ -75,6 +75,14 @@ const CustomerDashboard = () => {
                                         onClick={() => navigate('/accountsettings')}
                                     >
                                         Account Settings
+                                    </li>
+                                    <li 
+                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }} 
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'} 
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                        onClick={() => navigate('/employeedashboard')} //only if the customer is an employee
+                                    >
+                                        Change Account
                                     </li>
                                     <li 
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }} 
