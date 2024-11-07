@@ -10,7 +10,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
+  height: 100vh;
 }
 
 form {
@@ -19,7 +19,7 @@ form {
   border: 1px solid black;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 300px; 
+  width: 300px;
 }
 
 h1 {
@@ -48,16 +48,16 @@ button {
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  margin: 5px 0; 
+  margin: 5px 0;
 }
 
 
 .keypad {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 10px; 
-  margin-top: 20px; 
-  width: 300px; 
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  width: 300px;
 }
 
 .keypad button {
@@ -76,22 +76,6 @@ button {
 }
 
 .backspace {
-  background-color: red; 
+  background-color: red;
   color: white;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

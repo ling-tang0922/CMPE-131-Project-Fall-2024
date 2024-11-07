@@ -1,37 +1,28 @@
-import { Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField, Button } from "@aws-amplify/ui-react";
+import { Divider, Table, TableCell, TableHead, TableRow, TableBody, SelectField } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ManagerDashboard = () => {
     const navigate = useNavigate();
-    const [searchTerm, setSearchTerm] = useState("");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
 
     // Sample
-    const [accounts, setAccounts] = useState([
-        { first: 'Robbert', last: 'Bobbert', email: 'robbertbobbert@gmail.com', username: 'Robbert123', bankID: 'e1234', password: 'password', balance: '$0.42', bankPIN: '9481' },
-        { first: 'Jannet', last: 'Rose', email: 'jannet.rose321@gmail.com', username: 'Jannet321', bankID: 'e7622', password: 'password', balance: '$10000.84', bankPIN: '4135' },
-        { first: 'Sam', last: 'Darnold', email: 'samlikesbeefsticks@gmail.com',  username: 'Beefsticks', bankID: 'e2314', password: 'password', balance: '$13213.31', bankPIN: '7545' },
-        { first: 'Michael', last: 'Jordan', email: 'michaelJordan@gmail.com',  username: 'leafcar', bankID: 'e9876', password: 'password', balance: '$58912.32', bankPIN: '7683' },
-        { first: 'Adam', last: 'Smith', email: 'appledawgz@gmail.com',  username: 'AppleDawgz', bankID: 'e6792', password: 'password', balance: '$8912.41', bankPIN: '5133' },
-        { first: 'Samantha', last: 'Zhou', email: 'samanthazhou@gmail.com',  username: 'samantha_z098', bankID: 'e0944', password: 'password', balance: '$124.04', bankPIN: '5341' },
-    ]);
-
-    const searchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
+    const accounts = [
+        { bankIDuser: 'e1234', totalBalance: '$0.42', transaction: '-$100', connectedAccount: 'e1234', date: '11/07/24' },
+        { bankIDuser: 'e1234', totalBalance: '$100.42', transaction: '-$319.58', connectedAccount: 'e1234', date: '11/05/24' },
+        { bankIDuser: 'e1234', totalBalance: '$420', transaction: '+$120', connectedAccount: 'e1234', date: '11/02/24' },
+        { bankIDuser: 'e1234', totalBalance: '$300', transaction: '-$100', connectedAccount: 'e1234', date: '10/30/24' },
+    ];
 
     const sortChange = (event) => {
         setSortOrder(event.target.value);
     };
 
-    const filteredSorted = accounts
-        .filter(account => account.username.toLowerCase().includes(searchTerm.toLowerCase()))
-        .sort((a, b) => sortOrder === "ascending"
-            ? a.first.localeCompare(b.first)
-            : b.first.localeCompare(a.first));
+    const sortedAccounts = accounts.sort((a, b) => sortOrder === "ascending"
+        ? a.date.localeCompare(b.date)
+        : b.date.localeCompare(a.date));
 
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
@@ -53,7 +44,7 @@ const ManagerDashboard = () => {
         <WindowWrapperEmployee showSideNavEmployee={true}>
             <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Manager Dashboard</h1>
+                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Manager Dashboard: User's Transaction History</h1>
                     <div style={{ position: "relative", marginRight: "20px" }}>
                         <img
                             id="profile-pic"
@@ -108,21 +99,14 @@ const ManagerDashboard = () => {
                 <Divider />
                 <div style={{ padding: "20px", backgroundColor: 'transparent' }}>
                     <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
-                        <TextField
-                            label="Search Accounts"
-                            placeholder="Enter username"
-                            value={searchTerm}
-                            onChange={searchChange}
-                            style={{ marginRight: "20px", width: "300px" }}
-                        />
                         <SelectField
-                            label="Sort by First Name"
+                            label="Sort by Date"
                             value={sortOrder}
                             onChange={sortChange}
                             style={{ width: "200px" }}
                         >
-                            <option value="ascending">A-Z</option>
-                            <option value="descending">Z-A</option>
+                            <option value="ascending">Oldest to Recent</option>
+                            <option value="descending">Recent to Oldest</option>
                         </SelectField>
                     </div>
                     <Table
@@ -131,60 +115,21 @@ const ManagerDashboard = () => {
                     >
                         <TableHead>
                             <TableRow>
-                                <TableCell as="th">First Name</TableCell>
-                                <TableCell as="th">Last Name</TableCell>
-                                <TableCell as="th">Email</TableCell>
-                                <TableCell as="th">Username</TableCell>
                                 <TableCell as="th">BankID</TableCell>
-                                <TableCell as="th">Password</TableCell>
-                                <TableCell as="th">Balance</TableCell>
-                                <TableCell as="th">Transaction History</TableCell>
-                                <TableCell as="th">Bank PIN</TableCell>
-                                <TableCell as="th"></TableCell>
+                                <TableCell as="th">Total Balance</TableCell>
+                                <TableCell as="th">Transaction</TableCell>
+                                <TableCell as="th">Connected Account</TableCell>
+                                <TableCell as="th">Date</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredSorted.map((account, index) => (
+                            {sortedAccounts.map((account, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{account.first}</TableCell>
-                                    <TableCell>{account.last}</TableCell>
-                                    <TableCell>{account.email}</TableCell>
-                                    <TableCell>{account.username}</TableCell>
-                                    <TableCell>{account.bankID}</TableCell>
-                                    <TableCell>{account.password}</TableCell>
-                                    <TableCell>{account.balance}</TableCell>
-                                    <TableCell>
-                                        <Button
-                                            variation="link"
-                                            style={{
-                                                backgroundColor: '#57C43F',
-                                                color: 'white',
-                                                padding: '10px 20px',
-                                                borderRadius: '5px',
-                                                cursor: 'pointer',
-                                                textAlign: 'center'
-                                            }}
-                                            onClick={() => navigate('/transactionhistorymanager')}
-                                        >
-                                            View Transaction History
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell>{account.bankPIN}</TableCell>
-                                    <TableCell>
-                                        <Button 
-                                            variation="destructive" 
-                                            style={{
-                                                backgroundColor: '#8E1600',
-                                                color: '#FFFFFF',
-                                                padding: '10px 20px',
-                                                borderRadius: '5px',
-                                                cursor: 'pointer',
-                                                textAlign: 'center'
-                                            }}
-                                            onClick={() => alert("This account has been deleted.")}>
-                                            Delete Account
-                                        </Button>
-                                    </TableCell>
+                                    <TableCell>{account.bankIDuser}</TableCell>
+                                    <TableCell>{account.totalBalance}</TableCell>
+                                    <TableCell>{account.transaction}</TableCell>
+                                    <TableCell>{account.connectedAccount}</TableCell>
+                                    <TableCell>{account.date}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

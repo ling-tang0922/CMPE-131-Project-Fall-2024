@@ -143,10 +143,9 @@ const CustomerDashboard = () => {
                     </div>
                     <div style={{ flex: 1, margin: "0 10px" }}>
                         <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBillTransfer} />Transfer Funds</h2>
-                        <div>Easily transfer funds in just a few clicks! Use the shortcut below to send money instantly:</div>
-                        <strong>Recipient: </strong> Enter recipient's phone number.
+                        <div>Easily transfer funds in just a few clicks!</div>
+                        Enter recipient's phone number. Enter the desired amount to transfer.
                         <br/>
-                        <strong>Amount: </strong> Enter the desired amount to transfer.
                         <Button onClick={() => { navigate('/transferFunds'); }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Get Started!</Button>
                     </div>
                 </div>

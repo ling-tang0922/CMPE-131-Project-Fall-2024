@@ -25,7 +25,7 @@ const welcomeMSG = (
 
 const getStartedMSG = (
   <>
-    <h1 style={{ textAlign: "center", marginTop: "10%", marginBottom: "0" }}>
+    <h1 style={{ textAlign: "center", marginTop: "6%", marginBottom: "0" }}>
       Get Started!
     </h1>
     <p style={{ textAlign: "center", marginTop: "0%" }}>

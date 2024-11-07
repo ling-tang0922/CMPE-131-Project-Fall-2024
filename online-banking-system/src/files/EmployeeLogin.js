@@ -5,7 +5,6 @@ import {
   Label,
   Flex,
   Button,
-  ScrollView,
   Tabs,
 } from "@aws-amplify/ui-react";
 import NavBar from "../components/NavBar";

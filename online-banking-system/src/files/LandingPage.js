@@ -59,7 +59,7 @@ const LandingPage = () => {
         fontSize: "33px",
         color: "#555",
         textAlign: "center",
-        marginTop: "0"
+        marginTop: "0",
     };
 
     return (

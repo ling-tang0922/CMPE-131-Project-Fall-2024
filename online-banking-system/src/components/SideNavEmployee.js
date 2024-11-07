@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from "react-router-dom";
 import { Sidebar, Menu, MenuItem} from 'react-pro-sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faFileInvoice, faChartLine, faClipboardList, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faClipboardList, faCog } from '@fortawesome/free-solid-svg-icons';
 
 const SideNavEmployee = ({style={}}) => {
   const navigate = useNavigate();
@@ -24,17 +24,13 @@ const SideNavEmployee = ({style={}}) => {
               },
             },
           }}>
-            <MenuItem onClick={() => {navigate('/employeeManagement')}} style={{color:"white"}}>
-              <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faUsers} />
-              Employees
-            </MenuItem>
-            <MenuItem onClick={() => {navigate('/reports')}} style={{color:"white"}}>
-              <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faChartLine} />
-              Account Reports
-            </MenuItem>
-            <MenuItem onClick={() => {navigate('/transactions')}} style={{color:"white"}}>
+            <MenuItem onClick={() => {navigate('/employeedashboard')}} style={{color:"white"}}>
               <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faClipboardList} />
-              Transactions
+              Customer Info
+            </MenuItem>
+            <MenuItem onClick={() => {navigate('/employeeManagement')}} style={{color:"white"}}>
+              <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faUser} />
+              Employees
             </MenuItem>
             <MenuItem onClick={() => {navigate('/settings')}} style={{color:"white"}}>
               <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faCog} />

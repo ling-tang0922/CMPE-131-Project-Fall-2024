@@ -14,8 +14,10 @@ import ATMDashboard from './files/ATMDashboard';
 import DepositCash from './files/DepositBills';
 import TransferFunds from './files/TransferFunds';
 import UploadCheque from './files/UploadCheque';
+import AccountSettings from './files/AccountSettings';
 import EmployeeLogin from './files/EmployeeLogin';
 import EmployeeDashboard from './files/EmployeeDashboard';
+import TransactionHistoryManager from './files/TransactionHistoryManager';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -33,7 +35,8 @@ root.render(
     <Route path="/transferFunds" element={<TransferFunds />} />
     <Route path="/uploadCheque" element={<UploadCheque />} />
     <Route path="/EmployeeDashboard" element={<EmployeeDashboard/>} />
-
+    <Route path="/AccountSettings" element={<AccountSettings/>} />
+    <Route path="/TransactionHistoryManager" element={<TransactionHistoryManager/>} />
     </Routes>
   </Router>
   
