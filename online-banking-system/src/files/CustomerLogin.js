@@ -34,8 +34,59 @@ const getStartedMSG = (
   </>
 );
 
+
 const CustomerLogin = () => {
   const [activeTab, setActiveTab] = useState("Login");
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPass] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [initialBalance, setBalance] = useState("")
+  const type = "employee"
+  const handleLogin = () => {
+    axios.get('http://localhost:5001/validate-credentials',{
+      params: {username: username, password: password, type: type }
+    })
+    .then(response =>{
+      // Can we make response.data a boolean? 
+      setMessage(response.data)
+    })
+    .catch(error =>{
+      if(error.response && error.response.status === 401){
+        setMessage("Invalid credentials")
+      } else{
+        setMessage("Error validating credentials")
+      }
+    })
+  };
+  
+  const handleSignUp = () => {
+    
+    if(!username || !password || !firstName || !lastName || !phoneNumber || !email){
+      setMessage("All fields are required")
+      return
+     }
+    if(password !== confirmPassword){
+      setMessage("Passwords don't match")
+      return
+    }
+    
+   axios.post('http://localhost:5001/new-account',{
+    username: username,
+    password: password,
+    intitialBalance: initialBalance || 0
+   })
+   .then(response =>{
+    setMessage(response.data)
+   })
+   .catch(error =>{
+    setMessage("Error creating new account")
+    console.error(error)
+   })
+  };
   return (
     <WindowWrapper>
       <NavBar></NavBar>
@@ -92,8 +143,11 @@ const CustomerLogin = () => {
                           }}
                         />
                         <Input
+                          value = {username}
+                          type = "text"
                           placeholder="Enter Username"
                           name="username"
+                          onChange={(e)=> setUsername(e.target.value)}
                           style={{ paddingLeft: "35px" }}
                         />
                       </div>
@@ -114,14 +168,16 @@ const CustomerLogin = () => {
                           }}
                         />
                         <Input
+                          value={password}
                           type="password"
                           placeholder="Enter Password"
                           name="username"
                           style={{ paddingLeft: "35px" }}
+                          onChange={(e)=>setPassword(e.target.value)}
                         />
                       </div>
 
-                      <Button variation="primary" colorTheme="success">
+                      <Button onClick={handleLogin} variation="primary" colorTheme="success">
                         Login
                       </Button>
                     </Flex>
@@ -176,6 +232,8 @@ const CustomerLogin = () => {
                             />
                             <Input
                               placeholder="Enter First Name"
+                              value = {firstName}
+                              onChange={(e)=>setFirstName(e.target.value)}
                               name="firstName"
                               style={{ paddingLeft: "35px" }}
                             />
@@ -201,6 +259,8 @@ const CustomerLogin = () => {
                             />
                             <Input
                               placeholder="Enter Last Name"
+                              value ={lastName}
+                              onChange={(e)=>setLastName(e.target.value)}
                               name="lastName"
                               style={{ paddingLeft: "35px" }}
                             />
@@ -225,6 +285,8 @@ const CustomerLogin = () => {
                         />
                         <Input
                           placeholder="Enter Username"
+                          value = {username}
+                          onChange={(e)=>setUsername(e.target.value)}
                           name="username"
                           style={{ paddingLeft: "35px" }}
                         />
@@ -247,6 +309,8 @@ const CustomerLogin = () => {
                         />
                         <Input
                           type="password"
+                          value = {password}
+                          onChange={(e)=>setPassword(e.target.value)}
                           placeholder="Enter Password"
                           name="password"
                           style={{ paddingLeft: "35px" }}
@@ -272,6 +336,8 @@ const CustomerLogin = () => {
                         <Input
                           type="password"
                           placeholder="Confirm Password"
+                          value ={confirmPassword}
+                          onChange={(e)=>setConfirmPass}
                           name="confirmPassword"
                           style={{ paddingLeft: "35px" }}
                         />
@@ -294,6 +360,8 @@ const CustomerLogin = () => {
                         />
                         <Input
                           placeholder="bank@Ebankify.com"
+                          value = {email}
+                          onChange = {(e)=>setEmail(e.target.value)}
                           name="email"
                           style={{ paddingLeft: "35px" }}
                         />
@@ -305,7 +373,7 @@ const CustomerLogin = () => {
                         placeholder="234-567-8910"
                         errorMessage="Enter a Valid Phone Number"
                       />
-                      <Button variation="primary" colorTheme="success">
+                      <Button onClick={handleSignUp()} variation="primary" colorTheme="success">
                         Sign Up
                       </Button>
                     </Flex>{" "}
