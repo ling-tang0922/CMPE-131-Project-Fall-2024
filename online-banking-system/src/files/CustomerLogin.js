@@ -11,6 +11,7 @@ import {
   PhoneNumberField,
 } from "@aws-amplify/ui-react";
 import NavBar from "../components/NavBar";
+import { useNavigate } from 'react-router-dom'
 
 const welcomeMSG = (
   <>
@@ -36,6 +37,7 @@ const getStartedMSG = (
 
 
 const CustomerLogin = () => {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("Login");
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -48,11 +50,13 @@ const CustomerLogin = () => {
   const type = "employee"
   const handleLogin = () => {
     axios.get('http://localhost:5001/validate-credentials',{
-      params: {username: username, password: password, type: type }
+      params: {username: username, password: password, type: type, accountId: null }
     })
     .then(response =>{
-      // Can we make response.data a boolean? 
-      setMessage(response.data)
+      if(response.data.success){
+        const accountId = response.data.accountId
+        navigate("CustomerDashBoard", {accountId})
+      }
     })
     .catch(error =>{
       if(error.response && error.response.status === 401){
@@ -77,10 +81,27 @@ const CustomerLogin = () => {
    axios.post('http://localhost:5001/new-account',{
     username: username,
     password: password,
+    firstName: firstName,
+    lastName: lastName,
+    phoneNumber: phoneNumber,
+    email: email,
     intitialBalance: initialBalance || 0
    })
    .then(response =>{
-    setMessage(response.data)
+    if(success){
+      setMessage("Account Created")
+      setTimeout(()=>{
+        navigate("/CustomerDashboard", axios.get('http://localhost:5001/account-ID',{
+        username: username,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        email: email,
+        intitialBalance: initialBalance || 0
+        }))
+      }, 2000)
+    }
    })
    .catch(error =>{
     setMessage("Error creating new account")

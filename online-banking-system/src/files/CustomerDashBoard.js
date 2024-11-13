@@ -8,6 +8,8 @@ import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
 
 const CustomerDashboard = () => {
     const navigate = useNavigate();
+    const {accountId} = route.params
+    
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -162,14 +164,16 @@ const CustomerDashboard = () => {
                                     <TableCell as="th">Date and Time</TableCell>
                                     <TableCell as="th">Transaction Type</TableCell>
                                     <TableCell as="th">Amount</TableCell>
+                                    <TableCell as="th">Account ID</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {transactions.slice(0, 3).map((transaction, index) => (
+                                {transactions.slice(0, 4).map((transaction, index) => (
                                     <TableRow key={index}>
                                         <TableCell>{transaction.dateTime}</TableCell>
                                         <TableCell>{transaction.type}</TableCell>
                                         <TableCell>{transaction.amount}</TableCell>
+                                        <TableCell>{accountId}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

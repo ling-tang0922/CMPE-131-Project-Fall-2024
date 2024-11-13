@@ -72,24 +72,33 @@ app.put("/account-balance", async (req, res)=>{
 // Request Validation of Username and Password values
 // Get Function
 app.get("/validate-credentials", async (req, res)=>{
-    const { username, password, type} = req.query
-
-    if(!username || !password){
-        return res.status(400).send("Username and password are required")
-    }
-
-    db.query('SELECT * FROM ? WHERE username = ? AND password = ?', [type, username, password], (error, results)=>{
-        if(error){
-            console.error('Error validating credentials')
-            return res.status(500).send("Error validating credentials")
+    const { username, password, type, accountId} = req.query
+    if(accountId === null){
+        if(!username || !password){
+            return res.status(400).send("Username and password are required")
         }
-
-        if(results.length > 0){
-            res.send("Credentials are valid")
-        } else{
-            res.status(401).send("Invalid credentials")
+        const validTables = ['employees', 'customer', 'manager']
+        if(!validTables.includes(type)){
+            return res.status(400).send("Invalid account type")
         }
-    })
+        const query = `SELECT * FROM ${type} WHERE username = ? AND password = ?`
+        db.query(query, [username, password], (error, results)=>{
+            if(error){
+                console.error('Error validating credentials')
+                return res.status(500).send("Error validating credentials")
+            }
+
+            if(results.length > 0){
+                const accountId = results[0].id
+                res.send({success : true, accountId})
+            } else{
+                res.status(401).send(false)
+            }
+        })
+     }
+     else{
+        
+     }
 })
 
 // Request "Account Settings" - Talk with group about this
@@ -107,40 +116,71 @@ app.put("/", async (req, res)=>{
 // Request Username value
 // Get Function
 app.get("/account-username", async (req, res)=>{
-    res.send("Hello World")
+    const accountId = req.query.accountId
+    if(!accountId){
+        return res.status(400).send("Account ID is required")
+    }
+    db.query('SELECT customer FROM username WHERE id = ?', [accountId], (error, results)=>{
+        if(error){
+            console.error('Error fetching username:', error)
+            return res.status(500).send("Error fetching username")
+        }
+        if(results.length > 0){
+            res.send(`Username : ${results[0].username}`)
+        }
+    })
 })
 
 // Request Account ID Number
 // Get Function
+// Not needed for now
 app.get("/account-ID", async (req, res)=>{
-    res.send("Hello World")
-})
+    const {username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.body
 
-// Request Account Balance Value
-// Get Function
-app.get("/account-balance", async (req, res)=>{
-    res.send("Hello World")
+    if(!username || !password || !firstName || !lastName || !phoneNumber || !email || !initialBalance){
+        return res.status(400).send("User Information required")
+    }
+    db.query('SELECT customer FROM accountID WHERE id = ...'[], (error, results)=>{
+        if(error){
+            console.error('Error fetching accountID:', error)
+            return res.status(400).send("Account ID is required")
+        }
+    })
 })
 
 // Request Transaction History
 // Get Function
 app.get("/transaction-history", async (req, res)=>{
-    res.send("Hello World")
+    const accountId = req.query.accountId
+    if(!accountId){
+        return res.status(400).send("Account ID is required")
+    }
+    db.query('SELECT customer FROM transactionHistory WHERE id = ?', [accountId], (error, results)=>{
+        if(error){
+            console.error('Error fetching transaction history:', error)
+            return res.status(500).send("Error fetching transaction history")
+        }
+        if(results.length > 0){
+            res.send(`Username : ${results[0].transactrionHistory}`)
+        }
+    })
 })
 
 // Request to Store New Account Information
 // Post Function
 app.post("/new-account", async (req, res)=>{
-    const { username, password, initialBalance = 0} = req.body
+    const { username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.body
 
-    if(!username || !password){
-        return res.status(400).send("Username and password are required")
+    if(!username || !password || !firstName || !lastName || !phoneNumber || !email || !initialBalance){
+        return res.status(400).send("User Information required")
     }
-    db.query('INSERT INTO customer (username, password, balance) VALUES(?, ?, ?)',
-    [username, password, initialBalance], (error, results) =>{
+    db.query('INSERT INTO customer (username, password, firstName, lastName, phoneNumber, email, balance) VALUES(?, ?, ?, ?, ?, ?, ?)',
+    [username, password, firstName, lastName, phoneNumber, email, initialBalance], (error, results) =>{
         if(error){
             console.error('Error creating new account:', error)
             return res.status(500).send("Error creating new account")
+        }else{
+            res.send({success : true})
         }
 
         res.status(201).send("Error creating new account")
@@ -150,7 +190,14 @@ app.post("/new-account", async (req, res)=>{
 // Request Deletion of Account
 // Delete Function
 app.delete("/delete-account", async (req, res)=>{
-    res.send("Hello World")
+    db.query('DELETE FROM customer WHERE accountId = ?', [accountId], (error, results)=>{
+        if(error){
+            console.error('Error deleting existing account')
+            return res.status(500).send("Error deleting existing account")
+        }
+        res.send({success:true})
+    })
+
 })
 
 app.listen(5001,()=>{
