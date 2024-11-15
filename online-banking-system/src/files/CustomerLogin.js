@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLocation } from "react";
 import { CiUser, CiLock, CiMail, CiSquareChevRight } from "react-icons/ci";
 import WindowWrapper from "../components/WindowWrapper";
 import {
@@ -12,7 +12,7 @@ import {
 } from "@aws-amplify/ui-react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from 'react-router-dom'
-
+const axios = require('axios')
 const welcomeMSG = (
   <>
     <h1 style={{ textAlign: "center", marginTop: "10%", marginBottom: "0" }}>
@@ -47,15 +47,16 @@ const CustomerLogin = () => {
   const [confirmPassword, setConfirmPass] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [initialBalance, setBalance] = useState("")
+  const [message, setMessage] = useState("")
   const type = "employee"
   const handleLogin = () => {
-    axios.get('http://localhost:5001/validate-credentials',{
+    axios.get('http://localhost:3000/validate-credentials',{
       params: {username: username, password: password, type: type, accountId: null }
     })
     .then(response =>{
       if(response.data.success){
         const accountId = response.data.accountId
-        navigate("CustomerDashBoard", {accountId})
+        navigate('/CustomerDashBoard', {state: {accountId}})
       }
     })
     .catch(error =>{
@@ -78,7 +79,7 @@ const CustomerLogin = () => {
       return
     }
     
-   axios.post('http://localhost:5001/new-account',{
+   axios.post('http://localhost:3000/new-account',{
     username: username,
     password: password,
     firstName: firstName,
@@ -88,10 +89,10 @@ const CustomerLogin = () => {
     intitialBalance: initialBalance || 0
    })
    .then(response =>{
-    if(success){
+    if(response.success){
       setMessage("Account Created")
       setTimeout(()=>{
-        navigate("/CustomerDashboard", axios.get('http://localhost:5001/account-ID',{
+        navigate("/CustomerDashboard", axios.get('http://localhost:3000/account-ID',{
         username: username,
         password: password,
         firstName: firstName,

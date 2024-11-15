@@ -1,23 +1,18 @@
 const express = require('express')
-const mysql = require('mysql2')
+
 const dotenv = require('dotenv')
+require('dotenv').config();
 
 dotenv.config()
 const app = express()
 
-// static assets
-app.use(express.static('./src')) // This will load up the website
-// parse for data
-app.use(express.urlencoded({extended:false}))
-// parse json
-app.use(express.json())
-
+const mysql = require('mysql2')
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT
+    host: 'cmpe131project.cd4wsweu89i7.us-west-1.rds.amazonaws.com',
+    user: 'Group1',
+    password: 'CMPE131FrankButt',
+    database: 'cmpe131_bank',
+    port: '3306'
 })
 
 db.connect((err)=>{
@@ -28,6 +23,8 @@ db.connect((err)=>{
     console.log('Connected to AWS RDS MySQL database')
 })
 
+
+
 // Request Account Balance 
 // Get Funciton
 app.get("/account-balance", async (req, res)=>{
@@ -35,7 +32,7 @@ app.get("/account-balance", async (req, res)=>{
     if(!accountId){
         return res.status(400).send("Account ID is required")
     }
-    db.query('SELECT customer FROM accounts WHERE id = ?', [accountId], (error, results)=>{
+    db.query('SELECT balance FROM accounts WHERE id = ?', [accountId], (error, results)=>{
         if(error){
             console.error('Error fetching account balance:', error)
             return res.status(500).send("Error fetching account balance")
@@ -49,24 +46,54 @@ app.get("/account-balance", async (req, res)=>{
 // Request Modification of Account Balance
 // Put Function
 app.put("/account-balance", async (req, res)=>{
-    const { accountId, newBalance} = req.body
+    const {accountId, otherAccountId, newBalance, otherNewBalance, reqType} = req.body
 
-    if(!accountId || newBalance === undefined){
+    if(!accountId || !newBalance === undefined){
         return res.status(400).send("Account ID and new balance are required")
     }
 
-    db.query('UPDATE customer SET balance = ? WHERE id = ?' [newBalance, accountId], (error, results) =>{
-        if (error){
-            console.error('Error updating account balance:', error)
-            return res.status(500).send("Error updating account balance")
-        }
+    // Add to Balance
+    if(reqType === 'add' || reqType === 'subtract'){
+        db.query('UPDATE customer SET balance = ? WHERE id = ?', [newBalance, accountId], (error, results)=>{
+            if(error){
+                console.error('Error updating account balance:', error)
+            }
+            if(results.affectedRows > 0){
+                res.send("Account balance updated successfully")
+            }else{
+                res.status(404).send("Account not found")
+            }
+        } )
+    }
+   
+    // Transfer (Subtract and Add)
+    else if(reqType === 'transfer'){
+        db.query('UPDATE customer SET balance = ? WHERE id = ?', [newBalance, accountId], (error, results)=>{
+            if(error){
+                console.error('Error updating account balance:', error)
+            }
+            if(results.affectedRows > 0){
+                res.send("Account balance updated successfully")
+            }else{
+                res.status(404).send("Account not found")
+            }
+        })
+        db.query('UPDATE customer SET balance = ? WHERE id = ?', [otherNewBalance, otherAccountId], (error, results)=>{
+            if(error){
+                console.error('Error updating account balance:', error)
+            }
+            if(results.affectedRows > 0){
+                res.send("Account balance updated successfully")
+            }else{
+                res.status(404).send("Account not found")
+            }
+        })
+    }
 
-        if(results.affectedRows > 0){
-            res.send("Account balance updated successfully")
-        } else{
-            res.status(404).send("Account not found")
-        }
-    })
+
+
+
+
 })
 
 // Request Validation of Username and Password values
@@ -81,7 +108,7 @@ app.get("/validate-credentials", async (req, res)=>{
         if(!validTables.includes(type)){
             return res.status(400).send("Invalid account type")
         }
-        const query = `SELECT * FROM ${type} WHERE username = ? AND password = ?`
+        const query = `SELECT id FROM ${type} WHERE username = ? AND password = ?`
         db.query(query, [username, password], (error, results)=>{
             if(error){
                 console.error('Error validating credentials')
@@ -133,19 +160,20 @@ app.get("/account-username", async (req, res)=>{
 
 // Request Account ID Number
 // Get Function
-// Not needed for now
 app.get("/account-ID", async (req, res)=>{
     const {username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.body
 
     if(!username || !password || !firstName || !lastName || !phoneNumber || !email || !initialBalance){
         return res.status(400).send("User Information required")
     }
+    /*
     db.query('SELECT customer FROM accountID WHERE id = ...'[], (error, results)=>{
         if(error){
             console.error('Error fetching accountID:', error)
             return res.status(400).send("Account ID is required")
         }
     })
+    */
 })
 
 // Request Transaction History
@@ -200,6 +228,8 @@ app.delete("/delete-account", async (req, res)=>{
 
 })
 
-app.listen(5001,()=>{
-    console.log('Server is listening on port 5001')
+app.listen(3000,()=>{
+    console.log('Server is listening on port 3000')
+   
+
 })

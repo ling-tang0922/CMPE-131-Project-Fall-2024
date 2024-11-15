@@ -3,30 +3,33 @@ import WindowWrapper from "../components/WindowWrapper";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faUpload, faMoneyBillTransfer} from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
+
+
 
 const CustomerDashboard = () => {
     const navigate = useNavigate();
-    const {accountId} = route.params
+    const location = useLocation()
+    const {accountId} = location.state
     
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false)
 
     const toggleDropdown = () => {
-        setDropdownOpen(prev => !prev);
-    };
+        setDropdownOpen(prev => !prev)
+    }
 
     const closeDropdown = () => {
-        setDropdownOpen(false);
-    };
+        setDropdownOpen(false)
+    }
 
     const clickOutside = (event) => {
         const dropdown = document.getElementById('dropdown');
         const profilePic = document.getElementById('profile-pic');
         if (dropdown && !dropdown.contains(event.target) && !profilePic.contains(event.target)) {
-            closeDropdown();
+            closeDropdown()
         }
-    };
+    }
 
     useEffect(() => {
         window.addEventListener('click', clickOutside);
@@ -191,4 +194,4 @@ const CustomerDashboard = () => {
     );
 };
 
-export default CustomerDashboard;
+export default CustomerDashboard
