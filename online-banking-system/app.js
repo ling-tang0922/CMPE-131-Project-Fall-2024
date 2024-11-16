@@ -46,50 +46,24 @@ app.get("/account-balance", async (req, res)=>{
 // Request Modification of Account Balance
 // Put Function
 app.put("/account-balance", async (req, res)=>{
-    const {accountId, otherAccountId, newBalance, otherNewBalance, reqType} = req.body
+    const {accountId, newBalance, reqType} = req.body
 
-    if(!accountId || !newBalance === undefined){
+    if(!accountId || newBalance === undefined){
         return res.status(400).send("Account ID and new balance are required")
     }
-
     // Add to Balance
-    if(reqType === 'add' || reqType === 'subtract'){
-        db.query('UPDATE customer SET balance = ? WHERE id = ?', [newBalance, accountId], (error, results)=>{
-            if(error){
-                console.error('Error updating account balance:', error)
-            }
-            if(results.affectedRows > 0){
-                res.send("Account balance updated successfully")
-            }else{
-                res.status(404).send("Account not found")
-            }
-        } )
-    }
-   
-    // Transfer (Subtract and Add)
-    else if(reqType === 'transfer'){
-        db.query('UPDATE customer SET balance = ? WHERE id = ?', [newBalance, accountId], (error, results)=>{
-            if(error){
-                console.error('Error updating account balance:', error)
-            }
-            if(results.affectedRows > 0){
-                res.send("Account balance updated successfully")
-            }else{
-                res.status(404).send("Account not found")
-            }
-        })
-        db.query('UPDATE customer SET balance = ? WHERE id = ?', [otherNewBalance, otherAccountId], (error, results)=>{
-            if(error){
-                console.error('Error updating account balance:', error)
-            }
-            if(results.affectedRows > 0){
-                res.send("Account balance updated successfully")
-            }else{
-                res.status(404).send("Account not found")
-            }
-        })
-    }
-
+    db.query('UPDATE ? SET balance = ? WHERE id = ?', [reqType, newBalance, accountId], (error, results)=>{
+        if(error){
+            console.error('Error updating account balance:', error)
+        }
+        if(results.affectedRows > 0){
+            res.send("Account balance updated successfully")
+        }else{
+            res.status(404).send("Account not found")
+        }
+    })
+    
+    
 
 
 
@@ -130,8 +104,21 @@ app.get("/validate-credentials", async (req, res)=>{
 
 // Request "Account Settings" - Talk with group about this
 // Get Function
-app.get("/", async (req, res)=>{
-    res.send("Hello World")
+app.get("/account-settings", async (req, res)=>{
+    const {accountId, accType, reqType} = req.body
+    if(!accountId){
+        return res.status(400).send("Account ID is required")
+    }
+    db.query('SELECT ? FROM ? WHERE id = ?', [accType, reqType, accountId], (error, results)=>{
+        if(error){
+            console.error(`Error fetching ${reqType}`)
+            return res.status(500).send(`Error fetching ${reqType}`)
+        }
+        if(results.length > 0){
+            res.send(`${reqType} : ${results[0].reqType}`)
+        }
+
+    })
 })
 
 // Request Modification of "Account Settings" - Talk with group about this

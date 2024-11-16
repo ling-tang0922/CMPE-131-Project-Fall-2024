@@ -6,13 +6,46 @@ import { faMoneyBill, faUpload, faMoneyBillTransfer} from "@fortawesome/free-sol
 import { useNavigate, useLocation} from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
 
+/*
+***Backend Notes***
+    'CustomerDashBoard.js' uses two functions from app.js
+    - Request Account Balance, ~ Line 21, Used 1 time
+        When the 'CustomerDashboard.js' page is loaded, a request will then be sent to the AWS Database for the
+        Account Balance Value using the users Account Id. A response is then sent
+        back to "ATMDashboard.js" that contains the Account Balance Value. This
+        value will then be stored in the variable 'balance' using the 'setBalance'
+        function expression.
 
+    - Request Account Settings, ~ Lines 30 & 35, Used 3 times
+        The account settings that are requested for the Customer Dashboard are
+        the First Name, Last Name, and Username. Each piece of information will
+        have it's own request thats sent to the database and its own reponse sent
+        from the database containing that variables data. Although each piece of
+        information is using its own 'axios' request, all are being sent through the 
+        same node.js function 'account-settings'.
+*/
 
 const CustomerDashboard = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const location = useLocation()
     const {accountId} = location.state
-    
+    const [balance, setBalance] = useState('')
+    setBalance(axios.get('http://localhost:3000/account-balance', {
+        params: {accountId: accountId}
+    }))
+    const [firstName, setFirstName] = useState('')
+    setFirstName(axios.get('http://localhost:3000/account-settings',{
+        params: {accountId: accountId, accType: 'cust', reqType: 'first_name' }
+    }
+    ))
+    const [lastName, setLastName] = useState('')
+    setLastName(axios.get('http://localhost:3000/account-settings',{
+        params: {accountId: accountId, accType: 'cust', reqType: 'last_name'}
+    }))
+    const [username, setUsername] = useState('')
+    setUsername(axios.get('http://localhost:3000/account-settings', {
+        paras: {accountId: accountId, accType: 'cust', reqType: 'username'}
+    }))
     const [dropdownOpen, setDropdownOpen] = useState(false)
 
     const toggleDropdown = () => {
@@ -50,7 +83,7 @@ const CustomerDashboard = () => {
         <WindowWrapper showSideNav={true}>
             <div style={{ height: "100%", padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ flex: "0 0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <p style={{ fontSize: "35px", marginBottom: "20px", color: "#57C43F", fontWeight: "bold"}}>Welcome Back, First Last!</p>
+                    <p style={{ fontSize: "35px", marginBottom: "20px", color: "#57C43F", fontWeight: "bold"}}>Welcome Back, {firstName} {lastName}!</p>
                     <div style={{ position: "relative", marginRight: "20px", marginBottom: "10px" }}>
                         <img 
                             id="profile-pic"
@@ -106,7 +139,7 @@ const CustomerDashboard = () => {
                 <Divider />
                 <Divider />
                 <div style={{ minHeight: "300px", margin: "20px 10px", fontSize: "25px", padding: "10px" }}>
-                    @username's Account
+                    {username}'s' Account
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <div style={{
                             minHeight: "200px",
@@ -125,10 +158,12 @@ const CustomerDashboard = () => {
                         >
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <div><FontAwesomeIcon icon={faBuildingColumns}/> Account Balance</div>
-                                <div>***456</div>
+                                <div>{accountId}</div>
+                                
                             </div>
                             <div style={{ justifyContent: "flex-end" }}>
-                                <Text fontSize={"60px"} marginLeft={"10px"} fontWeight={"bold"} color= "#57C43F">$4200.00</Text>
+
+                                <Text fontSize={"60px"} marginLeft={"10px"} fontWeight={"bold"} color= "#57C43F">${balance}</Text>
                             </div>
                         </div>
                     </div>

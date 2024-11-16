@@ -6,17 +6,16 @@ const axios = require('axios')
 /* 
 ***Backend Notes***
     ATMDashboard.js uses two functions from app.js
-    - Request of Account Balance Value, ~ Line 35
+    - Request of Account Balance Value, ~ Line 35, Used 1 time
         
         Description: 
-        When the 'ATMDashboard.js' page is loaded, the node.js function will
-        be activated. A request will then be sent to the AWS Database for the
+        When the 'ATMDashboard.js' page is loaded, a request will then be sent to the AWS Database for the
         Account Balance Value using the users Account Id. A response is then sent
         back to "ATMDashboard.js" that contains the Account Balance Value. This
         value will then be stored in the variable 'balance' using the 'setBalance'
         function expression. 
     
-    - Request to Modify Account Balance Value, ~ Line 48
+    - Request to Modify Account Balance Value, ~ Line 48, Used 1 time
         
         Description:
         When the user authorizes a "Withdrawl", the value of the Account Balance
@@ -24,6 +23,7 @@ const axios = require('axios')
         the users New Balance. This New Balance will then be sent to the AWS Database
         through a node.js request and will send a response back to 'ATMDashboard.js'
         if the Account Balance was updated successfully.
+
 */
 const ATMDashboard = () => {
     const location = useLocation()
