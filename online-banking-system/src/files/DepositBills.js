@@ -1,6 +1,6 @@
 import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
-import React, { useState, useLocation} from "react";
+import React, { useState, useLocation, useEffect} from "react";
 const axios = require('axios')
 
 /*
@@ -16,12 +16,30 @@ const DepositBills = () =>{
     const [confirmAmount, setConfirmAmount] = useState('')
     const [termsAgreed, setTermsAgreed] = useState('')
     const [balance, setBalance] = useState(0)
+    const [message, setMessage] = useState('')
     const reqType= 'cust'
     const accountId = location.state
+
+    
+    const updateBalance = async (newBalance) => {
+        try{
+            const response = await axios.put('http://localhost:3000/account-balance', {
+                params : {accountId: accountId, balance: newBalance, reqType: reqType }
+            })
+            setMessage(`Your new balance of $${newBalance.toFixed(2)} has been updated successfully.`)
+        }catch(error){
+            console.error("Error updating account balance")
+            setMessage("Error updating account balance")
+        }
+    }
+
+        
+    
+
     useEffect(() => {
         const fetchBalance = async () => {
             try{
-                const response = await axios.getAdapter('http//localhost:3000/account-balance', {
+                const response = await axios.get('http://localhost:3000/account-balance', {
                     params : {accountId: accountId}
                 })
                 setBalance(response.data.balance)
@@ -34,7 +52,7 @@ const DepositBills = () =>{
         fetchBalance()
     }, [accountId])
 
-    const handleDeposit = async () =>{
+    const handleDeposit = () =>{
         const amountNum = parseFloat(amount);
         if(!termsAgreed){
             alert("You must agree to the terms and conditions")
@@ -50,23 +68,10 @@ const DepositBills = () =>{
         }
 
         const newBalance = (balance + amountNum)
-            try {
-                // Update balance on the server
-                await axios.put('http://localhost:3000/account-balance', {
-                    accountId: accountId,
-                    balance: newBalance,
-                    reqType: "customer",
-                });
-                
                 setBalance(newBalance);
+                updateBalance(newBalance)
                 setMessage(`You have deposited $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
                 setAmount(""); // Clear the input
-            } catch (error) {
-                console.error("Error updating account balance:", error);
-                setMessage("Error updating account balance.");
-            }
-
-        
     }
     return(<WindowWrapper showSideNav={true}>
         <div>

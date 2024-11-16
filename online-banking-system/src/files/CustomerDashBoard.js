@@ -31,59 +31,55 @@ const CustomerDashboard = () => {
     const {accountId} = location.state
     const [balance, setBalance] = useState('')
     const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [username, setUsername] = useState('')
+    const [dropdownOpen, setDropdownOpen] = useState(false)
+    const [message, setMessage] = useState('')
+
     useEffect(() => {
-        const fetchBalance = async () => {
+        const fetchAccountDetails = async () => {
             try{
-                const response = await axios.getAdapter('http//localhost:3000/account-balance', {
+                const balanceResponse = await axios.get('http://localhost:3000/account-balance', {
                     params : {accountId: accountId}
                 })
                 setBalance(response.data.balance)
 
-            }catch(error) {
-                console.error("Error fetching account balance:", error)
-                setMessage("Error fetching account balance")
-            }
-        }
-        fetchBalance()
-    }, [accountId])
-    useEffect(() => {
-        const fetchFirstName = async () => {
-            try{
-                const response = await axios.getAdapter('http//localhost:3000/account-settings', {
+                const AccountResponse = await axios.get('http://localhost:3000/account-settings', {
                     params: {accountId: accountId, accType: 'cust', reqType: 'first_name'}
                 })
                 setFirstName(response.data.firstName)
-            }catch(error){
-                console.error("Error fetching First Name")
-                setMessage("Error fetching First Name")
+                setLastName(response.data.lastName)
+                setUsername(response.data.username)
+            }catch(error) {
+                console.error("Error fetching account details", error)
             }
-
         }
-    }, [firstName])
-    useEffect(()=>{
-        const fetchLastName = async () => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/transactions', { params: { accountId } })
+                setTransactions(response.data);
+            } catch (error) {
+                console.error("Error fetching transactions:", error);
+            }
+        }
+        fetchAccountDetails()
+        
+    }, [accountId])
+    useEffect(() => {
+        const fetchUserDetails = async () => {
             try{
-                const response = await axios.getAdatper('http//localhost:3000/account-settings', {
-                    params: {accountId: accountId, accType: 'cust', reqType: 'last_name'}
-                })
+                
             }catch(error){
-                console.error("Error fetching Last Name")
-                setMessage("Error fetching Last Name")
+                console.error("Error fetching User Details")
+                setMessage("Error fetching User Details")
             }
-        }
-    }, [lastName])
-    
-    
-    const [lastName, setLastName] = useState('')
-    setLastName(axios.get('http://localhost:3000/account-settings',{
-        params: {accountId: accountId, accType: 'cust', reqType: 'last_name'}
-    }))
-    const [username, setUsername] = useState('')
-    setUsername(axios.get('http://localhost:3000/account-settings', {
-        paras: {accountId: accountId, accType: 'cust', reqType: 'username'}
-    }))
-    const [dropdownOpen, setDropdownOpen] = useState(false)
 
+        }
+        fetchUserDetails()
+    }, [accountId])
+    
+    
+    
     const toggleDropdown = () => {
         setDropdownOpen(prev => !prev)
     }
