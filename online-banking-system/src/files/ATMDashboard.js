@@ -29,14 +29,29 @@ const ATMDashboard = () => {
     const location = useLocation()
     const [amount, setAmount] = useState('')
     const [message, setMessage] = useState('')
-    const [balance, setBalance] = useState('')
+    const [balance, setBalance] = useState(0)
 
     const {accountId} = location.state
     setBalance(axios.get('http://localhost:3000/account-balance', {
         params: {accountId: accountId}
     }))
 
-    const handleWithdraw = (e) => {
+    useEffect(() => {
+        const fetchBalance = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/account-balance', {
+                    params: { accountId: accountId },
+                });
+                setBalance(response.data.balance);
+            } catch (error) {
+                console.error("Error fetching account balance:", error);
+                setMessage("Error fetching account balance.");
+            }
+        };
+        fetchBalance();
+    }, [accountId]);
+
+    const handleWithdraw = async (e) => {
         e.preventDefault();
         const amountNum = parseFloat(amount);
         // Simple validation for withdrawal
@@ -45,14 +60,23 @@ const ATMDashboard = () => {
         } else if (amountNum > balance) {
             setMessage("Insufficient funds.");
         } else {
-            setBalance(balance - amountNum)
-            axios.put('http://localhost:3000/account-balance', {
-                params: {accountId: accountId, newBalance: balance, reqType: 'customer'}
-            })
-            setMessage(`You have withdrawn $${amountNum}. Your new balance is $${(balance).toFixed(2)}.`);
-            setAmount('');
+            const newBalance = (balance - amountNum)
+            try {
+                // Update balance on the server
+                await axios.put('http://localhost:3000/account-balance', {
+                    accountId: accountId,
+                    balance: newBalance,
+                    reqType: "customer",
+                });
+                
+                setBalance(newBalance);
+                setMessage(`You have withdrawn $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
+                setAmount(""); // Clear the input
+            } catch (error) {
+                console.error("Error updating account balance:", error);
+                setMessage("Error updating account balance.");
+            }
 
-            ; 
              
         }
     };
@@ -63,7 +87,6 @@ const ATMDashboard = () => {
 
     const handleBackspace = () => {
         setAmount(amount.slice(0, -1)); 
-        handleWithdraw()
     };
 
     return (

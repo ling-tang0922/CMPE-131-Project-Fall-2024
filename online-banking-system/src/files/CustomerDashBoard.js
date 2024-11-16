@@ -157,7 +157,7 @@ const CustomerDashboard = () => {
                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                         >
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <div><FontAwesomeIcon icon={faBuildingColumns}/> Account Balance</div>
+                                <div><FontAwesomeIcon icon={faBuildingColumns}/>Account Balance</div>
                                 <div>{accountId}</div>
                                 
                             </div>

@@ -46,13 +46,13 @@ app.get("/account-balance", async (req, res)=>{
 // Request Modification of Account Balance
 // Put Function
 app.put("/account-balance", async (req, res)=>{
-    const {accountId, newBalance, reqType} = req.body
+    const {accountId, balance, reqType} = req.body
 
-    if(!accountId || newBalance === undefined){
-        return res.status(400).send("Account ID and new balance are required")
+    if(!accountId || !balance || !reqType){
+        return res.status(400).send("Account ID, Balance, and Request Type are required")
     }
     // Add to Balance
-    db.query('UPDATE ? SET balance = ? WHERE id = ?', [reqType, newBalance, accountId], (error, results)=>{
+    db.query('UPDATE ? SET balance = ? WHERE id = ?', [reqType, balance, accountId], (error, results)=>{
         if(error){
             console.error('Error updating account balance:', error)
         }
