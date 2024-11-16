@@ -33,9 +33,6 @@ const DepositBills = () =>{
         }
     }
 
-        
-    
-
     useEffect(() => {
         const fetchBalance = async () => {
             try{

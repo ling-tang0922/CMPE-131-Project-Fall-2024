@@ -36,6 +36,7 @@ const CustomerDashboard = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [message, setMessage] = useState('')
 
+    
     useEffect(() => {
         const fetchAccountDetails = async () => {
             try{
@@ -56,26 +57,17 @@ const CustomerDashboard = () => {
         }
         const fetchTransactions = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/transactions', { params: { accountId } })
+                const response = await axios.get('http://localhost:3000/transaction-history', {
+                    params: {accountId} })
                 setTransactions(response.data);
             } catch (error) {
                 console.error("Error fetching transactions:", error);
+                setMessage("Error fetching transactions")
             }
         }
         fetchAccountDetails()
+        fetchTransactions()
         
-    }, [accountId])
-    useEffect(() => {
-        const fetchUserDetails = async () => {
-            try{
-                
-            }catch(error){
-                console.error("Error fetching User Details")
-                setMessage("Error fetching User Details")
-            }
-
-        }
-        fetchUserDetails()
     }, [accountId])
     
     
