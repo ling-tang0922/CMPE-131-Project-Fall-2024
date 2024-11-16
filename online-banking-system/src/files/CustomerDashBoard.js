@@ -30,14 +30,50 @@ const CustomerDashboard = () => {
     const location = useLocation()
     const {accountId} = location.state
     const [balance, setBalance] = useState('')
-    setBalance(axios.get('http://localhost:3000/account-balance', {
-        params: {accountId: accountId}
-    }))
     const [firstName, setFirstName] = useState('')
-    setFirstName(axios.get('http://localhost:3000/account-settings',{
-        params: {accountId: accountId, accType: 'cust', reqType: 'first_name' }
-    }
-    ))
+    useEffect(() => {
+        const fetchBalance = async () => {
+            try{
+                const response = await axios.getAdapter('http//localhost:3000/account-balance', {
+                    params : {accountId: accountId}
+                })
+                setBalance(response.data.balance)
+
+            }catch(error) {
+                console.error("Error fetching account balance:", error)
+                setMessage("Error fetching account balance")
+            }
+        }
+        fetchBalance()
+    }, [accountId])
+    useEffect(() => {
+        const fetchFirstName = async () => {
+            try{
+                const response = await axios.getAdapter('http//localhost:3000/account-settings', {
+                    params: {accountId: accountId, accType: 'cust', reqType: 'first_name'}
+                })
+                setFirstName(response.data.firstName)
+            }catch(error){
+                console.error("Error fetching First Name")
+                setMessage("Error fetching First Name")
+            }
+
+        }
+    }, [firstName])
+    useEffect(()=>{
+        const fetchLastName = async () => {
+            try{
+                const response = await axios.getAdatper('http//localhost:3000/account-settings', {
+                    params: {accountId: accountId, accType: 'cust', reqType: 'last_name'}
+                })
+            }catch(error){
+                console.error("Error fetching Last Name")
+                setMessage("Error fetching Last Name")
+            }
+        }
+    }, [lastName])
+    
+    
     const [lastName, setLastName] = useState('')
     setLastName(axios.get('http://localhost:3000/account-settings',{
         params: {accountId: accountId, accType: 'cust', reqType: 'last_name'}
