@@ -1,6 +1,7 @@
-import React, { useState, useLocation } from "react";
+import React, { useState } from "react";
 import { CiUser, CiLock, CiMail, CiSquareChevRight } from "react-icons/ci";
 import WindowWrapper from "../components/WindowWrapper";
+import axios from "axios";
 import {
   Input,
   Label,
@@ -10,9 +11,8 @@ import {
   Divider,
   PhoneNumberField,
 } from "@aws-amplify/ui-react";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/NavBar"
 import { useNavigate } from 'react-router-dom'
-const axios = require('axios')
 const welcomeMSG = (
   <>
     <h1 style={{ textAlign: "center", marginTop: "10%", marginBottom: "0" }}>
@@ -50,7 +50,7 @@ const CustomerLogin = () => {
   const [message, setMessage] = useState("")
   const type = "employee"
   const handleLogin = () => {
-    axios.get('http://localhost:3000/validate-credentials',{
+    axios.get('http://localhost:4000/validate-credentials',{
       params: {username: username, password: password, type: type, accountId: null }
     })
     .then(response =>{
@@ -74,25 +74,11 @@ const CustomerLogin = () => {
       setMessage("All fields are required")
       return
      }
-    if(password !== confirmPassword){
+    else if(password !== confirmPassword){
       setMessage("Passwords don't match")
       return
-    }
-    
-   axios.post('http://localhost:3000/new-account',{
-    username: username,
-    password: password,
-    firstName: firstName,
-    lastName: lastName,
-    phoneNumber: phoneNumber,
-    email: email,
-    intitialBalance: initialBalance || 0
-   })
-   .then(response =>{
-    if(response.success){
-      setMessage("Account Created")
-      setTimeout(()=>{
-        navigate("/CustomerDashboard", axios.get('http://localhost:3000/account-ID',{
+    }else{
+      axios.post('http://localhost:4000/new-account',{
         username: username,
         password: password,
         firstName: firstName,
@@ -100,7 +86,20 @@ const CustomerLogin = () => {
         phoneNumber: phoneNumber,
         email: email,
         intitialBalance: initialBalance || 0
-        }))
+   })
+   .then(response =>{
+    if(response.success){
+      setMessage("Account Created")
+      setTimeout(()=>{
+        navigate("/CustomerDashboard", axios.get('http://localhost:4000/account-ID', {params: {
+        username: username,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        email: email,
+        intitialBalance: initialBalance || 0
+        }}))
       }, 2000)
     }
    })
@@ -108,6 +107,9 @@ const CustomerLogin = () => {
     setMessage("Error creating new account")
     console.error(error)
    })
+    }
+    
+   
   };
   return (
     <WindowWrapper>
@@ -359,7 +361,7 @@ const CustomerLogin = () => {
                           type="password"
                           placeholder="Confirm Password"
                           value ={confirmPassword}
-                          onChange={(e)=>setConfirmPass}
+                          onChange={(e)=>setConfirmPass(e.target.value)}
                           name="confirmPassword"
                           style={{ paddingLeft: "35px" }}
                         />
@@ -395,7 +397,7 @@ const CustomerLogin = () => {
                         placeholder="234-567-8910"
                         errorMessage="Enter a Valid Phone Number"
                       />
-                      <Button onClick={handleSignUp()} variation="primary" colorTheme="success">
+                      <Button onClick={handleSignUp} variation="primary" colorTheme="success">
                         Sign Up
                       </Button>
                     </Flex>{" "}
