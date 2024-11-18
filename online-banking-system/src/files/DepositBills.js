@@ -23,7 +23,7 @@ const DepositBills = () =>{
     
     const updateBalance = async (newBalance) => {
         try{
-            const response = await axios.put('http://localhost:3000/account-balance', {
+            const response = await axios.put('http://localhost:4000/account-balance', {
                 params : {accountId: accountId, balance: newBalance, reqType: reqType }
             })
             setMessage(`Your new balance of $${newBalance.toFixed(2)} has been updated successfully.`)
@@ -36,7 +36,7 @@ const DepositBills = () =>{
     useEffect(() => {
         const fetchBalance = async () => {
             try{
-                const response = await axios.get('http://localhost:3000/account-balance', {
+                const response = await axios.get('http://localhost:4000/account-balance', {
                     params : {accountId: accountId}
                 })
                 setBalance(response.data.balance)

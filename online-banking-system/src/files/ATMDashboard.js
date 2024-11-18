@@ -32,14 +32,14 @@ const ATMDashboard = () => {
     const [balance, setBalance] = useState(0)
 
     const {accountId} = location.state
-    setBalance(axios.get('http://localhost:3000/account-balance', {
+    setBalance(axios.get('http://localhost:4000/account-balance', {
         params: {accountId: accountId}
     }))
 
     useEffect(() => {
         const fetchBalance = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/account-balance', {
+                const response = await axios.get('http://localhost:4000/account-balance', {
                     params: { accountId: accountId },
                 });
                 setBalance(response.data.balance);
@@ -63,7 +63,7 @@ const ATMDashboard = () => {
             const newBalance = (balance - amountNum)
             try {
                 // Update balance on the server
-                await axios.put('http://localhost:3000/account-balance', {
+                await axios.put('http://localhost:4000/account-balance', {
                     accountId: accountId,
                     balance: newBalance,
                     reqType: "customer",

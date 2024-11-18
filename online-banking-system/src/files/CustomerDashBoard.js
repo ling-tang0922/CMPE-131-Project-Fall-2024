@@ -45,7 +45,7 @@ const CustomerDashboard = () => {
                 })
                 setBalance(response.data.balance)
 
-                const AccountResponse = await axios.get('http://localhost:3000/account-settings', {
+                const AccountResponse = await axios.get('http://localhost:4000/account-settings', {
                     params: {accountId: accountId, accType: 'cust', reqType: 'first_name'}
                 })
                 setFirstName(response.data.firstName)
@@ -57,7 +57,7 @@ const CustomerDashboard = () => {
         }
         const fetchTransactions = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/transaction-history', {
+                const response = await axios.get('http://localhost:4000/transaction-history', {
                     params: {accountId} })
                 setTransactions(response.data);
             } catch (error) {
