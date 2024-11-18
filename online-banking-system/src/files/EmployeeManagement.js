@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import { useNavigate } from "react-router-dom";
-import "./modal.css"; // Import the CSS file
+import "./modal.css"; 
 
 const EmployeeManagement = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("ascending");
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [employees, setEmployees] = useState([
         { first: 'John', last: 'Doe', email: 'john.doe@example.com', username: 'johndoe', password: 'password123' },
         { first: 'Jane', last: 'Smith', email: 'jane.smith@example.com', username: 'janesmith', password: 'password456' },
-        { first: 'Alice', last: 'Johnson', email: 'alice.johnson@example.com', username: 'alicej', password: 'password789' },
-        { first: 'Bob', last: 'Davis', email: 'bob.davis@example.com', username: 'bobd', password: 'password012' },
-        { first: 'Charlie', last: 'Brown', email: 'charlie.brown@example.com', username: 'charlieb', password: 'password345' },
     ]);
-
     const [modalOpen, setModalOpen] = useState(false);
     const [newEmployee, setNewEmployee] = useState({
         first: "",
@@ -25,39 +20,8 @@ const EmployeeManagement = () => {
         username: "",
         password: "",
     });
-
-    const searchChange = (event) => setSearchTerm(event.target.value);
-    const sortChange = (event) => setSortOrder(event.target.value);
-
-    const filteredSorted = employees
-        .filter(employee => employee.username.toLowerCase().includes(searchTerm.toLowerCase()))
-        .sort((a, b) => sortOrder === "ascending"
-            ? a.first.localeCompare(b.first)
-            : b.first.localeCompare(a.first));
-
-    const toggleDropdown = () => setDropdownOpen(prev => !prev);
-    const closeDropdown = () => setDropdownOpen(false);
-
-    const handleRemoveEmployee = (username) => {
-        const confirmRemove = window.confirm(`Are you sure you want to remove the employee ${username}?`);
-        if (confirmRemove) {
-            alert(`Employee ${username} has been removed.`);
-            setEmployees(employees.filter(employee => employee.username !== username));
-        }
-    };
-
-    const clickOutside = (event) => {
-        const dropdown = document.getElementById('dropdown');
-        const profilePic = document.getElementById('profile-pic');
-        if (dropdown && !dropdown.contains(event.target) && !profilePic.contains(event.target)) {
-            closeDropdown();
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('click', clickOutside);
-        return () => window.removeEventListener('click', clickOutside);
-    }, []);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [profilePic, setProfilePic] = useState('default_profile_pic.png'); // Set a default profile picture
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -78,23 +42,94 @@ const EmployeeManagement = () => {
         }
     };
 
+    // Toggle dropdown visibility
+    const toggleDropdown = () => setDropdownOpen(prev => !prev);
+    const closeDropdown = () => setDropdownOpen(false);
+
+    // Close dropdown if clicked outside
+    const clickOutside = (event) => {
+        const dropdown = document.getElementById('dropdown');
+        const profilePicElement = document.getElementById('profile-pic');
+        if (dropdown && !dropdown.contains(event.target) && !profilePicElement.contains(event.target)) {
+            closeDropdown();
+        }
+    };
+
+    React.useEffect(() => {
+        window.addEventListener('click', clickOutside);
+        return () => window.removeEventListener('click', clickOutside);
+    }, []);
+
     return (
         <WindowWrapperEmployee showSideNavEmployee={true}>
             <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
-                <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Employee Management</h1>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold", textAlign: "left" }}>Employee Management</h1>
+                    
+                    <div style={{ position: "relative", marginRight: "20px" }}>
+                        <img
+                            id="profile-pic"
+                            src={profilePic} 
+                            alt="User Profile"
+                            style={{ height: "50px", width: "50px", borderRadius: "50%", cursor: "pointer" }}
+                            onClick={toggleDropdown}
+                        />
+                        {dropdownOpen && (
+                            <div
+                                id="dropdown"
+                                style={{
+                                    borderRadius: "10%",
+                                    position: "absolute",
+                                    right: 0,
+                                    backgroundColor: "white",
+                                    boxShadow: "0 2px 10px #FFFFFF",
+                                    zIndex: 1,
+                                    minWidth: "150px",
+                                }}
+                            >
+                                <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+                                    <li
+                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                        onClick={() => navigate('/accountsettings')}
+                                    >
+                                        Account Settings
+                                    </li>
+                                    <li
+                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                        onClick={() => navigate('/dashboard')}
+                                    >
+                                        Change Account
+                                    </li>
+                                    <li
+                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                                        onClick={() => navigate('/')}
+                                    >
+                                        Log Out
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                </div>
                 <Divider />
                 <div style={{ marginTop: "30px", display: "flex", alignItems: "center", marginBottom: "20px" }}>
                     <TextField
                         label="Search Employees"
                         placeholder="Enter username"
                         value={searchTerm}
-                        onChange={searchChange}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         style={{ marginRight: "20px", width: "300px" }}
                     />
                     <SelectField
                         label="Sort by First Name"
                         value={sortOrder}
-                        onChange={sortChange}
+                        onChange={(e) => setSortOrder(e.target.value)}
                         style={{ width: "150px" }}
                     >
                         <option value="ascending">A-Z</option>
@@ -113,7 +148,7 @@ const EmployeeManagement = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredSorted.map((employee, index) => (
+                        {employees.map((employee, index) => (
                             <TableRow key={index}>
                                 <TableCell>{employee.first}</TableCell>
                                 <TableCell>{employee.last}</TableCell>
@@ -121,11 +156,7 @@ const EmployeeManagement = () => {
                                 <TableCell>{employee.username}</TableCell>
                                 <TableCell>{employee.password}</TableCell>
                                 <TableCell>
-                                    <Button
-                                        variation="destructive"
-                                        onClick={() => handleRemoveEmployee(employee.username)}
-                                        style={{ marginLeft: '10px' }}
-                                    >
+                                    <Button variation="destructive" onClick={() => setEmployees(employees.filter(emp => emp.username !== employee.username))}>
                                         Remove
                                     </Button>
                                 </TableCell>
@@ -133,11 +164,7 @@ const EmployeeManagement = () => {
                         ))}
                     </TableBody>
                 </Table>
-                <Button
-                    variation="primary"
-                    onClick={() => setModalOpen(true)}
-                    style={{ marginTop: '20px', backgroundColor: '#57C43F' }}
-                >
+                <Button variation="primary" onClick={() => setModalOpen(true)} style={{ marginTop: '20px', backgroundColor: '#57C43F' }}>
                     Add Employee
                 </Button>
 
@@ -147,42 +174,11 @@ const EmployeeManagement = () => {
                         <div className="modal-content">
                             <h2>Add Employee</h2>
                             <form onSubmit={handleSubmit}>
-                                <TextField
-                                    label="First Name"
-                                    name="first"
-                                    value={newEmployee.first}
-                                    onChange={handleInputChange}
-                                    className="modal-input"
-                                />
-                                <TextField
-                                    label="Last Name"
-                                    name="last"
-                                    value={newEmployee.last}
-                                    onChange={handleInputChange}
-                                    className="modal-input"
-                                />
-                                <TextField
-                                    label="Email"
-                                    name="email"
-                                    value={newEmployee.email}
-                                    onChange={handleInputChange}
-                                    className="modal-input"
-                                />
-                                <TextField
-                                    label="Username"
-                                    name="username"
-                                    value={newEmployee.username}
-                                    onChange={handleInputChange}
-                                    className="modal-input"
-                                />
-                                <TextField
-                                    label="Password"
-                                    name="password"
-                                    value={newEmployee.password}
-                                    onChange={handleInputChange}
-                                    type="password"
-                                    className="modal-input"
-                                />
+                                <TextField label="First Name" name="first" value={newEmployee.first} onChange={handleInputChange} className="modal-input" />
+                                <TextField label="Last Name" name="last" value={newEmployee.last} onChange={handleInputChange} className="modal-input" />
+                                <TextField label="Email" name="email" value={newEmployee.email} onChange={handleInputChange} className="modal-input" />
+                                <TextField label="Username" name="username" value={newEmployee.username} onChange={handleInputChange} className="modal-input" />
+                                <TextField label="Password" name="password" type="password" value={newEmployee.password} onChange={handleInputChange} className="modal-input" />
                                 <div className="modal-button-container">
                                     <Button type="submit" variation="primary">Add</Button>
                                     <Button onClick={() => setModalOpen(false)} className="modal-close">Cancel</Button>
@@ -197,8 +193,6 @@ const EmployeeManagement = () => {
 };
 
 export default EmployeeManagement;
-
-
 
 
 
