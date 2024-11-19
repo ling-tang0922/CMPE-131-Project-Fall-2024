@@ -48,10 +48,11 @@ const CustomerLogin = () => {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [initialBalance, setBalance] = useState("")
   const [message, setMessage] = useState("")
-  const type = "employee"
+  
+  
   const handleLogin = () => {
     axios.get('http://localhost:4000/validate-credentials',{
-      params: {username: username, password: password, type: type, accountId: null }
+      params: {username: username, password: password, type: 'employee', bankID: null, ATMorSignin: 'SignIn', bankPin: null }
     })
     .then(response =>{
       if(response.data.success){

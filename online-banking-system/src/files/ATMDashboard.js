@@ -31,13 +31,13 @@ const ATMDashboard = () => {
     const [message, setMessage] = useState('')
     const [balance, setBalance] = useState(0)
 
-    const {accountId} = location.state
+    const {bankID} = location.state
 
     useEffect(() => {
         const fetchBalance = async () => {
             try {
                 const response = await axios.get('http://localhost:4000/account-balance', {
-                    params: { accountId: accountId },
+                    params: { bankID: bankID },
                 });
                 setBalance(response.data.balance);
             } catch (error) {
@@ -46,7 +46,7 @@ const ATMDashboard = () => {
             }
         };
         fetchBalance();
-    }, [accountId]);
+    }, [bankID]);
 
     const handleWithdraw = async (e) => {
         e.preventDefault();
@@ -61,7 +61,7 @@ const ATMDashboard = () => {
             try {
                 // Update balance on the server
                 await axios.put('http://localhost:4000/account-balance', {
-                    accountId: accountId,
+                    bankID: bankID,
                     balance: newBalance,
                     reqType: "customer",
                 });

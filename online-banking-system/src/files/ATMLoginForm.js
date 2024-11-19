@@ -1,36 +1,52 @@
 import React, { useState, useEffect } from "react";
 import './ATMLoginForm.css';
 import NavBar from "../components/ATMNavBar";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom'
 /*
 ***Backend
 */
 const ATMLoginForm = () => {
-    const [accountNumber, setAccountNumber] = useState('');
-    const [accountPin, setAccountPin] = useState('');
-    const [focusedField, setFocusedField] = useState('accountNumber'); 
+    const navigate = useNavigate()
+    const [bankID, setBankID] = useState('')
+    const [bankPin, setBankPin] = useState('')
+    const [focusedField, setFocusedField] = useState('bankID')
+    const [message, setMessage] = useState('')
+    const handleLogin = (e) => {
+        e.preventDefault()
+        axios.get('http://localhost:4000/validate-credentials',{
+          params: {username: null, password: null, type: 'employee', bankID: bankID, ATMorSignin: 'SignIn', bankPin: bankPin }
+        })
+        .then(response =>{
+          if(response.data.success){
+            const bankID = response.data.bankID
+            navigate('/CustomerDashBoard', {state: {bankID}})
+          }
+        })
+        .catch(error =>{
+          if(error.response && error.response.status === 401){
+            setMessage("Invalid credentials")
+          } else{
+            setMessage("Error validating credentials")
+          }
+        })
+      };
     const handleKeyPress = (num) => {
-        if (focusedField === 'accountPin') {
-            if (accountPin.length < 4) {
-                setAccountPin(accountPin + num);
+        if (focusedField === 'bankPin') {
+            if (bankPin.length < 4) {
+                setBankPin(bankPin + num)
             }
         } else {
-            setAccountNumber(accountNumber + num);
+            setBankID(bankID + num)
         }
     };
 
     const handleBackspace = () => {
-        if (focusedField === 'accountPin') {
-            setAccountPin(accountPin.slice(0, -1));
+        if (focusedField === 'bankPin') {
+            setBankPin(bankPin.slice(0, -1));
         } else {
-            setAccountNumber(accountNumber.slice(0, -1));
+            setBankID(bankID.slice(0, -1));
         }
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        console.log('Account Number:', accountNumber);
-        console.log('Account PIN:', accountPin);
     };
 
     const handleKeyDown = (e) => {
@@ -40,34 +56,34 @@ const ATMLoginForm = () => {
     };
 
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keydown', handleKeyDown)
         return () => {
-            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keydown', handleKeyDown)
         };
-    }, [accountPin, accountNumber]);
+    }, [])
 
     return (
         <div className='wrapper'>
             <NavBar />
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleLogin}>
                 <h1>Login</h1>
                 <div className="input-box">
                     <input
                         type="text"
-                        placeholder='Account Number'
-                        value={accountNumber}
-                        onChange={(e) => setAccountNumber(e.target.value)}
-                        onFocus={() => setFocusedField('accountNumber')} 
+                        placeholder='bankID'
+                        value={bankID}
+                        onChange={(e) => setBankID(e.target.value)}
+                        onFocus={() => setFocusedField('bankID')} 
                         required
                     />
                 </div>
                 <div className="input-box">
                     <input
                         type="password"
-                        placeholder='Account Pin'
-                        value={accountPin}
-                        onChange={(e) => setAccountPin(e.target.value)}
-                        onFocus={() => setFocusedField('accountPin')} 
+                        placeholder='Bank Pin'
+                        value={bankPin}
+                        onChange={(e) => setBankPin(e.target.value)}
+                        onFocus={() => setFocusedField('bankPin')} 
                         required
                     />
                 </div>

@@ -1,7 +1,8 @@
 import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
-import React, { useState, useLocation, useEffect} from "react";
+import React, { useState, useEffect} from "react";
 import axios from "axios";
+import {useLocation} from 'react-router-dom'
 
 
 /*
@@ -19,12 +20,12 @@ const DepositBills = () =>{
     const [balance, setBalance] = useState(0)
     const [message, setMessage] = useState('')
     const reqType= 'cust'
-    const bankID = location.state
-    //const accountId = 'e123'
+    //const bankID = location.state
+    const bankID = 'e123'
     
     const updateBalance = async (newBalance) => {
         try {
-            const response = await axios.put('http://localhost:4000/account-balance', {
+            await axios.put('http://localhost:4000/account-balance', {
                 bankID: bankID,       // Pass these in the request body
                 balance: newBalance,
                 reqType: reqType
