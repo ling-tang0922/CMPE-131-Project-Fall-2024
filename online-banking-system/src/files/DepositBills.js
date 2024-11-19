@@ -19,13 +19,13 @@ const DepositBills = () =>{
     const [balance, setBalance] = useState(0)
     const [message, setMessage] = useState('')
     const reqType= 'cust'
-    const accountId = location.state
+    const bankID = location.state
     //const accountId = 'e123'
     
     const updateBalance = async (newBalance) => {
         try {
             const response = await axios.put('http://localhost:4000/account-balance', {
-                accountId: accountId,       // Pass these in the request body
+                bankID: bankID,       // Pass these in the request body
                 balance: newBalance,
                 reqType: reqType
             })
@@ -40,7 +40,7 @@ const DepositBills = () =>{
         const fetchBalance = async () => {
             try{
                 const response = await axios.get('http://localhost:4000/account-balance', {
-                    params : {accountId: accountId}
+                    params : {bankID: bankID}
                 })
                 setBalance(response.data.balance)
 
@@ -50,7 +50,7 @@ const DepositBills = () =>{
             }
         }
         fetchBalance()
-    }, [accountId])
+    }, [bankID])
 
     const handleDeposit = () =>{
         const amountNum = parseFloat(amount);

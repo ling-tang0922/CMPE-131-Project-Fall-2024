@@ -29,7 +29,7 @@ import axios from "axios";
 const CustomerDashboard = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const {accountId} = location.state
+    const {bankID} = location.state
     const [balance, setBalance] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -43,12 +43,12 @@ const CustomerDashboard = () => {
         const fetchAccountDetails = async () => {
             try{
                 const balanceResponse = await axios.get('http://localhost:4000/account-balance', {
-                    params : {accountId: accountId}
+                    params : {bankID: bankID}
                 })
                 setBalance(balanceResponse.data.accountBalance)
 
                 const accountSettings = await axios.get('http://localhost:4000/account-settings', {
-                    params: {accountId: accountId, accType: 'cust', reqType: 'first_name'}
+                    params: {bankID: bankID, accType: 'cust', reqType: 'first_name'}
                 })
                 setFirstName(accountSettings.data.firstName)
                 setLastName(accountSettings.data.lastName)
@@ -60,7 +60,7 @@ const CustomerDashboard = () => {
         const fetchTransactions = async () => {
             try {
                 const transactions = await axios.get('http://localhost:4000/transaction-history', {
-                    params: {accountId} })
+                    params: {bankID: bankID} })
                 // more research needs to be done for this functionality
                 setTransactions(transactions.data.transactionHistory);
             } catch (error) {
@@ -71,7 +71,7 @@ const CustomerDashboard = () => {
         fetchAccountDetails()
         fetchTransactions()
         
-    }, [accountId])
+    }, [bankID])
     
     
     
@@ -185,7 +185,7 @@ const CustomerDashboard = () => {
                         >
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <div><FontAwesomeIcon icon={faBuildingColumns}/>Account Balance</div>
-                                <div>{accountId}</div>
+                                <div>{bankID}</div>
                                 
                             </div>
                             <div style={{ justifyContent: "flex-end" }}>
@@ -238,7 +238,7 @@ const CustomerDashboard = () => {
                                         <TableCell>{transaction.dateTime}</TableCell>
                                         <TableCell>{transaction.type}</TableCell>
                                         <TableCell>{transaction.amount}</TableCell>
-                                        <TableCell>{accountId}</TableCell>
+                                        <TableCell>{bankID}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

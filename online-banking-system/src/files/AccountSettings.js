@@ -9,6 +9,12 @@ const AccountSettings = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [accountStatus, setAccountStatus] = useState('open');
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [username, setUsername] = useState('')
+    const [bankID, setBankID] = useState('')
+    const [email, setEmail] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
 
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
@@ -116,6 +122,25 @@ const AccountSettings = () => {
                     fontSize: "25px",
                     padding: "10px"
                 }}>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        marginBottom: "20px",
+                        padding: "20px",
+                        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+                        borderRadius: "8px",
+                        backgroundColor: "#FFFFFF",
+                    }}>
+                        <h3 style={{ marginTop: "1px" }}>User Information</h3>
+                        <div style={{ marginBottom: "5px" }}> <strong>First Name: </strong>{firstName}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Last Name: </strong>{lastName}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Username: </strong>{username}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Account ID: </strong>{bankID}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Email: </strong>{email}</div>
+                        <div style={{ marginBottom: "5px" }}><strong>Phone: </strong>{phoneNumber}</div>
+                    </div>
+
                     <div style={{
                         display: "flex",
                         flexDirection: "column",

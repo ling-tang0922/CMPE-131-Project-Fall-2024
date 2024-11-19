@@ -11,7 +11,7 @@ const ManagerDashboard = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
     const [message, setMessage] = useState('')
-    const accountId = location.state
+    const bankID = location.state
     const accType = 'employee'
     const [reqType, setReqType] = useState('')
     
@@ -30,7 +30,7 @@ const ManagerDashboard = () => {
     const updateAccountList = async () => {
         try {
             const accListResponse = await axios.get('http://localhost:4000/transaction-history', {
-                accountId : accountId,
+                bankID : bankID,
                 reqType: reqType
             })
             setAccounts(accListResponse.data.accounts)

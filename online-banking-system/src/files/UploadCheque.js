@@ -13,7 +13,7 @@ const UploadCheque = () =>{
     const [balance, setBalance] = useState('')
     const [message, setMessage] = useState('')
     const [amount, setAmount] = useState('')
-    const accountId = location.state
+    const bankID = location.state
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -33,7 +33,7 @@ const UploadCheque = () =>{
     const updateBalance = async (newBalance) => {
       try{
         const response = await axios.put('http://localhost:4000/account-balance', {
-          accountId: accountId,
+          bankID: bankID,
           balance: newBalance,
           reqType: 'customer'
         })
@@ -50,7 +50,7 @@ const UploadCheque = () =>{
       const fetchBalance = async ()=>{
         try{
           const response = await axios.get('http://localhost:4000/account-balance', {
-            params : {accountId: accountId}
+            params : {bankID: bankID}
           })
           setBalance(response.data.balance)
         }catch(error){
@@ -58,7 +58,7 @@ const UploadCheque = () =>{
           setMessage("Error fetching account balance")
         }
       }
-    }, [accountId])
+    }, [bankID])
     return(<WindowWrapper showSideNav={true}>
         <div>
             <div style={{"display":"flex",justifyContent:"center"}}>

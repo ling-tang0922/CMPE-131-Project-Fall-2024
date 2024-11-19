@@ -55,8 +55,8 @@ const CustomerLogin = () => {
     })
     .then(response =>{
       if(response.data.success){
-        const accountId = response.data.accountId
-        navigate('/CustomerDashBoard', {state: {accountId}})
+        const bankID = response.data.bankID
+        navigate('/CustomerDashBoard', {state: {bankID}})
       }
     })
     .catch(error =>{
