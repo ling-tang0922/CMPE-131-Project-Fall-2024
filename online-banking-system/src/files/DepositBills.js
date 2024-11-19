@@ -1,7 +1,8 @@
 import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
 import React, { useState, useLocation, useEffect} from "react";
-const axios = require('axios')
+import axios from "axios";
+
 
 /*
 ***Backend Notes***
@@ -19,12 +20,14 @@ const DepositBills = () =>{
     const [message, setMessage] = useState('')
     const reqType= 'cust'
     const accountId = location.state
-
+    //const accountId = 'e123'
     
     const updateBalance = async (newBalance) => {
-        try{
+        try {
             const response = await axios.put('http://localhost:4000/account-balance', {
-                params : {accountId: accountId, balance: newBalance, reqType: reqType }
+                accountId: accountId,       // Pass these in the request body
+                balance: newBalance,
+                reqType: reqType
             })
             setMessage(`Your new balance of $${newBalance.toFixed(2)} has been updated successfully.`)
         }catch(error){

@@ -1,15 +1,23 @@
 import { Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField, Button } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ManagerDashboard = () => {
-    const navigate = useNavigate();
-    const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate()
+    const location = useLocation();
+    const [searchTerm, setSearchTerm] = useState('');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
-
+    const [message, setMessage] = useState('')
+    const accountId = location.state
+    const accType = 'employee'
+    const [reqType, setReqType] = useState('')
+    
     // Sample
+
+    
     const [accounts, setAccounts] = useState([
         { first: 'Robbert', last: 'Bobbert', email: 'robbertbobbert@gmail.com', username: 'Robbert123', bankID: 'e1234', password: 'password', balance: '$0.42', bankPIN: '9481' },
         { first: 'Jannet', last: 'Rose', email: 'jannet.rose321@gmail.com', username: 'Jannet321', bankID: 'e7622', password: 'password', balance: '$10000.84', bankPIN: '4135' },
@@ -18,6 +26,20 @@ const ManagerDashboard = () => {
         { first: 'Adam', last: 'Smith', email: 'appledawgz@gmail.com',  username: 'AppleDawgz', bankID: 'e6792', password: 'password', balance: '$8912.41', bankPIN: '5133' },
         { first: 'Samantha', last: 'Zhou', email: 'samanthazhou@gmail.com',  username: 'samantha_z098', bankID: 'e0944', password: 'password', balance: '$124.04', bankPIN: '5341' },
     ]);
+    // Test this last!!!!
+    const updateAccountList = async () => {
+        try {
+            const accListResponse = await axios.get('http://localhost:4000/transaction-history', {
+                accountId : accountId,
+                reqType: reqType
+            })
+            setAccounts(accListResponse.data.accounts)
+        }
+        catch(error){
+            console.error("Error updating account balance")
+            setMessage("Error updating account balance")
+        }
+    }
 
     const searchChange = (event) => {
         setSearchTerm(event.target.value);

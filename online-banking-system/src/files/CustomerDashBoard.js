@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faUpload, faMoneyBillTransfer} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation} from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 /*
 ***Backend Notes***
@@ -35,31 +36,33 @@ const CustomerDashboard = () => {
     const [username, setUsername] = useState('')
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [message, setMessage] = useState('')
+    const [transactionHistory, setTransactions] = useState('')
 
     
     useEffect(() => {
         const fetchAccountDetails = async () => {
             try{
-                const balanceResponse = await axios.get('http://localhost:3000/account-balance', {
+                const balanceResponse = await axios.get('http://localhost:4000/account-balance', {
                     params : {accountId: accountId}
                 })
-                setBalance(response.data.balance)
+                setBalance(balanceResponse.data.accountBalance)
 
-                const AccountResponse = await axios.get('http://localhost:4000/account-settings', {
+                const accountSettings = await axios.get('http://localhost:4000/account-settings', {
                     params: {accountId: accountId, accType: 'cust', reqType: 'first_name'}
                 })
-                setFirstName(response.data.firstName)
-                setLastName(response.data.lastName)
-                setUsername(response.data.username)
+                setFirstName(accountSettings.data.firstName)
+                setLastName(accountSettings.data.lastName)
+                setUsername(accountSettings.data.username)
             }catch(error) {
                 console.error("Error fetching account details", error)
             }
         }
         const fetchTransactions = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/transaction-history', {
+                const transactions = await axios.get('http://localhost:4000/transaction-history', {
                     params: {accountId} })
-                setTransactions(response.data);
+                // more research needs to be done for this functionality
+                setTransactions(transactions.data.transactionHistory);
             } catch (error) {
                 console.error("Error fetching transactions:", error);
                 setMessage("Error fetching transactions")

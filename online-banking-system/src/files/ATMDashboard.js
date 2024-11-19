@@ -1,4 +1,4 @@
-import React, { useState, useLocation } from "react";
+import React, { useState, useLocation, useEffect} from "react";
 import ATMNavBar from "../components/ATMDashboardNavBar";
 import './ATMDashboard.css';
 const axios = require('axios')
@@ -32,9 +32,6 @@ const ATMDashboard = () => {
     const [balance, setBalance] = useState(0)
 
     const {accountId} = location.state
-    setBalance(axios.get('http://localhost:4000/account-balance', {
-        params: {accountId: accountId}
-    }))
 
     useEffect(() => {
         const fetchBalance = async () => {

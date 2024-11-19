@@ -72,10 +72,12 @@ const CustomerLogin = () => {
     
     if(!username || !password || !firstName || !lastName || !phoneNumber || !email){
       setMessage("All fields are required")
+      console.log('here 1')
       return
      }
     else if(password !== confirmPassword){
       setMessage("Passwords don't match")
+      console.log('here 2')
       return
     }else{
       axios.post('http://localhost:4000/new-account',{
@@ -85,10 +87,10 @@ const CustomerLogin = () => {
         lastName: lastName,
         phoneNumber: phoneNumber,
         email: email,
-        intitialBalance: initialBalance || 0
+        intitialBalance: initialBalance || 0,
    })
    .then(response =>{
-    if(response.success){
+    if(response.data.success){
       setMessage("Account Created")
       setTimeout(()=>{
         navigate("/CustomerDashboard", axios.get('http://localhost:4000/account-ID', {params: {
@@ -394,6 +396,7 @@ const CustomerLogin = () => {
                       <PhoneNumberField
                         defaultDialCode="+1"
                         label="Phone number:"
+                        onChange={(e)=>setPhoneNumber(e.target.value)}
                         placeholder="234-567-8910"
                         errorMessage="Enter a Valid Phone Number"
                       />

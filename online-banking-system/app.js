@@ -62,12 +62,6 @@ app.put("/account-balance", async (req, res)=>{
             res.status(404).send("Account not found")
         }
     })
-    
-    
-
-
-
-
 })
 
 // Request Validation of Username and Password values
@@ -82,8 +76,8 @@ app.get("/validate-credentials", async (req, res)=>{
         if(!validTables.includes(type)){
             return res.status(400).send("Invalid account type")
         }
-        const query = `SELECT id FROM ${type} WHERE username = ? AND password = ?`
-        db.query(query, [username, password], (error, results)=>{
+        const query = `SELECT bankID FROM accounts WHERE username= '?' AND password = '?' AND role = '?'`
+        db.query(query, [username, password, type], (error, results)=>{
             if(error){
                 console.error('Error validating credentials')
                 return res.status(500).send("Error validating credentials")
@@ -166,7 +160,7 @@ app.get("/account-ID", async (req, res)=>{
 // Request Transaction History
 // Get Function
 app.get("/transaction-history", async (req, res)=>{
-    const accountId = req.query.accountId
+    const {accountId, reqType} = req.body
     if(!accountId){
         return res.status(400).send("Account ID is required")
     }
@@ -187,18 +181,16 @@ app.post("/new-account", async (req, res)=>{
     const { username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.body
 
     if(!username || !password || !firstName || !lastName || !phoneNumber || !email || !initialBalance){
-        return res.status(400).send("User Information required")
+        return res.status(400).send({error: "User Information required"})
     }
     db.query('INSERT INTO customer (username, password, firstName, lastName, phoneNumber, email, balance) VALUES(?, ?, ?, ?, ?, ?, ?)',
     [username, password, firstName, lastName, phoneNumber, email, initialBalance], (error, results) =>{
         if(error){
             console.error('Error creating new account:', error)
-            return res.status(500).send("Error creating new account")
-        }else{
-            res.send({success : true})
+            return res.status(500).send({error: "Error creating new account"})
         }
-
-        res.status(201).send("Error creating new account")
+        res.status(201).send({success: true, accountId: results.data.accountId})
+        
     })
 })
 
