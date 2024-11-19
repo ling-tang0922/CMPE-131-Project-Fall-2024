@@ -29,11 +29,11 @@ const UploadCheque = () =>{
       const uploadCheque = ()=>{
         setMessage(<></>)
         if(isNaN(amount) || parseInt(amount)<=0 || amount==null){
-            setMessage(<Message colorTheme="error">Enter a valid Amount!</Message>);
+            setMessage(<Message colorTheme="error">Please enter a valid amount!</Message>);
             return;
         }
         if(frontImage==null || backImage==null){
-          setMessage(<Message colorTheme="error">Please upload both sides of the cheque!</Message>);
+          setMessage(<Message colorTheme="error">Please upload both sides of the check!</Message>);
             return;
         }
         //call transfer funds api
@@ -104,8 +104,8 @@ const UploadCheque = () =>{
                 <Label>Amount: $</Label>
                 <Input value={amount} onChange={(event)=>{setAmount(event.target.value)}}  placeholder="Enter Amount"/>   
                 </div>     
-                <p>Note: Make sure you have signed on the back side of the check</p>
-                <CheckboxField value={checked} onChange={()=>{setChecked(!checked)}}  margin="10px 0px" label="I agree to all terms and conditions"/>
+                <p>Note: Make sure you have signed on the back side of the check.</p>
+                <CheckboxField value={checked} onChange={()=>{setChecked(!checked)}}  margin="10px 0px" label="I agree to all terms and conditions."/>
                 <Button isDisabled={!checked} onClick={uploadCheque} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Deposit Check!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
             </div>
         </div>

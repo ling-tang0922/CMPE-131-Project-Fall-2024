@@ -13,11 +13,11 @@ const TransferFunds = () =>{
     function handleDepositFunds(){
         setMessage(<></>)
         if(isNaN(amount) || parseInt(amount)<=0 || amount==null){
-            setMessage(<Message colorTheme="error">Enter a valid Amount!</Message>);
+            setMessage(<Message colorTheme="error">Enter a valid amount!</Message>);
             return;
         }
         if(!contact){
-            setMessage(<Message colorTheme="error">Enter Contact Details!</Message>);
+            setMessage(<Message colorTheme="error">Enter contact details!</Message>);
             return;
         }
         if(contact!=confirmedContact){
@@ -39,18 +39,18 @@ const TransferFunds = () =>{
             </div>
             <div style={{margin:"0 30%"}}>
                 <div style={{margin:"30px 0"}}>
-                <Label>Reciever Phone Number: $</Label>
+                <Label>Receiver Phone Number: Enter the phone number of the person that you are sending the money to.</Label>
                 <Input value={contact} onChange={(event)=>{setContact(event.target.value)}} placeholder="Enter Reciever Phone Number"/>   
                 </div>  
                 <div style={{margin:"30px 0"}}>
-                <Label>Verify Phone Number: $</Label>
+                <Label>Verify Phone Number</Label>
                 <Input value={confirmedContact} onChange={(event)=>{setConfirmedContact(event.target.value)}}  placeholder="Verify Reciever Phone Number"/>   
                 </div>
                 <div style={{margin:"30px 0"}}>
                 <Label>Amount: $</Label>
                 <Input value={amount} onChange={(event)=>{setAmount(event.target.value)}}  placeholder="Enter Amount"/>   
                 </div>     
-                <CheckboxField value={checked} onChange={()=>{setChecked(!checked)}} margin="10px" label="I agree to all terms and conditions"/>
+                <CheckboxField value={checked} onChange={()=>{setChecked(!checked)}} margin="10px" label="I agree to all terms and conditions."/>
                 <Button onClick={handleDepositFunds} isDisabled = {!checked} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Transfer Funds!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
             </div>
         </div>

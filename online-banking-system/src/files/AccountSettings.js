@@ -10,6 +10,11 @@ const AccountSettings = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [accountStatus, setAccountStatus] = useState('open');
 
+    // sample user
+    const user = {
+        firstName: "Robbert", lastName: "Bobbert", username: "Robbert123", bankID: "e1234", email: "robbertbobbert@gmail.com", phoneNumber: "(123) 456 - 7890",
+    };
+
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
 
@@ -26,7 +31,7 @@ const AccountSettings = () => {
             alert('Passwords do not match.');
             return;
         }
-        else if(newPassword == 0 || confirmPassword == 0) {
+        else if (newPassword === "" || confirmPassword === "") {
             alert('Please enter a password.');
             return;
         }
@@ -48,14 +53,14 @@ const AccountSettings = () => {
         <WindowWrapper showSideNav={true}>
             <div style={{ height: "100%", padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ flex: "0 0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <p style={{ fontSize: "35px", marginBottom: "20px", color: "#57C43F", fontWeight: "bold"}}>Account Settings</p>
+                    <p style={{ fontSize: "35px", marginBottom: "20px", color: "#57C43F", fontWeight: "bold" }}>Account Settings</p>
                     <div style={{ position: "relative", marginRight: "20px", marginBottom: "10px" }}>
-                        <img 
+                        <img
                             id="profile-pic"
-                            src="default.png" 
-                            alt="User Profile" 
-                            style={{ height: "50px", width: "50px", borderRadius: "50%", cursor: "pointer" }} 
-                            onClick={toggleDropdown} 
+                            src="default.png"
+                            alt="User Profile"
+                            style={{ height: "50px", width: "50px", borderRadius: "50%", cursor: "pointer" }}
+                            onClick={toggleDropdown}
                         />
                         {dropdownOpen && (
                             <div id="dropdown" style={{
@@ -111,11 +116,30 @@ const AccountSettings = () => {
                 </div>
                 <Divider />
                 <div style={{
-                    minHeight: "300px",
-                    margin: "20px 10px",
+                    minHeight: "100px",
+                    margin: "10px",
                     fontSize: "25px",
                     padding: "10px"
                 }}>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        marginBottom: "20px",
+                        padding: "20px",
+                        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+                        borderRadius: "8px",
+                        backgroundColor: "#FFFFFF",
+                    }}>
+                        <h3 style={{ marginTop: "1px" }}>User Information</h3>
+                        <div style={{ marginBottom: "5px" }}> <strong>First Name: </strong>{user.firstName}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Last Name: </strong>{user.lastName}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Username: </strong>{user.username}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Account ID: </strong>{user.bankID}</div>
+                        <div style={{ marginBottom: "5px" }}> <strong>Email: </strong>{user.email}</div>
+                        <div style={{ marginBottom: "5px" }}><strong>Phone: </strong>{user.phoneNumber}</div>
+                    </div>
+
                     <div style={{
                         display: "flex",
                         flexDirection: "column",
