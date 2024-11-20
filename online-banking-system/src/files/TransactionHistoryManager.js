@@ -7,7 +7,7 @@ const ManagerDashboard = () => {
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
-
+    
     // Sample
     const accounts = [
         { bankIDuser: 'e1234', totalBalance: '$0.42', transaction: '-$100', connectedAccount: 'e1234', date: '11/07/24' },

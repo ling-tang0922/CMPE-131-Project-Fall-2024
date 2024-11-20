@@ -32,7 +32,7 @@ const UploadCheque = () =>{
 
     const updateBalance = async (newBalance) => {
       try{
-        const response = await axios.put('http://localhost:4000/account-balance', {
+        await axios.put('http://localhost:4000/account-balance', {
           bankID: bankID,
           balance: newBalance,
           reqType: 'customer'
@@ -50,7 +50,7 @@ const UploadCheque = () =>{
       const fetchBalance = async ()=>{
         try{
           const response = await axios.get('http://localhost:4000/account-balance', {
-            params : {bankID: bankID}
+            params : {bankID: bankID, phoneNumber: null}
           })
           setBalance(response.data.balance)
         }catch(error){

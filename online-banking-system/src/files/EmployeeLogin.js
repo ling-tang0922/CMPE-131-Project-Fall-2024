@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import WindowWrappper from "../components/WindowWrapper";
+import axios from "axios";
 import {
   Input,
   Label,
@@ -8,7 +9,31 @@ import {
   Tabs,
 } from "@aws-amplify/ui-react";
 import NavBar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
+
 const EmployeeLogin = () => {
+  const[username, setUsername] = useState('')
+  const[password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
+  const navigate = useNavigate()
+  const handleLogin = () =>{
+    axios.get('http://localhost:4000/validate-credentials',{
+      params: {username: username, password: password, type: 'employee', bankID: null, ATMorSignin: 'SignIn', bankPin: null}
+    })
+    .then(response=>{
+      if(response.data.success){
+        const bankID = response.data.bankID
+        navigate('/EmployeeDashboard', {state: {bankID}})
+      }
+    })
+    .catch(error=>{
+      if(error.response && error.response.status === 401){
+        setMessage("Invalid credentials")
+      }else{
+        setMessage("Error validating credentials")
+      }
+    })
+  }
   return (
     <WindowWrappper>
       <NavBar></NavBar>
@@ -40,14 +65,21 @@ const EmployeeLogin = () => {
                   <div style={{ padding: "10px" }}>
                     <Flex direction="column" gap="small">
                       <Label htmlFor="first_name">Username:</Label>
-                      <Input placeholder="Enter Username" name="username" />
+                      <Input 
+                      placeholder="Enter Username" 
+                      name="username"
+                      value = {username}
+                      onChange={(e)=> setUsername(e.target.value)}
+                      />
                       <Label htmlFor="first_name">Password:</Label>
                       <Input
                         type="password"
                         placeholder="Enter Password"
                         name="username"
+                        value={password}
+                        onChange={(e)=> setPassword(e.target.value)}
                       />
-                      <Button variation="primary" colorTheme="success">
+                      <Button onClick={handleLogin} variation="primary" colorTheme="success">
                         Login
                       </Button>
                     </Flex>

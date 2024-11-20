@@ -28,40 +28,70 @@ db.connect((err)=>{
 // Request Account Balance 
 // Get Funciton
 app.get("/account-balance", async (req, res)=>{
-    const bankID = req.query.accountId
-    if(!bankID){
-        return res.status(400).send("Account ID is required")
+    const {bankID, phoneNumber} = req.body
+    if(!bankID && !phoneNumber){
+        return res.status(400).send("Bank ID or Phone Number is required")
     }
-    db.query('SELECT balance FROM accounts WHERE id = ?', [bankID], (error, results)=>{
-        if(error){
-            console.error('Error fetching account balance:', error)
-            return res.status(500).send("Error fetching account balance")
-        }
-        if(results.length > 0){
-            res.send(`Account Balance : ${results[0].balance}`)
-        }
-    })
+    if(bankID){
+        db.query('SELECT balance FROM accounts WHERE id = ?', [bankID], (error, results)=>{
+            if(error){
+                console.error('Error fetching account balance:', error)
+                return res.status(500).send("Error fetching account balance")
+            }
+            if(results.length > 0){
+                res.send(`Account Balance : ${results[0].balance}`)
+            }
+        })
+    }
+    else if(phoneNumber){
+        db.query('SELECT balance FROM accounts WHERE phoneNumber = ?', [phoneNumber], (error, results)=>{
+            if(error){
+                console.error('Error fetching account balance:', error)
+                return res.status(500).send("Error fetching account balance")
+            }
+            if(results.length > 0){
+                res.send(`Account Balance : ${results[0].balance}`)
+            }
+        })
+    }
+    
 })
 
 // Request Modification of Account Balance
 // Put Function
 app.put("/account-balance", async (req, res)=>{
-    const {bankID, balance, reqType} = req.body
+    const {bankID, balance, reqType, phoneNumber} = req.body
 
     if(!bankID || !balance || !reqType){
-        return res.status(400).send("Account ID, Balance, and Request Type are required")
+        return res.status(400).send("Account ID or Phone Number, and Balance or Request Type are required")
     }
+    else if(!phoneNumber || !balance || !reqType)
     // Add to Balance
-    db.query('UPDATE ? SET balance = ? WHERE id = ?', [reqType, balance, bankID], (error, results)=>{
-        if(error){
-            console.error('Error updating account balance:', error)
-        }
-        if(results.affectedRows > 0){
-            res.send("Account balance updated successfully")
-        }else{
-            res.status(404).send("Account not found")
-        }
-    })
+    if(bankID){
+        db.query('UPDATE ? SET balance = ? WHERE id = ?', [reqType, balance, bankID], (error, results)=>{
+            if(error){
+                console.error('Error updating account balance:', error)
+            }
+            if(results.affectedRows > 0){
+                res.send("Account balance updated successfully")
+            }else{
+                res.status(404).send("Account not found")
+            }
+        })
+    }
+    else if(phoneNumber){
+        db.query('UPDATE ? SET balance = ? WHERE phoneNumber = ?', [reqType, balance, phoneNumber], (error, results)=>{
+            if(error){
+                console.error('Error updating account balance:', error)
+            }
+            if(results.affectedRows > 0){
+                res.send("Account balance updated successfully")
+            }else{
+                res.status(404).send("Account not found")
+            }
+        })
+    }
+    
 })
 
 // Request Validation of Username and Password values

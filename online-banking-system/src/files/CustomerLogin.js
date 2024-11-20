@@ -52,7 +52,7 @@ const CustomerLogin = () => {
   
   const handleLogin = () => {
     axios.get('http://localhost:4000/validate-credentials',{
-      params: {username: username, password: password, type: 'employee', bankID: null, ATMorSignin: 'SignIn', bankPin: null }
+      params: {username: username, password: password, type: 'customer', bankID: null, ATMorSignin: 'SignIn', bankPin: null }
     })
     .then(response =>{
       if(response.data.success){
@@ -93,7 +93,7 @@ const CustomerLogin = () => {
    .then(response =>{
     if(response.data.success){
       setMessage("Account Created")
-      setTimeout(()=>{
+
         navigate("/CustomerDashboard", axios.get('http://localhost:4000/account-ID', {params: {
         username: username,
         password: password,
@@ -103,7 +103,7 @@ const CustomerLogin = () => {
         email: email,
         intitialBalance: initialBalance || 0
         }}))
-      }, 2000)
+    
     }
    })
    .catch(error =>{
@@ -241,7 +241,7 @@ const CustomerLogin = () => {
                         }}
                       >
                         <div style={{ width: "49%" }}>
-                          <Label htmlFor="first_name">Fast Name:</Label>
+                          <Label htmlFor="first_name">First Name:</Label>
                           <div
                             style={{
                               display: "flex",
