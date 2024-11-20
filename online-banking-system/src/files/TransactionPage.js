@@ -1,16 +1,35 @@
-import React, { useState,} from "react";
-import WindowWrapper from "../components/WindowWrapper";
-import './TransactionPage.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import WindowWrapper from '../components/WindowWrapper';
 
 const TransactionPage = () => {
-    // Sample data
-    const [transactions] = useState([
-        { dateTime: '2024-10-01 01:30', type: 'Deposit', amount: '+$200', balanceAfter: '$4000.00' },
-        { dateTime: '2024-10-05 14:03', type: 'Withdrawal', amount: '-$50', balanceAfter: '$3800.00' },
-        { dateTime: '2024-10-10 07:00', type: 'Deposit', amount: '+$100', balanceAfter: '$3900.00' },
-        { dateTime: '2024-10-12 16:45', type: 'Transfer', amount: '-$150', balanceAfter: '$3750.00' },
-    ]);
-;
+    // State to hold transactions
+    const [transactions, setTransactions] = useState([]);
+
+    // Fetch transactions from the API
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await axios.get('/transactionhistory');
+                const transactionData = response.data.transactions;
+
+                // Format the transactions to match the desired structure
+                const formattedTransactions = transactionData.map(transaction => ({
+                    dateTime: new Date(transaction.date).toLocaleString(), // Format date as 'YYYY-MM-DD HH:mm'
+                    type: transaction.type,
+                    amount: transaction.amount > 0 ? `+$${transaction.amount}` : `-$${Math.abs(transaction.amount)}`,
+                    balanceAfter: `$${transaction.balanceAfter.toFixed(2)}`, // Format balance to two decimal places
+                }));
+
+                setTransactions(formattedTransactions);
+            } catch (error) {
+                console.error('Error fetching transaction history:', error);
+            }
+        };
+
+        fetchTransactions();
+    }, []); // Run only once when the component mounts
+
     return (
         <WindowWrapper showSideNav={true}>
             <div className="transaction-container">
@@ -27,7 +46,7 @@ const TransactionPage = () => {
                     <tbody>
                         {transactions.length === 0 ? (
                             <tr>
-                                <td colSpan="3" style={{ textAlign: 'center' }}>No transactions available</td>
+                                <td colSpan="4" style={{ textAlign: 'center' }}>No transactions available</td>
                             </tr>
                         ) : (
                             transactions.map((transaction, index) => (

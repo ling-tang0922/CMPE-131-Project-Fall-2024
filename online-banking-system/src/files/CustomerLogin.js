@@ -51,23 +51,28 @@ const CustomerLogin = () => {
   
   
   const handleLogin = () => {
-    axios.get('http://localhost:4000/validate-credentials',{
-      params: {username: username, password: password, type: 'customer', bankID: null, ATMorSignin: 'SignIn', bankPin: null }
+    console.log('Sending request with params:', { username, password, type: 'customer', bankID: null, ATMorLogin: 'SignIn', bankPin: null });
+
+    axios.get('http://localhost:4000/validate-credentials', {
+      params: { username: username, password: password, type: 'customer', bankID: null, ATMorLogin: 'SignIn', bankPin: null }
     })
-    .then(response =>{
-      if(response.data.success){
-        const bankID = response.data.bankID
-        navigate('/CustomerDashBoard', {state: {bankID}})
+    .then(response => {
+      console.log('Response received:', response);
+      if (response.data.success) {
+        const bankID = response.data.bankID;
+        navigate('/CustomerDashBoard', { state: { bankID } });
       }
     })
-    .catch(error =>{
-      if(error.response && error.response.status === 401){
-        setMessage("Invalid credentials")
-      } else{
-        setMessage("Error validating credentials")
+    .catch(error => {
+      console.error('Error occurred:', error);
+      if (error.response && error.response.status === 401) {
+        setMessage("Invalid credentials");
+      } else {
+        setMessage("Error validating credentials");
       }
-    })
-  };
+    });
+};
+
   
   const handleSignUp = () => {
     

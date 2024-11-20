@@ -1,4 +1,6 @@
 const express = require('express')
+const cors = require('cors');
+app.use(cors());
 
 const dotenv = require('dotenv')
 require('dotenv').config();
@@ -28,7 +30,7 @@ db.connect((err)=>{
 // Request Account Balance 
 // Get Funciton
 app.get("/account-balance", async (req, res)=>{
-    const {bankID, phoneNumber} = req.body
+    const {bankID, phoneNumber} = req.query
     if(!bankID && !phoneNumber){
         return res.status(400).send("Bank ID or Phone Number is required")
     }
@@ -65,7 +67,7 @@ app.put("/account-balance", async (req, res)=>{
     if(!bankID || !balance || !reqType){
         return res.status(400).send("Account ID or Phone Number, and Balance or Request Type are required")
     }
-    else if(!phoneNumber || !balance || !reqType)
+    
     // Add to Balance
     if(bankID){
         db.query('UPDATE ? SET balance = ? WHERE id = ?', [reqType, balance, bankID], (error, results)=>{
@@ -114,10 +116,9 @@ app.get("/validate-credentials", async (req, res)=>{
             }
 
             if(results.length > 0){
-                const bankID = results[0].id
-                res.send({success : true, bankID})
+                res.send({success : true, bankID: results[0].bankID})
             } else{
-                res.status(401).send(false)
+                res.status(401).send({success: false})
             }
         })
      }
@@ -137,8 +138,7 @@ app.get("/validate-credentials", async (req, res)=>{
             }
 
             if(results.length > 0){
-                const bankID = results[0].bankID
-                res.send({success : true, bankID})
+                res.send({success : true, bankID: results[0].bankID})
             } else{
                 res.status(401).send(false)
             }
@@ -149,7 +149,7 @@ app.get("/validate-credentials", async (req, res)=>{
 // Request "Account Settings" - Talk with group about this
 // Get Function
 app.get("/account-settings", async (req, res)=>{
-    const {bankID, accType, reqType} = req.body
+    const {bankID, accType, reqType} = req.query
     if(!bankID){
         return res.status(400).send("Account ID is required")
     }
@@ -192,7 +192,7 @@ app.get("/account-username", async (req, res)=>{
 // Request Account ID Number
 // Get Function
 app.get("/account-ID", async (req, res)=>{
-    const {username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.body
+    const {username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.query
 
     if(!username || !password || !firstName || !lastName || !phoneNumber || !email || !initialBalance){
         return res.status(400).send("User Information required")
@@ -210,7 +210,7 @@ app.get("/account-ID", async (req, res)=>{
 // Request Transaction History
 // Get Function
 app.get("/transaction-history", async (req, res)=>{
-    const {bankID, reqType} = req.body
+    const {bankID, reqType} = req.query
     if(!bankID){
         return res.status(400).send("Account ID is required")
     }
@@ -248,7 +248,6 @@ app.post("/new-account", async (req, res)=>{
 // Delete Function
 app.delete("/delete-account", async (req, res)=>{
     db.query('DELETE FROM customer WHERE accountId = ?', [bankID], (error, results)=>{
-        db.query('', [], (error, results))
         if(error){
             console.error('Error deleting existing account')
             return res.status(500).send("Error deleting existing account")

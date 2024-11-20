@@ -1,8 +1,8 @@
 import { Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField, Button } from "@aws-amplify/ui-react";
-import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import WindowWrapperEmployee from "../components/WindowWrapperEmployee"
+import React, { useState, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import axios from "axios"
 
 const ManagerDashboard = () => {
     const navigate = useNavigate()
@@ -203,7 +203,7 @@ const ManagerDashboard = () => {
                                                 cursor: 'pointer',
                                                 textAlign: 'center'
                                             }}
-                                            onClick={() => alert("This account has been deleted.")}>
+                                            >
                                             Delete Account
                                         </Button>
                                     </TableCell>
