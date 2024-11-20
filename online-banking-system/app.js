@@ -248,6 +248,7 @@ app.post("/new-account", async (req, res)=>{
 // Delete Function
 app.delete("/delete-account", async (req, res)=>{
     db.query('DELETE FROM customer WHERE accountId = ?', [bankID], (error, results)=>{
+        db.query('', [], (error, results))
         if(error){
             console.error('Error deleting existing account')
             return res.status(500).send("Error deleting existing account")
