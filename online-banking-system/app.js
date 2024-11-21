@@ -22,29 +22,9 @@ db.connect((err)=>{
     console.log('Connected to AWS RDS MySQL database')
 })
 
-// Request Modification of Account Balance
-// Put Function
-app.put('/user-account-balance-update', async (req, res)=>{
-    const{bankID, newBalance} = req.query
-    db.query('UPDATE accounts SET accountBalance = ? WHERE bankID = ?', [newBalance, bankID], (error, results)=>{
-        if(error){
-            console.error('Error updating account balance:', error)
-            res.status(404).send('Account not found')
-        }
-        
-        res.send({success: true})
-       
-    })
-})
 
-
-app.get('/test', async (req, res)=>{
-    const {username, password, object} = req.query
-    db.query('SELECT bankID FROM accounts ')
-    res.send({success: true , message : 'Hello World', username : username, password: password})
-})
-
-//Works
+// Request Validation of Credentials (Customer/Employee Login)
+// Get Function
 app.get('/validate-credentials-userLogin', async (req,res)=>{
     const {username, password, type, bankID, bankPin} = req.query
 
@@ -61,7 +41,8 @@ app.get('/validate-credentials-userLogin', async (req,res)=>{
     })
 })
 
-// Works
+// Request Validation of Credentials (ATM Login)
+// Get Function
 app.get('/validate-credentials-ATMLogin', async (req,res)=>{
     const {bankID, bankPin} = req.query
 
@@ -78,7 +59,7 @@ app.get('/validate-credentials-ATMLogin', async (req,res)=>{
     })
 })
 
-// Request "Account Settings"
+// Request Account Settings
 // Get Function
 app.get("/account-settings", async (req, res)=>{
     const {bankID, PhoneNumber} = req.query
@@ -91,10 +72,15 @@ app.get("/account-settings", async (req, res)=>{
         if(results.length > 0){
             res.send({
                 success: true,
+                bankID: results[0].bankID,
+                email: results[0].email,
+                PhoneNumber: results[0].PhoneNumber,
+                accountBalance: results[0].accountBalance,
                 username: results[0].username,
-                balance: results[0].accountBalance,
-                lastName: results[0].lastName,
-                firstName: results[0].firstName
+                password: results[0].password,
+                transactrionHistory:  results[0].transactrionHistory,
+                bankPin: results[0].bankPin,
+                role: results[0].role
             
             });
         }else {
@@ -105,8 +91,24 @@ app.get("/account-settings", async (req, res)=>{
     
 })
 
-// Request Modification of "Account Settings" - Talk with group about this
+// Request Modification of "Account Settings"
+// TO DO: '/UpdateEmail', '/UpdateUsername', '/UpdatePassword', '/UpdateBankPin', '/UpdateRole'
+
+// Request Modification of Account Balance
 // Put Function
+app.put('/UpdateAccountBalance', async (req, res)=>{
+    const{bankID, newBalance} = req.query
+    db.query('UPDATE accounts SET accountBalance = ? WHERE bankID = ?', [newBalance, bankID], (error, results)=>{
+        if(error){
+            console.error('Error updating account balance:', error)
+            res.status(404).send('Account not found')
+        }
+        
+        res.send({success: true})
+       
+    })
+})
+
 app.put("/", async (req, res)=>{
     res.send("Hello World")
 })

@@ -51,7 +51,7 @@ const DepositBills = () =>{
         }
         const newBalance = (balance + amountNum)
 
-        axios.put('http://localhost:4000/user-account-balance-update',{
+        axios.put('http://localhost:4000/UpdateAccountBalance',{
             params: {bankID: bankID, newBalance: newBalance}
         })
         .then(response => {

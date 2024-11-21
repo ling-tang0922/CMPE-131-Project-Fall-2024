@@ -62,7 +62,7 @@ const TransferFunds = () =>{
     const handleTransfer = async () =>{
         const senderNewBalance = Number(senderBalance) - Number(amount)
         const recieverNewBalance = Number(recieverBalance) + Number(amount)
-        axios.put('http://localhost:4000/user-account-balance-update', {
+        axios.put('http://localhost:4000/UpdateAccountBalance', {
             params: {bankID: bankID, newBalance: senderNewBalance}
         })
         .then(response=>{
@@ -80,7 +80,7 @@ const TransferFunds = () =>{
             }
         })
 
-        axios.put('http://localhost:4000/user-account-balance-update', {
+        axios.put('http://localhost:4000/UpdateAccountBalance', {
             params: {bankID: recieverBankID, newBalance: recieverNewBalance}
         })
         .then(response=>{
