@@ -28,8 +28,7 @@ import axios from "axios";
 
 const CustomerDashboard = () => {
     const navigate = useNavigate()
-    const location = useLocation()
-    const {bankID} = location.state
+    
     const [balance, setBalance] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -37,43 +36,28 @@ const CustomerDashboard = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [message, setMessage] = useState('')
     const [transactionHistory, setTransactions] = useState('')
+    const location = useLocation();
+    const {bankID} = location.state
 
-    
-    useEffect(() => {
-        const fetchAccountDetails = async () => {
-            try{
-                const balanceResponse = await axios.get('http://localhost:4000/account-balance', {
-                    params : {bankID: bankID}
-                })
-                setBalance(balanceResponse.data.accountBalance)
-
-                const accountSettings = await axios.get('http://localhost:4000/account-settings', {
-                    params: {bankID: bankID, accType: 'cust', reqType: 'first_name'}
-                })
-                setFirstName(accountSettings.data.firstName)
-                setLastName(accountSettings.data.lastName)
-                setUsername(accountSettings.data.username)
-            }catch(error) {
-                console.error("Error fetching account details", error)
-            }
-        }
-        const fetchTransactions = async () => {
-            try {
-                const transactions = await axios.get('http://localhost:4000/transaction-history', {
-                    params: {bankID: bankID} })
-                // more research needs to be done for this functionality
-                setTransactions(transactions.data.transactionHistory);
-            } catch (error) {
-                console.error("Error fetching transactions:", error);
-                setMessage("Error fetching transactions")
-            }
-        }
-        fetchAccountDetails()
-        fetchTransactions()
-        
-    }, [bankID])
-    
-    
+        const fetchAccountDetails = () => {
+            axios.get('http://localhost:4000/account-settings',{
+                params: {bankID: bankID }
+            })
+            .then(response =>{
+                if(response.data.success){
+                    setUsername(response.data.username)
+                    setBalance(response.data.balance)
+                }
+            })
+            .catch(error =>{
+                if(error.response && error.response.status === 401){
+                    setMessage("Invalid credentials")
+             } else{
+                setMessage("Error validating credentials")
+          }
+        })
+    }
+    fetchAccountDetails()
     
     const toggleDropdown = () => {
         setDropdownOpen(prev => !prev)
@@ -190,7 +174,7 @@ const CustomerDashboard = () => {
                             </div>
                             <div style={{ justifyContent: "flex-end" }}>
 
-                                <Text fontSize={"60px"} marginLeft={"10px"} fontWeight={"bold"} color= "#57C43F">${balance}</Text>
+                                <Text fontSize={"60px"} marginLeft={"10px"} fontWeight={"bold"} color= "#57C43F">${Number(balance).toFixed(2)}</Text>
                             </div>
                         </div>
                     </div>
@@ -206,7 +190,7 @@ const CustomerDashboard = () => {
                     <div style={{ flex: 1, margin: "0 10px" }}>
                         <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faUpload} />Deposit Check</h2>
                         <div>1. Upload the check.<br/>2. Verify the amount.</div>
-                        <Button onClick={() => { navigate('/uploadCheque'); }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Upload Check!</Button>
+                        <Button onClick={() => {navigate('/UploadCheque', {state: {bankID}}) }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Upload Check!</Button>
                     </div>
                     <div style={{ flex: 1, margin: "0 10px" }}>
                         <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBillTransfer} />Transfer Funds</h2>

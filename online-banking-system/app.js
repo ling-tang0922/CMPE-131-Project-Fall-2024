@@ -1,14 +1,11 @@
 const express = require('express')
 const cors = require('cors');
-app.use(cors());
-
-const dotenv = require('dotenv')
-require('dotenv').config();
-
-dotenv.config()
 const app = express()
-
+app.use(cors());
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 const mysql = require('mysql2')
+
 const db = mysql.createConnection({
     host: 'cmpe131project.cd4wsweu89i7.us-west-1.rds.amazonaws.com',
     user: 'Group1',
@@ -29,38 +26,23 @@ db.connect((err)=>{
 
 // Request Account Balance 
 // Get Funciton
-app.get("/account-balance", async (req, res)=>{
-    const {bankID, phoneNumber} = req.query
-    if(!bankID && !phoneNumber){
-        return res.status(400).send("Bank ID or Phone Number is required")
-    }
-    if(bankID){
-        db.query('SELECT balance FROM accounts WHERE id = ?', [bankID], (error, results)=>{
-            if(error){
-                console.error('Error fetching account balance:', error)
-                return res.status(500).send("Error fetching account balance")
-            }
-            if(results.length > 0){
-                res.send(`Account Balance : ${results[0].balance}`)
-            }
-        })
-    }
-    else if(phoneNumber){
-        db.query('SELECT balance FROM accounts WHERE phoneNumber = ?', [phoneNumber], (error, results)=>{
-            if(error){
-                console.error('Error fetching account balance:', error)
-                return res.status(500).send("Error fetching account balance")
-            }
-            if(results.length > 0){
-                res.send(`Account Balance : ${results[0].balance}`)
-            }
-        })
-    }
-    
-})
+
 
 // Request Modification of Account Balance
 // Put Function
+app.put('/user-account-balance-update', async (req, res)=>{
+    const{bankID, newBalance} = req.query
+    db.query('UPDATE accounts SET accountBalance = ? WHERE bankID = ?', [newBalance, bankID], (error, results)=>{
+        if(error){
+            console.error('Error updating account balance:', error)
+            res.status(404).send('Account not found')
+        }
+        
+        res.send({success: true})
+       
+    })
+})
+
 app.put("/account-balance", async (req, res)=>{
     const {bankID, balance, reqType, phoneNumber} = req.body
 
@@ -98,71 +80,70 @@ app.put("/account-balance", async (req, res)=>{
 
 // Request Validation of Username and Password values
 // Get Function
-app.get("/validate-credentials", async (req, res)=>{
-    const { username, password, type, bankID, ATMorLogin, bankPin} = req.query
-    if(ATMorLogin === 'Login'){
-        if(!username || !password){
-            return res.status(400).send("Username and password are required")
-        }
-        const validTables = ['employees', 'customer', 'manager']
-        if(!validTables.includes(type)){
-            return res.status(400).send("Invalid account type")
-        }
-        const query = `SELECT bankID FROM accounts WHERE username= '?' AND password = '?' AND role = '?'`
-        db.query(query, [username, password, type], (error, results)=>{
-            if(error){
-                console.error('Error validating credentials')
-                return res.status(500).send("Error validating credentials")
-            }
 
-            if(results.length > 0){
-                res.send({success : true, bankID: results[0].bankID})
-            } else{
-                res.status(401).send({success: false})
-            }
-        })
-     }
-     else if(ATMorLogin === 'ATM'){
-        if(!bankPin || !bankID){
-            return res.status(400).send("Bank ID and Bank Pin are required")
-        }
-        const validTables = ['employee', 'customer', 'manager']
-        if(!validTables.includes(type)){
-            return res.status(400).send("Invalid account type")
-        }
-        const query = `SELECT bankID FROM accounts WHERE bankID= '?' AND bankPin = '?' AND role = '?'`
-        db.query(query, [bankID, bankPin, type], (error, results)=>{
-            if(error){
-                console.error('Error validating credentials')
-                return res.status(500).send("Error validating credentials")
-            }
-
-            if(results.length > 0){
-                res.send({success : true, bankID: results[0].bankID})
-            } else{
-                res.status(401).send(false)
-            }
-        })
-     }
+app.get('/test', async (req, res)=>{
+    const {username, password, object} = req.query
+    db.query('SELECT bankID FROM accounts ')
+    res.send({success: true , message : 'Hello World', username : username, password: password})
 })
+//Works
+app.get('/validate-credentials-userLogin', async (req,res)=>{
+    const {username, password, type, bankID, bankPin} = req.query
+
+    db.query('SELECT bankID FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results)=>{
+        if(error){
+            console.error('Error validating credentials')
+            return res.status(500).send("Error validating credentials")
+        }
+        if(results.length > 0){
+            res.send({success : true, bankID: results[0].bankID})
+        } else{
+            res.status(401).send({success: false})
+        }
+    })
+})
+// Works
+app.get('/validate-credentials-ATMLogin', async (req,res)=>{
+    const {bankID, bankPin} = req.query
+
+    db.query('SELECT bankID FROM accounts WHERE bankID = ? AND bankPin = ?', [bankID, bankPin], (error, results)=>{
+        if(error){
+            console.error('Error validating credentials')
+            return res.status(500).send("Error validating credentials")
+        }
+        if(results.length > 0){
+            res.send({success : true, bankID: results[0].bankID})
+        } else{
+            res.status(401).send({success: false})
+        }
+    })
+})
+
+
 
 // Request "Account Settings" - Talk with group about this
 // Get Function
 app.get("/account-settings", async (req, res)=>{
-    const {bankID, accType, reqType} = req.query
-    if(!bankID){
-        return res.status(400).send("Account ID is required")
-    }
-    db.query('SELECT ? FROM ? WHERE id = ?', [accType, reqType, bankID], (error, results)=>{
+    const {bankID} = req.query
+    console.log(bankID)
+    db.query('SELECT * FROM accounts WHERE bankID = ?', [bankID], (error, results)=>{
         if(error){
-            console.error(`Error fetching ${reqType}`)
-            return res.status(500).send(`Error fetching ${reqType}`)
+            console.error(`Error fetching Account Settings`)
+            return res.status(500).send(`Error fetching Account Settings`)
         }
         if(results.length > 0){
-            res.send(`${reqType} : ${results[0].reqType}`)
+            res.send({
+                success: true,
+                username: results[0].username,
+                balance: results[0].accountBalance
+            
+            });
+        }else {
+            res.status(401).send({success:false})
         }
 
     })
+    
 })
 
 // Request Modification of "Account Settings" - Talk with group about this
@@ -171,56 +152,19 @@ app.put("/", async (req, res)=>{
     res.send("Hello World")
 })
 
-// Request Username value
-// Get Function
-app.get("/account-username", async (req, res)=>{
-    const bankID = req.query.accountId
-    if(!bankID){
-        return res.status(400).send("Account ID is required")
-    }
-    db.query('SELECT customer FROM username WHERE id = ?', [bankID], (error, results)=>{
-        if(error){
-            console.error('Error fetching username:', error)
-            return res.status(500).send("Error fetching username")
-        }
-        if(results.length > 0){
-            res.send(`Username : ${results[0].username}`)
-        }
-    })
-})
 
-// Request Account ID Number
-// Get Function
-app.get("/account-ID", async (req, res)=>{
-    const {username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.query
-
-    if(!username || !password || !firstName || !lastName || !phoneNumber || !email || !initialBalance){
-        return res.status(400).send("User Information required")
-    }
-    /*
-    db.query('SELECT customer FROM accountID WHERE id = ...'[], (error, results)=>{
-        if(error){
-            console.error('Error fetching accountID:', error)
-            return res.status(400).send("Account ID is required")
-        }
-    })
-    */
-})
 
 // Request Transaction History
 // Get Function
 app.get("/transaction-history", async (req, res)=>{
     const {bankID, reqType} = req.query
-    if(!bankID){
-        return res.status(400).send("Account ID is required")
-    }
     db.query('SELECT customer FROM transactionHistory WHERE id = ?', [bankID], (error, results)=>{
         if(error){
             console.error('Error fetching transaction history:', error)
             return res.status(500).send("Error fetching transaction history")
         }
         if(results.length > 0){
-            res.send(`Username : ${results[0].transactrionHistory}`)
+            res.send(`${results[0].transactrionHistory}`)
         }
     })
 })
@@ -256,6 +200,8 @@ app.delete("/delete-account", async (req, res)=>{
     })
 
 })
+
+
 
 app.listen(4000,()=>{
     console.log('Server is listening on port 4000')

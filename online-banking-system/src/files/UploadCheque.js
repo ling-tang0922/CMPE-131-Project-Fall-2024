@@ -13,8 +13,8 @@ const UploadCheque = () =>{
     const [balance, setBalance] = useState('')
     const [message, setMessage] = useState('')
     const [amount, setAmount] = useState('')
-    const bankID = location.state
-
+    const {bankID} = location.state
+    console.log(bankID)
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -29,36 +29,51 @@ const UploadCheque = () =>{
         }
         setUploadedImage(Array.from(files)[0]);
       };
-
-    const updateBalance = async (newBalance) => {
-      try{
-        await axios.put('http://localhost:4000/account-balance', {
-          bankID: bankID,
-          balance: newBalance,
-          reqType: 'customer'
-        })
-        setMessage(`Your new balance of $${newBalance.toFixed(2)} has been updated successfully.`)
-      }catch(error){
-        console.error("Error updating account balance")
-        setMessage("Error updating account balance")
+    const updateBalance = (newBalance) =>{
+      axios.put('http://localhost:4000/user-account-balance-update', {
+      params: {
+        bankID: bankID,
+        newBalance: newBalance,
       }
+    })
+    
+    .then(response => {
+      console.log('Response received:', response.data);
+      if (response.data.success) {
+        console.log('Updated')
+      }
+    })
+    .catch(error => {
+      console.error('Error occurred:', error);
+      if (error.response && error.response.status === 401) {
+        setMessage("Invalid credentials");
+      } else {
+        setMessage("Error validating credentials");
+      }
+    })
     }
+    
     const amountInput = (e) => {
       setBalance((Number(e.target.value) + Number(balance)).toString())
     }
-    useEffect(() =>{
-      const fetchBalance = async ()=>{
-        try{
-          const response = await axios.get('http://localhost:4000/account-balance', {
-            params : {bankID: bankID, phoneNumber: null}
-          })
-          setBalance(response.data.balance)
-        }catch(error){
-          console.error("Error fetching account balance:", error)
-          setMessage("Error fetching account balance")
-        }
-      }
-    }, [bankID])
+    const fetchAccountDetails = () => {
+      axios.get('http://localhost:4000/account-settings',{
+          params: {bankID: bankID }
+      })
+      .then(response =>{
+          if(response.data.success){
+              setBalance(response.data.balance)
+          }
+      })
+      .catch(error =>{
+          if(error.response && error.response.status === 401){
+              setMessage("Invalid credentials")
+       } else{
+          setMessage("Error validating credentials")
+    }
+    fetchAccountDetails()
+  })
+}
     return(<WindowWrapper showSideNav={true}>
         <div>
             <div style={{"display":"flex",justifyContent:"center"}}>
@@ -107,5 +122,5 @@ const UploadCheque = () =>{
             </div>
         </div>
     </WindowWrapper>)
-}   
+} 
 export default UploadCheque;

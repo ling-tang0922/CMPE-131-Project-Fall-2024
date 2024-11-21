@@ -14,13 +14,13 @@ const ATMLoginForm = () => {
     const [message, setMessage] = useState('')
     const handleLogin = (e) => {
         e.preventDefault()
-        axios.get('http://localhost:4000/validate-credentials',{
-          params: {username: null, password: null, type: 'employee', bankID: bankID, ATMorSignin: 'SignIn', bankPin: bankPin }
+        axios.get('http://localhost:4000/validate-credentials-ATMLogin',{
+          params: {bankID: bankID, bankPin: bankPin }
         })
         .then(response =>{
           if(response.data.success){
             const bankID = response.data.bankID
-            navigate('/CustomerDashBoard', {state: {bankID}})
+            navigate('/DashBoard', {state: {bankID}})
           }
         })
         .catch(error =>{

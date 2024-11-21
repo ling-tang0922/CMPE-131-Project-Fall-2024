@@ -51,16 +51,16 @@ const CustomerLogin = () => {
   
   
   const handleLogin = () => {
-    console.log('Sending request with params:', { username, password, type: 'customer', bankID: null, ATMorLogin: 'SignIn', bankPin: null });
-
-    axios.get('http://localhost:4000/validate-credentials', {
-      params: { username: username, password: password, type: 'customer', bankID: null, ATMorLogin: 'SignIn', bankPin: null }
+    axios.get('http://localhost:4000/validate-credentials-userLogin', {
+      params: { username: username, password: password, type: 'customer', bankID: null, bankPin: null }
     })
+    
     .then(response => {
-      console.log('Response received:', response);
+      console.log('Response received:', response.data);
       if (response.data.success) {
         const bankID = response.data.bankID;
-        navigate('/CustomerDashBoard', { state: { bankID } });
+        console.log(bankID)
+        navigate('/DashBoard', { state: { bankID } });
       }
     })
     .catch(error => {
@@ -70,8 +70,10 @@ const CustomerLogin = () => {
       } else {
         setMessage("Error validating credentials");
       }
-    });
-};
+    })
+  }
+    
+
 
   
   const handleSignUp = () => {
@@ -86,7 +88,7 @@ const CustomerLogin = () => {
       console.log('here 2')
       return
     }else{
-      axios.post('http://localhost:4000/new-account',{
+      axios.post('http://localhost:4000/app/new-account',{
         username: username,
         password: password,
         firstName: firstName,
@@ -116,9 +118,9 @@ const CustomerLogin = () => {
     console.error(error)
    })
     }
-    
-   
+
   };
+
   return (
     <WindowWrapper>
       <NavBar></NavBar>
@@ -419,5 +421,5 @@ const CustomerLogin = () => {
       </div>
     </WindowWrapper>
   );
-};
+}
 export default CustomerLogin;
