@@ -81,24 +81,75 @@ app.get("/account-settings", async (req, res)=>{
                 transactrionHistory:  results[0].transactrionHistory,
                 bankPin: results[0].bankPin,
                 role: results[0].role
-            
             });
         }else {
             res.status(401).send({success:false})
         }
-
     })
-    
 })
 
-// Request Modification of "Account Settings"
-// TO DO: '/UpdateEmail', '/UpdateUsername', '/UpdatePassword', '/UpdateBankPin', '/UpdateRole'
 
 // Request Modification of Account Balance
 // Put Function
 app.put('/UpdateAccountBalance', async (req, res)=>{
     const{bankID, newBalance} = req.query
     db.query('UPDATE accounts SET accountBalance = ? WHERE bankID = ?', [newBalance, bankID], (error, results)=>{
+        if(error){
+            console.error('Error updating account balance:', error)
+            res.status(404).send('Account not found')
+        }
+        
+        res.send({success: true})
+       
+    })
+})
+// Request Modification of Email
+// Put Function
+app.put('/UpdateEmail', async (req, res)=>{
+    const{bankID, newEmail} = req.query
+    db.query('UPDATE accounts SET email = ? WHERE bankID = ?', [newEmail, bankID], (error, results)=>{
+        if(error){
+            console.error('Error updating Email:', error)
+            res.status(404).send('Account not found')
+        }
+        
+        res.send({success: true})
+       
+    })
+})
+// Request Modification of Username
+// Put Function
+app.put('/UpdateUsername', async (req, res)=>{
+    const{bankID, newUsername} = req.query
+    db.query('UPDATE accounts SET username = ? WHERE bankID = ?', [newUsername, bankID], (error, results)=>{
+        if(error){
+            console.error('Error updating Username:', error)
+            res.status(404).send('Account not found')
+        }
+        
+        res.send({success: true})
+       
+    })
+})
+// Request Modification of Password
+// Put Function
+app.put('/UpdatePassword', async (req, res)=>{
+    const{bankID, newPassword} = req.query
+    db.query('UPDATE accounts SET password = ? WHERE bankID = ?', [newPassword, bankID], (error, results)=>{
+        if(error){
+            console.error('Error updating Password:', error)
+            res.status(404).send('Account not found')
+        }
+        
+        res.send({success: true})
+       
+    })
+})
+// Request Modification of Bank Pin
+// Put Function
+app.put('/UpdateBankPin', async (req, res)=>{
+    const{bankID, newBankPin} = req.query
+    db.query('UPDATE accounts SET bankPin = ? WHERE bankID = ?', [newBankPin, bankID], (error, results)=>{
         if(error){
             console.error('Error updating account balance:', error)
             res.status(404).send('Account not found')
