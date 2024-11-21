@@ -14,11 +14,12 @@ import { useNavigate } from "react-router-dom";
 const EmployeeLogin = () => {
   const[username, setUsername] = useState('')
   const[password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
+  const[message, setMessage] = useState('')
   const navigate = useNavigate()
+  // Backend: 
   const handleLogin = () =>{
     axios.get('http://localhost:4000/validate-credentials',{
-      params: {username: username, password: password, type: 'employee', bankID: null, ATMorSignin: 'SignIn', bankPin: null}
+      params: {username: username, password: password, type: 'employee', bankID: null, bankPin: null}
     })
     .then(response=>{
       if(response.data.success){
@@ -34,6 +35,7 @@ const EmployeeLogin = () => {
       }
     })
   }
+  //
   return (
     <WindowWrappper>
       <NavBar></NavBar>

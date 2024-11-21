@@ -4,14 +4,6 @@ import React, { useState, useEffect} from "react";
 import axios from "axios";
 import {useLocation} from 'react-router-dom'
 
-
-/*
-***Backend Notes***
-'DepositBills.js' uses two functions from app.js
-    - Request Account Balance
-    - Request Modification of Account Balance
-*/
-
 const DepositBills = () =>{
     const location = useLocation()
     const [amount, setAmount] = useState('')
@@ -19,39 +11,29 @@ const DepositBills = () =>{
     const [termsAgreed, setTermsAgreed] = useState('')
     const [balance, setBalance] = useState(0)
     const [message, setMessage] = useState('')
-    const reqType= 'cust'
-    //const bankID = location.state
-    const bankID = 'e123'
+    const bankID = location.state
     
-    const updateBalance = async (newBalance) => {
-        try {
-            await axios.put('http://localhost:4000/account-balance', {
-                bankID: bankID,       // Pass these in the request body
-                balance: newBalance,
-                reqType: reqType
-            })
-            setMessage(`Your new balance of $${newBalance.toFixed(2)} has been updated successfully.`)
-        }catch(error){
-            console.error("Error updating account balance")
-            setMessage("Error updating account balance")
-        }
-    }
-
-    useEffect(() => {
-        const fetchBalance = async () => {
-            try{
-                const response = await axios.get('http://localhost:4000/account-balance', {
-                    params : {bankID: bankID}
-                })
-                setBalance(response.data.balance)
-
-            }catch(error) {
-                console.error("Error fetching account balance:", error)
-                setMessage("Error fetching account balance")
+    const fetchBalance = () =>{
+        axios.get('http://localhost:4000/account-settings', {
+            params:{bankID: bankID}
+        })
+        .then(response =>{
+            console.log('Response recieved:', response.data)
+            if(response.data.success){
+                const accountBalance = response.data.accountBalance
+                setBalance(accountBalance)
             }
-        }
-        fetchBalance()
-    }, [bankID])
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            if (error.response && error.response.status === 401) {
+              setMessage("Invalid credentials");
+            } else {
+              setMessage("Error validating credentials");
+            }
+          })
+    }
+    fetchBalance()
 
     const handleDeposit = () =>{
         const amountNum = parseFloat(amount);
@@ -67,12 +49,28 @@ const DepositBills = () =>{
             alert("Please enter a valid deposit amount.")
             return
         }
-
         const newBalance = (balance + amountNum)
-                setBalance(newBalance);
-                updateBalance(newBalance)
-                setMessage(`You have deposited $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
-                setAmount(""); // Clear the input
+
+        axios.put('http://localhost:4000/user-account-balance-update',{
+            params: {bankID: bankID, newBalance: newBalance}
+        })
+        .then(response => {
+            console.log('Response recieved:', response.data)
+            if(response.data.success){
+                setMessage('Success!')
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            if (error.response && error.response.status === 401) {
+              setMessage("Invalid credentials");
+            } else {
+              setMessage("Error validating credentials");
+            }
+        })
+
+        setMessage(`You have deposited $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
+        setAmount(""); // Clear the input
     }
     return(<WindowWrapper showSideNav={true}>
         <div>

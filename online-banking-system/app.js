@@ -22,12 +22,6 @@ db.connect((err)=>{
     console.log('Connected to AWS RDS MySQL database')
 })
 
-
-
-// Request Account Balance 
-// Get Funciton
-
-
 // Request Modification of Account Balance
 // Put Function
 app.put('/user-account-balance-update', async (req, res)=>{
@@ -43,49 +37,13 @@ app.put('/user-account-balance-update', async (req, res)=>{
     })
 })
 
-app.put("/account-balance", async (req, res)=>{
-    const {bankID, balance, reqType, phoneNumber} = req.body
-
-    if(!bankID || !balance || !reqType){
-        return res.status(400).send("Account ID or Phone Number, and Balance or Request Type are required")
-    }
-    
-    // Add to Balance
-    if(bankID){
-        db.query('UPDATE ? SET balance = ? WHERE id = ?', [reqType, balance, bankID], (error, results)=>{
-            if(error){
-                console.error('Error updating account balance:', error)
-            }
-            if(results.affectedRows > 0){
-                res.send("Account balance updated successfully")
-            }else{
-                res.status(404).send("Account not found")
-            }
-        })
-    }
-    else if(phoneNumber){
-        db.query('UPDATE ? SET balance = ? WHERE phoneNumber = ?', [reqType, balance, phoneNumber], (error, results)=>{
-            if(error){
-                console.error('Error updating account balance:', error)
-            }
-            if(results.affectedRows > 0){
-                res.send("Account balance updated successfully")
-            }else{
-                res.status(404).send("Account not found")
-            }
-        })
-    }
-    
-})
-
-// Request Validation of Username and Password values
-// Get Function
 
 app.get('/test', async (req, res)=>{
     const {username, password, object} = req.query
     db.query('SELECT bankID FROM accounts ')
     res.send({success: true , message : 'Hello World', username : username, password: password})
 })
+
 //Works
 app.get('/validate-credentials-userLogin', async (req,res)=>{
     const {username, password, type, bankID, bankPin} = req.query
@@ -102,6 +60,7 @@ app.get('/validate-credentials-userLogin', async (req,res)=>{
         }
     })
 })
+
 // Works
 app.get('/validate-credentials-ATMLogin', async (req,res)=>{
     const {bankID, bankPin} = req.query
@@ -119,9 +78,7 @@ app.get('/validate-credentials-ATMLogin', async (req,res)=>{
     })
 })
 
-
-
-// Request "Account Settings" - Talk with group about this
+// Request "Account Settings"
 // Get Function
 app.get("/account-settings", async (req, res)=>{
     const {bankID, PhoneNumber} = req.query
@@ -153,8 +110,6 @@ app.get("/account-settings", async (req, res)=>{
 app.put("/", async (req, res)=>{
     res.send("Hello World")
 })
-
-
 
 // Request Transaction History
 // Get Function
@@ -199,8 +154,6 @@ app.delete("/delete-account", async (req, res)=>{
     })
 
 })
-
-
 
 app.listen(4000,()=>{
     console.log('Server is listening on port 4000')
