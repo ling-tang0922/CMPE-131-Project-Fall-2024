@@ -14,66 +14,71 @@ const UploadCheque = () =>{
     const [message, setMessage] = useState('')
     const [amount, setAmount] = useState('')
     const {bankID} = location.state
-    console.log(bankID)
+    // Bankend:
+    const updateBalance = (balance) =>{
+      const newBalance = balance + amount
+      axios.put('http://localhost:4000/user-account-balance-update', {
+      params: {
+        bankID: bankID,
+        newBalance: newBalance,
+      }
+      })
+    
+      .then(response => {
+        console.log('Response received:', response.data);
+        if (response.data.success) {
+          console.log('Updated')
+        }
+      })
+      .catch(error => {
+        console.error('Error occurred:', error);
+        if (error.response && error.response.status === 401) {
+          setMessage("Invalid credentials");
+        } else {
+          setMessage("Error validating credentials");
+        }
+      })
+    }
+
+    const fetchAccountDetails = () => {
+      axios.get('http://localhost:4000/account-settings',{
+        params: {bankID: bankID }
+      })
+      .then(response =>{
+        if(response.data.success){
+          setBalance(response.data.balance)
+        }
+      })
+      .catch(error =>{
+        if(error.response && error.response.status === 401){
+          setMessage("Invalid credentials")
+        } else{
+          setMessage("Error validating credentials")
+        }
+      })
+    }
+    fetchAccountDetails()
+    //
     const handleImageChange = (event) => {
-        const file = event.target.files[0];
+      const file = event.target.files[0];
         if (file) {
           const imageUrl = URL.createObjectURL(file);
           setUploadedImage(imageUrl);
         }
       };
     const onFilePickerChange = (event) => {
-        const { files } = event.target;
-        if (!files || files.length === 0) {
-          return;
-        }
-        setUploadedImage(Array.from(files)[0]);
-      };
-    const updateBalance = (newBalance) =>{
-      axios.put('http://localhost:4000/user-account-balance-update', {
-      params: {
-        bankID: bankID,
-        newBalance: newBalance,
+      const { files } = event.target;
+      if (!files || files.length === 0) {
+        return;
       }
-    })
+      setUploadedImage(Array.from(files)[0]);
+    };
     
-    .then(response => {
-      console.log('Response received:', response.data);
-      if (response.data.success) {
-        console.log('Updated')
-      }
-    })
-    .catch(error => {
-      console.error('Error occurred:', error);
-      if (error.response && error.response.status === 401) {
-        setMessage("Invalid credentials");
-      } else {
-        setMessage("Error validating credentials");
-      }
-    })
-    }
     
     const amountInput = (e) => {
       setBalance((Number(e.target.value) + Number(balance)).toString())
     }
-    const fetchAccountDetails = () => {
-      axios.get('http://localhost:4000/account-settings',{
-          params: {bankID: bankID }
-      })
-      .then(response =>{
-          if(response.data.success){
-              setBalance(response.data.balance)
-          }
-      })
-      .catch(error =>{
-          if(error.response && error.response.status === 401){
-              setMessage("Invalid credentials")
-       } else{
-          setMessage("Error validating credentials")
-    }
-    fetchAccountDetails()
-  })
-}
+    
     return(<WindowWrapper showSideNav={true}>
         <div>
             <div style={{"display":"flex",justifyContent:"center"}}>
@@ -113,7 +118,7 @@ const UploadCheque = () =>{
                 <Input  
                   placeholder="Verify Amount"
                   value={amount}
-                  onChange={amountInput}
+                  onChange={amountInput()}
                   />   
                 </div>
                 <p>Note: Make sure you have signed on the back side of the check</p>

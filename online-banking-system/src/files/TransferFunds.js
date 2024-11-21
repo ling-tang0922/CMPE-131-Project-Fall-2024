@@ -7,60 +7,98 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 const TransferFunds = () =>{
-
-    //const location = useLocation()
     const [message, setMessage] = useState('')
     const [senderBalance, setSenderBalance] = useState('')
     const [recieverBalance, setRecieverBalance] = useState('')
     const [amount, setAmount] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
-    //const bankID = location.state
-    const bankID = 123
-    const [activate, setActivate] = useState(false)
-    useEffect(() =>{
-        const fetchBalance = async (bankIDInput, phoneNumberInput)=>{
-            try{
-                const response = await axios.get('http://localhost:4000/account-balance', {
-                    params: {bankID : bankIDInput, phoneNumber: phoneNumberInput}
-                })
-                if(!activate){
-                    setSenderBalance(response.data.balance)
-                }
-                else{
-                    setRecieverBalance(response.data.balance)
-                }
-            }catch(error){
-                console.error("Error fetching account balance", error)
-                setMessage("Error fetching account balance")
+    const location = useLocation()
+    const {bankID} = location.state
+    const [recieverBankID, setRecieverBankID] = useState('')
+    // Backend:
+    const fetchBalance = async () =>{
+        axios.get('http://localhost:4000/account-settings',{
+            params: {bankdID : bankID, PhoneNumber: null}
+        })
+        .then(response =>{
+            console.log('Response recieved:', response.data)
+            if(response.data.success){
+                const balance = response.data.accountBalance
+                setSenderBalance(balance)
             }
-        }
-        if(activate){
-            fetchBalance(null, phoneNumber)
-        }
-    }, [activate, bankID])
-    
+        })
+        .catch(error => {
+            console.error('Error occured:', error)
+            if (error.response && error.response.status === 401) {
+                setMessage("Invalid credentials");
+            } else {
+                setMessage("Error validating credentials");
+            }
+        })
+
+        axios.get('http://localhost:4000/account-settings',{
+            params: {bankdID : null, PhoneNumber: phoneNumber}
+        })
+        .then(response =>{
+            console.log('Response recieved:', response.data)
+            if(response.data.success){
+                const balance = response.data.accountBalance
+                const bankID = response.data.bankID
+                setRecieverBalance(balance)
+                setRecieverBankID(bankID)
+            }
+        })
+        .catch(error => {
+            console.error('Error occured:', error)
+            if (error.response && error.response.status === 401) {
+                setMessage("Invalid credentials");
+            } else {
+                setMessage("Error validating credentials");
+            }
+        })
+    }
+    fetchBalance()
+
     const handleTransfer = async () =>{
         const senderNewBalance = Number(senderBalance) - Number(amount)
         const recieverNewBalance = Number(recieverBalance) + Number(amount)
-        try{
-            await axios.put('http://localhost:4000/account-balance', {
-                bankID: bankID,
-                balance: senderNewBalance,
-                reqType: 'customer',
-                phoneNumber: null
-            })
-            await axios.put('http://localhost:4000/account-balance', {
-                bankID: null,
-                balance: recieverNewBalance,
-                reqType: 'customer',
-                phoneNumber: phoneNumber
-            })
-            setMessage(`$${amount} has been transfered to ${phoneNumber}`)
-        }catch(error){
-            console.error('Error updating both account balances')
-            setMessage('Error updating both account balances')
-        }
+        axios.put('http://localhost:4000/user-account-balance-update', {
+            params: {bankID: bankID, newBalance: senderNewBalance}
+        })
+        .then(response=>{
+            console.log('Response recieved:', response.data)
+            if(response.data.succuss){
+                setMessage('Success!')
+            }
+        })
+        .catch(error=>{
+            console.error('Error occured:', error)
+            if (error.response && error.response.status === 401) {
+                setMessage("Invalid credentials");
+            } else {
+                setMessage("Error validating credentials");
+            }
+        })
+
+        axios.put('http://localhost:4000/user-account-balance-update', {
+            params: {bankID: recieverBankID, newBalance: recieverNewBalance}
+        })
+        .then(response=>{
+            console.log('Response recieved:', response.data)
+            if(response.data.succuss){
+                setMessage('Success!')
+            }
+        })
+        .catch(error=>{
+            console.error('Error occured:', error)
+            if (error.response && error.response.status === 401) {
+                setMessage("Invalid credentials");
+            } else {
+                setMessage("Error validating credentials");
+            }
+        })
     }
+    //
     return(<WindowWrapper showSideNav={true}>
         <div>
             <div style={{"display":"flex",justifyContent:"center"}}>
@@ -87,7 +125,7 @@ const TransferFunds = () =>{
                 placeholder="Enter Amount"/>   
                 </div>     
                 <CheckboxField  margin="10px" label="I agree to all terms and conditions"/>
-                <Button onClick={() => setActivate(true)} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Transfer Funds!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
+                <Button onClick={() => handleTransfer()} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Transfer Funds!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
             </div>
         </div>
     </WindowWrapper>)

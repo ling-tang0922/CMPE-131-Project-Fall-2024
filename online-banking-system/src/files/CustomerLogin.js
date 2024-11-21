@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { CiUser, CiLock, CiMail, CiSquareChevRight } from "react-icons/ci";
 import WindowWrapper from "../components/WindowWrapper";
 import axios from "axios";
+import NavBar from "../components/NavBar"
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   Label,
@@ -10,9 +12,9 @@ import {
   Tabs,
   Divider,
   PhoneNumberField,
+  AccountSettings,
 } from "@aws-amplify/ui-react";
-import NavBar from "../components/NavBar"
-import { useNavigate } from 'react-router-dom'
+
 const welcomeMSG = (
   <>
     <h1 style={{ textAlign: "center", marginTop: "10%", marginBottom: "0" }}>
@@ -48,8 +50,9 @@ const CustomerLogin = () => {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [initialBalance, setBalance] = useState("")
   const [message, setMessage] = useState("")
+  const [newBankID, setNewBankID] = useState('')
   
-  
+  // Backend:
   const handleLogin = () => {
     axios.get('http://localhost:4000/validate-credentials-userLogin', {
       params: { username: username, password: password, type: 'customer', bankID: null, bankPin: null }
@@ -59,10 +62,10 @@ const CustomerLogin = () => {
       console.log('Response received:', response.data);
       if (response.data.success) {
         const bankID = response.data.bankID;
-        console.log(bankID)
         navigate('/DashBoard', { state: { bankID } });
       }
     })
+
     .catch(error => {
       console.error('Error occurred:', error);
       if (error.response && error.response.status === 401) {
@@ -72,23 +75,36 @@ const CustomerLogin = () => {
       }
     })
   }
-    
 
+  const generateID = () =>{
+    const IDcheck = 'e' + (Math.floor(1000 + Math.random() * 9000)).toString()
+    axios.get('http://localhost:4000/account-settings',{
+      params: {bankID: IDcheck }
+    })
+    .then(response =>{
+      if(response.data.success){
+        checkDupID()
+      }
+    })
+    .catch(error =>{
+      setNewBankID(IDcheck)
+    })
+  }
 
-  
   const handleSignUp = () => {
-    
     if(!username || !password || !firstName || !lastName || !phoneNumber || !email){
       setMessage("All fields are required")
-      console.log('here 1')
       return
-     }
+    }
+
     else if(password !== confirmPassword){
       setMessage("Passwords don't match")
-      console.log('here 2')
       return
-    }else{
-      axios.post('http://localhost:4000/app/new-account',{
+    }
+    
+    else{
+      generateID()
+      axios.post('http://localhost:4000/new-account',{
         username: username,
         password: password,
         firstName: firstName,
@@ -96,31 +112,25 @@ const CustomerLogin = () => {
         phoneNumber: phoneNumber,
         email: email,
         intitialBalance: initialBalance || 0,
-   })
-   .then(response =>{
-    if(response.data.success){
-      setMessage("Account Created")
+        bankID: newBankID
+      })
 
-        navigate("/CustomerDashboard", axios.get('http://localhost:4000/account-ID', {params: {
-        username: username,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        email: email,
-        intitialBalance: initialBalance || 0
-        }}))
-    
-    }
-   })
-   .catch(error =>{
-    setMessage("Error creating new account")
-    console.error(error)
-   })
+      .then(response =>{
+        if(response.data.success){
+          setMessage("Account Created")
+          const bankID = response.data.bankID
+          navigate('/Dashboard', {state : {bankID}})
+        }
+      })
+      
+      .catch(error =>{
+        setMessage("Error creating new account")
+        console.error('Error occured:', error)
+      })
     }
 
   };
-
+  //
   return (
     <WindowWrapper>
       <NavBar></NavBar>

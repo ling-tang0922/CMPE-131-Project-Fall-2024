@@ -124,9 +124,9 @@ app.get('/validate-credentials-ATMLogin', async (req,res)=>{
 // Request "Account Settings" - Talk with group about this
 // Get Function
 app.get("/account-settings", async (req, res)=>{
-    const {bankID} = req.query
+    const {bankID, PhoneNumber} = req.query
     console.log(bankID)
-    db.query('SELECT * FROM accounts WHERE bankID = ?', [bankID], (error, results)=>{
+    db.query('SELECT * FROM accounts WHERE bankID = ? OR PhoneNumber = ?', [bankID, PhoneNumber], (error, results)=>{
         if(error){
             console.error(`Error fetching Account Settings`)
             return res.status(500).send(`Error fetching Account Settings`)
@@ -135,7 +135,9 @@ app.get("/account-settings", async (req, res)=>{
             res.send({
                 success: true,
                 username: results[0].username,
-                balance: results[0].accountBalance
+                balance: results[0].accountBalance,
+                lastName: results[0].lastName,
+                firstName: results[0].firstName
             
             });
         }else {
@@ -172,12 +174,9 @@ app.get("/transaction-history", async (req, res)=>{
 // Request to Store New Account Information
 // Post Function
 app.post("/new-account", async (req, res)=>{
-    const { username, password, firstName, lastName, phoneNumber, email, initialBalance} = req.body
+    const { username, password, firstName, lastName, phoneNumber, email, initialBalance, bankID} = req.body
 
-    if(!username || !password || !firstName || !lastName || !phoneNumber || !email || !initialBalance){
-        return res.status(400).send({error: "User Information required"})
-    }
-    db.query('INSERT INTO customer (username, password, firstName, lastName, phoneNumber, email, balance) VALUES(?, ?, ?, ?, ?, ?, ?)',
+    db.query('INSERT INTO customer (username, password, firstName, lastName, PhoneNumber, email, balance) VALUES(?, ?, ?, ?, ?, ?, ?)',
     [username, password, firstName, lastName, phoneNumber, email, initialBalance], (error, results) =>{
         if(error){
             console.error('Error creating new account:', error)

@@ -7,25 +7,6 @@ import { useNavigate, useLocation} from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-/*
-***Backend Notes***
-    'CustomerDashBoard.js' uses two functions from app.js
-    - Request Account Balance, ~ Line 21, Used 1 time
-        When the 'CustomerDashboard.js' page is loaded, a request will then be sent to the AWS Database for the
-        Account Balance Value using the users Account Id. A response is then sent
-        back to "ATMDashboard.js" that contains the Account Balance Value. This
-        value will then be stored in the variable 'balance' using the 'setBalance'
-        function expression.
-
-    - Request Account Settings, ~ Lines 30 & 35, Used 3 times
-        The account settings that are requested for the Customer Dashboard are
-        the First Name, Last Name, and Username. Each piece of information will
-        have it's own request thats sent to the database and its own reponse sent
-        from the database containing that variables data. Although each piece of
-        information is using its own 'axios' request, all are being sent through the 
-        same node.js function 'account-settings'.
-*/
-
 const CustomerDashboard = () => {
     const navigate = useNavigate()
     
@@ -38,27 +19,31 @@ const CustomerDashboard = () => {
     const [transactionHistory, setTransactions] = useState('')
     const location = useLocation();
     const {bankID} = location.state
-
-        const fetchAccountDetails = () => {
-            axios.get('http://localhost:4000/account-settings',{
-                params: {bankID: bankID }
-            })
-            .then(response =>{
-                if(response.data.success){
-                    setUsername(response.data.username)
-                    setBalance(response.data.balance)
-                }
-            })
-            .catch(error =>{
-                if(error.response && error.response.status === 401){
-                    setMessage("Invalid credentials")
-             } else{
+    //Backend:
+    const fetchAccountDetails = () => {
+        axios.get('http://localhost:4000/account-settings',{
+            params: {bankID: bankID }
+        })
+        .then(response =>{
+            if(response.data.success){
+                setUsername(response.data.username)
+                setBalance(response.data.balance)
+                setFirstName(response.data.firstName)
+                setLastName(response.data.lastName)
+            }
+        })
+        .catch(error =>{
+            if(error.response && error.response.status === 401){
+                setMessage("Invalid credentials")
+            } 
+            else{
                 setMessage("Error validating credentials")
-          }
+            }
         })
     }
-    fetchAccountDetails()
     
+    fetchAccountDetails()
+    //
     const toggleDropdown = () => {
         setDropdownOpen(prev => !prev)
     }
