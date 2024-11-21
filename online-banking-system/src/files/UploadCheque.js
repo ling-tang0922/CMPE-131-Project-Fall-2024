@@ -13,15 +13,13 @@ const UploadCheque = () =>{
     const [balance, setBalance] = useState('')
     const [message, setMessage] = useState('')
     const [amount, setAmount] = useState('')
-    const {bankID} = location.state
+    const {bankID} = location.state || {}
     // Bankend:
-    const updateBalance = (balance) =>{
-      const newBalance = balance + amount
+    const updateBalance = () =>{
+      const newBalance = (Number(balance) + Number(amount)).toString()
       axios.put('http://localhost:4000/UpdateAccountBalance', {
-      params: {
         bankID: bankID,
         newBalance: newBalance,
-      }
       })
     
       .then(response => {
@@ -46,7 +44,7 @@ const UploadCheque = () =>{
       })
       .then(response =>{
         if(response.data.success){
-          setBalance(response.data.balance)
+          setBalance(response.data.accountBalance)
         }
       })
       .catch(error =>{
@@ -74,10 +72,6 @@ const UploadCheque = () =>{
       setUploadedImage(Array.from(files)[0]);
     };
     
-    
-    const amountInput = (e) => {
-      setBalance((Number(e.target.value) + Number(balance)).toString())
-    }
     
     return(<WindowWrapper showSideNav={true}>
         <div>
@@ -111,19 +105,21 @@ const UploadCheque = () =>{
                 <VisuallyHidden></VisuallyHidden>
                 <div style={{margin:"30px 0"}}>
                 <Label>Amount: $</Label>
-                <Input  placeholder="Enter Amount"/>   
+                <Input  
+                  placeholder="Enter Amount"
+                  />   
                 </div>     
                 <div style={{margin:"30px 0"}}>
                 <Label>Verify Amount: $</Label>
                 <Input  
                   placeholder="Verify Amount"
                   value={amount}
-                  onChange={amountInput()}
+                  onChange={(e)=> setAmount(e.target.value)}
                   />   
                 </div>
                 <p>Note: Make sure you have signed on the back side of the check</p>
                 <CheckboxField  margin="10px 0px" label="I agree to all terms and conditions"/>
-                <Button onClick={() => updateBalance(balance)} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Deposit Check!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
+                <Button onClick={() => updateBalance()} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Deposit Check!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
             </div>
         </div>
     </WindowWrapper>)

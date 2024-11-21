@@ -27,7 +27,7 @@ const CustomerDashboard = () => {
         .then(response =>{
             if(response.data.success){
                 setUsername(response.data.username)
-                setBalance(response.data.balance)
+                setBalance(response.data.accountBalance)
                 setFirstName(response.data.firstName)
                 setLastName(response.data.lastName)
             }

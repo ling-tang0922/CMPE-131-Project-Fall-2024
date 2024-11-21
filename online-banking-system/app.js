@@ -92,7 +92,7 @@ app.get("/account-settings", async (req, res)=>{
 // Request Modification of Account Balance
 // Put Function
 app.put('/UpdateAccountBalance', async (req, res)=>{
-    const{bankID, newBalance} = req.query
+    const{bankID, newBalance} = req.body
     db.query('UPDATE accounts SET accountBalance = ? WHERE bankID = ?', [newBalance, bankID], (error, results)=>{
         if(error){
             console.error('Error updating account balance:', error)

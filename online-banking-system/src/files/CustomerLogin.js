@@ -83,7 +83,7 @@ const CustomerLogin = () => {
     })
     .then(response =>{
       if(response.data.success){
-        checkDupID()
+        generateID()
       }
     })
     .catch(error =>{
