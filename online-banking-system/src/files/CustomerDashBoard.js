@@ -19,8 +19,24 @@ const CustomerDashboard = () => {
     const [message, setMessage] = useState('')
     const [transactionHistory, setTransactions] = useState('')
     const location = useLocation();
-    const bankID = localStorage.getItem("bankID")
+    const bankID = localStorage.get("bankID") || {}
     //Backend:
+    axios.get('http://localhost:4000/transaction-history',{
+            params: {bankID: bankID }
+        })
+        .then(response =>{
+            if(response.data.success){
+                setTransactions(response.data)
+            }
+        })
+        .catch(error =>{
+            if(error.response && error.response.status === 401){
+                setMessage("Invalid credentials")
+            } 
+            else{
+                setMessage("Error validating credentials")
+            }
+        })
     const fetchAccountDetails = () => {
         axios.get('http://localhost:4000/account-settings',{
             params: {bankID: bankID }
@@ -60,7 +76,10 @@ const CustomerDashboard = () => {
             closeDropdown()
         }
     }
-
+    const signOut = () => {
+        localStorage.set('bankID', '')
+        navigate('/')
+    }
     useEffect(() => {
         window.addEventListener('click', clickOutside);
         return () => {
@@ -69,12 +88,7 @@ const CustomerDashboard = () => {
     }, []);
 
     // Sample data
-    const transactions = [
-        { dateTime: '2024-10-01 01:30', type: 'Deposit', amount: '+$200' },
-        { dateTime: '2024-10-05 14:03', type: 'Withdrawal', amount: '-$50' },
-        { dateTime: '2024-10-10 07:00', type: 'Deposit', amount: '+$100' },
-        { dateTime: '2024-10-12 16:45', type: 'Transfer', amount: '-$150' },
-    ];
+    
 
     return (
         <WindowWrapper showSideNav={true}>
@@ -123,7 +137,7 @@ const CustomerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }} 
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'} 
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/')}
+                                        onClick={() => signOut()}
                                     >
                                         Log Out
                                     </li>
@@ -203,7 +217,7 @@ const CustomerDashboard = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {transactions.slice(0, 4).map((transaction, index) => (
+                                {transactionHistory.slice(0, 4).map((transaction, index) => (
                                     <TableRow key={index}>
                                         <TableCell>{transaction.dateTime}</TableCell>
                                         <TableCell>{transaction.type}</TableCell>

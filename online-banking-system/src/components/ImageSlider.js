@@ -62,6 +62,7 @@ const textOverlayStyles = {
 const ImageSlider = ({ slides }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(1); 
+  const bankID = localStorage.getItem("bankID")
 
   const goToPrevious = () => {
     const isFirstSlide = currentIndex === 0;

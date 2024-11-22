@@ -61,8 +61,8 @@ const CustomerLogin = () => {
     .then(response => {
       console.log('Response received:', response.data);
       if (response.data.success) {
-        const bankID = response.data.bankID;
-        localStorage.setItem("bankID", bankID);
+        const bankID = response.data.bankID
+        localStorage.setItem("bankID", bankID)
 
         navigate('/DashBoard');
       }

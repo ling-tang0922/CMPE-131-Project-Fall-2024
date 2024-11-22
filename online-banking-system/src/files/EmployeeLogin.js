@@ -19,7 +19,7 @@ const EmployeeLogin = () => {
   // Backend: 
   const handleLogin = () =>{
     axios.get('http://localhost:4000/validate-credentials',{
-      params: {username: username, password: password, type: 'employee', bankID: null, bankPin: null}
+      params: {username: username, password: password, type: 'employee'}
     })
     .then(response=>{
       if(response.data.success){

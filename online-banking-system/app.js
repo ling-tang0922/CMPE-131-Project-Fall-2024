@@ -90,6 +90,33 @@ app.get("/account-settings", async (req, res)=>{
     })
 })
 
+app.get("/account-settings-role", async (req, res)=>{
+    const {role} = req.query
+    db.query('SELECT * FROM accounts WHERE role = ?', [role], (error, results)=>{
+        if(error){
+            console.error(`Error fetching Account Settings`)
+            return res.status(500).send(`Error fetching Account Settings`)
+        }
+        if(results.length > 0){
+            res.send({
+                success: true,
+                bankID: results[0].bankID,
+                email: results[0].email,
+                PhoneNumber: results[0].PhoneNumber,
+                accountBalance: results[0].accountBalance,
+                username: results[0].username,
+                password: results[0].password,
+                transactrionHistory:  results[0].transactrionHistory,
+                bankPin: results[0].bankPin,
+                role: results[0].role,
+                firstName: results[0].firstName,
+                lastName: results[0].lastName
+            });
+        }else {
+            res.status(401).send({success:false})
+        }
+    })
+})
 
 // Request Modification of Account Balance
 // Put Function
@@ -169,8 +196,20 @@ app.put("/", async (req, res)=>{
 // Request Transaction History
 // Get Function
 app.get("/transaction-history", async (req, res)=>{
-    const {bankID, reqType} = req.query
-    db.query('SELECT customer FROM transactionHistory WHERE id = ?', [bankID], (error, results)=>{
+    const {bankID} = req.query
+    db.query('SELECT * FROM transactionHistory WHERE id = ?', [bankID], (error, results)=>{
+        if(error){
+            console.error('Error fetching transaction history:', error)
+            return res.status(500).send("Error fetching transaction history")
+        }
+        if(results.length > 0){
+            res.send(`${results[0].transactrionHistory}`)
+        }
+    })
+})
+
+app.get("/totalTransactionHistory", async (req, res)=>{
+    db.query('SELECT * FROM transactionHistory', (error, results)=>{
         if(error){
             console.error('Error fetching transaction history:', error)
             return res.status(500).send("Error fetching transaction history")
@@ -200,14 +239,24 @@ app.post("/new-account", async (req, res)=>{
 // Request Deletion of Account
 // Delete Function
 app.delete("/delete-account", async (req, res)=>{
-    db.query('DELETE FROM customer WHERE accountId = ?', [bankID], (error, results)=>{
+    const{bankID} = req.query
+    db.query('DELETE FROM accounts WHERE bankID = ?', [bankID], (error, results)=>{
         if(error){
             console.error('Error deleting existing account')
             return res.status(500).send("Error deleting existing account")
         }
         res.send({success:true})
     })
-
+})
+app.delete('/deleteAccountHistory', async (req, res)=>{
+    const {bankID} = req.query
+    db.query('DELETE FROM transactionHistory WHERE bankID = ?', [bankID], (error, results)=>{
+        if(error){
+            console.error('Error deleting existing account')
+            return res.status(500).send("Error deleting existing account")
+        }
+        res.send({success:true})
+    })
 })
 
 app.listen(4000,()=>{

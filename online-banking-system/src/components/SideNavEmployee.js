@@ -6,6 +6,7 @@ import { faUser, faClipboardList, faCog } from '@fortawesome/free-solid-svg-icon
 
 const SideNavEmployee = ({style={}}) => {
   const navigate = useNavigate();
+  const bankID = localStorage.getItem("bankID")
   return (
     <div style={{position:"fixed"}}>
         <Sidebar rootStyles={{

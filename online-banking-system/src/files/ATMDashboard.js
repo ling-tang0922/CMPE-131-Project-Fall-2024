@@ -9,8 +9,7 @@ const ATMDashboard = () => {
     const [message, setMessage] = useState('')
     const [balance, setBalance] = useState(0)
 
-    const {bankID} = location.state
-
+    const bankID = localStorage.get("bankID") || {}
     useEffect(() => {
         const fetchBalance = async () => {
             try {

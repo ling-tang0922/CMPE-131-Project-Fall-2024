@@ -37,6 +37,7 @@ root.render(
     <Route path="/EmployeeDashboard" element={<EmployeeDashboard/>} />
     <Route path="/AccountSettings" element={<AccountSettings/>} />
     <Route path="/TransactionHistoryManager" element={<TransactionHistoryManager/>} />
+    <Route path="/EmployeeManagement" element={<EmployeeManagement/>} />
     </Routes>
   </Router>
   

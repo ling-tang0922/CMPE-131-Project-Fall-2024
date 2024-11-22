@@ -1,34 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import WindowWrapper from '../components/WindowWrapper';
 
 const TransactionPage = () => {
     // State to hold transactions
     const [transactions, setTransactions] = useState([]);
-
+    const bankID = localStorage.get("bankID") || {}
     // Fetch transactions from the API
-    useEffect(() => {
-        const fetchTransactions = async () => {
-            try {
-                const response = await axios.get('/transactionhistory');
-                const transactionData = response.data.transactions;
-
-                // Format the transactions to match the desired structure
-                const formattedTransactions = transactionData.map(transaction => ({
-                    dateTime: new Date(transaction.date).toLocaleString(), // Format date as 'YYYY-MM-DD HH:mm'
-                    type: transaction.type,
-                    amount: transaction.amount > 0 ? `+$${transaction.amount}` : `-$${Math.abs(transaction.amount)}`,
-                    balanceAfter: `$${transaction.balanceAfter.toFixed(2)}`, // Format balance to two decimal places
-                }));
-
-                setTransactions(formattedTransactions);
-            } catch (error) {
-                console.error('Error fetching transaction history:', error);
+    axios.get('http://localhost:4000/transactionHistory',{
+            params: {bankID: bankID }
+        })
+        .then(response =>{
+            if(response.data.success){
+                setTransactions(response.data.transactionHistory)
             }
-        };
-
-        fetchTransactions();
-    }, []); // Run only once when the component mounts
+        })
+        .catch(error =>{
+            if(error.response && error.response.status === 401){
+                alert("Invalid credentials")
+            } 
+            else{
+                alert("Error validating credentials")
+            }
+        })
 
     return (
         <WindowWrapper showSideNav={true}>

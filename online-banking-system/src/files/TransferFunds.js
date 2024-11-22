@@ -7,13 +7,11 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 const TransferFunds = () =>{
-    const [message, setMessage] = useState('')
     const [senderBalance, setSenderBalance] = useState('')
     const [recieverBalance, setRecieverBalance] = useState('')
     const [amount, setAmount] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
-    const location = useLocation()
-    const {bankID} = location.state
+    const bankID = localStorage.get("bankID") || {}
     const [recieverBankID, setRecieverBankID] = useState('')
     // Backend:
     const fetchBalance = async () =>{
@@ -30,9 +28,9 @@ const TransferFunds = () =>{
         .catch(error => {
             console.error('Error occured:', error)
             if (error.response && error.response.status === 401) {
-                setMessage("Invalid credentials");
+                alert("Invalid credentials");
             } else {
-                setMessage("Error validating credentials");
+                alert("Error validating credentials");
             }
         })
 
@@ -51,9 +49,9 @@ const TransferFunds = () =>{
         .catch(error => {
             console.error('Error occured:', error)
             if (error.response && error.response.status === 401) {
-                setMessage("Invalid credentials");
+                alert("Invalid credentials");
             } else {
-                setMessage("Error validating credentials");
+                alert("Error validating credentials");
             }
         })
     }
@@ -68,15 +66,15 @@ const TransferFunds = () =>{
         .then(response=>{
             console.log('Response recieved:', response.data)
             if(response.data.succuss){
-                setMessage('Success!')
+                alert('Success!')
             }
         })
         .catch(error=>{
             console.error('Error occured:', error)
             if (error.response && error.response.status === 401) {
-                setMessage("Invalid credentials");
+                alert("Invalid credentials");
             } else {
-                setMessage("Error validating credentials");
+                alert("Error validating credentials");
             }
         })
 
@@ -86,15 +84,15 @@ const TransferFunds = () =>{
         .then(response=>{
             console.log('Response recieved:', response.data)
             if(response.data.succuss){
-                setMessage('Success!')
+                alert('Success!')
             }
         })
         .catch(error=>{
             console.error('Error occured:', error)
             if (error.response && error.response.status === 401) {
-                setMessage("Invalid credentials");
+                alert("Invalid credentials");
             } else {
-                setMessage("Error validating credentials");
+                alert("Error validating credentials");
             }
         })
     }

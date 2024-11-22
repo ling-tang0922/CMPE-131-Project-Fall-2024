@@ -12,7 +12,7 @@ const AccountSettings = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
-    const [bankID, setBankID] = useState('')
+    const bankID = localStorage.get("bankID") || {}
     const [email, setEmail] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
 

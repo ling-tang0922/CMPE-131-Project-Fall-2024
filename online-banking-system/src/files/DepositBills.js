@@ -5,13 +5,11 @@ import axios from "axios";
 import {useLocation} from 'react-router-dom'
 
 const DepositBills = () =>{
-    const location = useLocation()
     const [amount, setAmount] = useState('')
     const [confirmAmount, setConfirmAmount] = useState('')
     const [termsAgreed, setTermsAgreed] = useState('')
     const [balance, setBalance] = useState(0)
-    const [message, setMessage] = useState('')
-    const bankID = location.state
+    const bankID = localStorage.get("bankID") || {}
     
     const fetchBalance = () =>{
         axios.get('http://localhost:4000/account-settings', {
@@ -27,9 +25,9 @@ const DepositBills = () =>{
         .catch(error => {
             console.error('Error occurred:', error);
             if (error.response && error.response.status === 401) {
-              setMessage("Invalid credentials");
+              alert("Invalid credentials");
             } else {
-              setMessage("Error validating credentials");
+              alert("Error validating credentials");
             }
           })
     }
@@ -57,19 +55,19 @@ const DepositBills = () =>{
         .then(response => {
             console.log('Response recieved:', response.data)
             if(response.data.success){
-                setMessage('Success!')
+                alert('Success!')
             }
         })
         .catch(error => {
             console.error('Error occurred:', error);
             if (error.response && error.response.status === 401) {
-              setMessage("Invalid credentials");
+              alert("Invalid credentials");
             } else {
-              setMessage("Error validating credentials");
+              alert("Error validating credentials");
             }
         })
 
-        setMessage(`You have deposited $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
+        alert(`You have deposited $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
         setAmount(""); // Clear the input
     }
     return(<WindowWrapper showSideNav={true}>

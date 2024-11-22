@@ -1,46 +1,68 @@
 import { Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField, Button } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee"
 import React, { useState, useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 const ManagerDashboard = () => {
     const navigate = useNavigate()
-    const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
-    const [message, setMessage] = useState('')
-    const bankID = location.state
-    const accType = 'employee'
-    const [reqType, setReqType] = useState('')
+    const bankID = localStorage.get("bankID") || {}
     
     // Sample
-
-    
-    const [accounts, setAccounts] = useState([
-        { first: 'Robbert', last: 'Bobbert', email: 'robbertbobbert@gmail.com', username: 'Robbert123', bankID: 'e1234', password: 'password', balance: '$0.42', bankPIN: '9481' },
-        { first: 'Jannet', last: 'Rose', email: 'jannet.rose321@gmail.com', username: 'Jannet321', bankID: 'e7622', password: 'password', balance: '$10000.84', bankPIN: '4135' },
-        { first: 'Sam', last: 'Darnold', email: 'samlikesbeefsticks@gmail.com',  username: 'Beefsticks', bankID: 'e2314', password: 'password', balance: '$13213.31', bankPIN: '7545' },
-        { first: 'Michael', last: 'Jordan', email: 'michaelJordan@gmail.com',  username: 'leafcar', bankID: 'e9876', password: 'password', balance: '$58912.32', bankPIN: '7683' },
-        { first: 'Adam', last: 'Smith', email: 'appledawgz@gmail.com',  username: 'AppleDawgz', bankID: 'e6792', password: 'password', balance: '$8912.41', bankPIN: '5133' },
-        { first: 'Samantha', last: 'Zhou', email: 'samanthazhou@gmail.com',  username: 'samantha_z098', bankID: 'e0944', password: 'password', balance: '$124.04', bankPIN: '5341' },
-    ]);
-    // Test this last!!!!
-    const updateAccountList = async () => {
-        try {
-            const accListResponse = await axios.get('http://localhost:4000/transaction-history', {
-                bankID : bankID,
-                reqType: reqType
-            })
-            setAccounts(accListResponse.data.accounts)
+    const [accounts, setAccounts] = useState([])
+    axios.get('http://localhost:4000/totalTransactionHistory')
+    .then(response=>{
+        if(response.data.success){
+          setAccounts(response.data)
         }
-        catch(error){
-            console.error("Error updating account balance")
-            setMessage("Error updating account balance")
+    })
+    .catch(error=>{
+        if(error.response && error.response.status === 401){
+          alert("Invalid credentials")
+        }else{
+          alert("Error validating credentials")
         }
+    })
+    const signOut = () => {
+        localStorage.set('bankID', '')
+        navigate('/')
     }
+    const deleteAccount = (bankID) => {
+        axios.get('http://localhost:4000/delete-account',{
+            params: {bankID}
+        })
+        .then(response=>{
+            if(response.data.success){
+                alert('Account has been deleted')
+            }
+        })
+        .catch(error=>{
+            if(error.response && error.response.status === 401){
+                alert("Invalid credentials")
+            }else{
+                alert("Error validating credentials")
+            }
+        })
 
+        axios.get('http://localhost:4000/deleteAccountHistory',{
+            params: {bankID}
+        })
+        .then(response=>{
+            if(response.data.success){
+                alert('Account history has been cleard')
+            }
+        })
+        .catch(error=>{
+            if(error.response && error.response.status === 401){
+                alert("Invalid credentials")
+            }else{
+                alert("Error validating credentials")
+            }
+        })
+    }
     const searchChange = (event) => {
         setSearchTerm(event.target.value);
     };
@@ -118,7 +140,7 @@ const ManagerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/')}
+                                        onClick={() => signOut()}
                                     >
                                         Log Out
                                     </li>
@@ -168,13 +190,13 @@ const ManagerDashboard = () => {
                         <TableBody>
                             {filteredSorted.map((account, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{account.first}</TableCell>
-                                    <TableCell>{account.last}</TableCell>
+                                    <TableCell>{account.firstName}</TableCell>
+                                    <TableCell>{account.lastName}</TableCell>
                                     <TableCell>{account.email}</TableCell>
                                     <TableCell>{account.username}</TableCell>
                                     <TableCell>{account.bankID}</TableCell>
                                     <TableCell>{account.password}</TableCell>
-                                    <TableCell>{account.balance}</TableCell>
+                                    <TableCell>{account.accountBalance}</TableCell>
                                     <TableCell>
                                         <Button
                                             variation="link"
@@ -191,7 +213,7 @@ const ManagerDashboard = () => {
                                             View Transaction History
                                         </Button>
                                     </TableCell>
-                                    <TableCell>{account.bankPIN}</TableCell>
+                                    <TableCell>{account.bankPin}</TableCell>
                                     <TableCell>
                                         <Button 
                                             variation="destructive" 
@@ -203,6 +225,7 @@ const ManagerDashboard = () => {
                                                 cursor: 'pointer',
                                                 textAlign: 'center'
                                             }}
+                                            onClick={()=> deleteAccount(account.bankID)}
                                             >
                                             Delete Account
                                         </Button>

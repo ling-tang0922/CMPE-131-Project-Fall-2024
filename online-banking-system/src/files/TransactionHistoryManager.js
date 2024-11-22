@@ -7,15 +7,25 @@ const ManagerDashboard = () => {
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
-    
-    // Sample
-    const accounts = [
-        { bankIDuser: 'e1234', totalBalance: '$0.42', transaction: '-$100', connectedAccount: 'e1234', date: '11/07/24' },
-        { bankIDuser: 'e1234', totalBalance: '$100.42', transaction: '-$319.58', connectedAccount: 'e1234', date: '11/05/24' },
-        { bankIDuser: 'e1234', totalBalance: '$420', transaction: '+$120', connectedAccount: 'e1234', date: '11/02/24' },
-        { bankIDuser: 'e1234', totalBalance: '$300', transaction: '-$100', connectedAccount: 'e1234', date: '10/30/24' },
-    ];
-
+    const bankID = localStorage.get("bankID") || {}
+    const [accounts, setAccounts] = useState('')
+    axios.get('http://localhost:4000/totalTransactionHistory',{
+            params: {bankID: bankID }
+        })
+    .then(response =>{
+        if(response.data.success){
+            setAccounts(response.data.transactionHistory)
+        }
+    })
+    .catch(error =>{
+        if(error.response && error.response.status === 401){
+            alert("Invalid credentials")
+        } 
+        else{
+            alert("Error validating credentials")
+        }
+    })
+   
     const sortChange = (event) => {
         setSortOrder(event.target.value);
     };

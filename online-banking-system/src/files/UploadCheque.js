@@ -2,18 +2,15 @@ import { Button, Input,Label,CheckboxField,VisuallyHidden} from "@aws-amplify/ui
 import WindowWrapper from "../components/WindowWrapper";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay} from "@fortawesome/free-solid-svg-icons";
-import React, {useState, useEffect} from "react";
-import {useLocation} from "react-router-dom"
+import React, {useState} from "react";
 import axios from "axios";
 
 const UploadCheque = () =>{
-    const location = useLocation()
     const [uploadedImage,setUploadedImage] = React.useState(null);
     const hiddenInput = React.useRef(null);
     const [balance, setBalance] = useState('')
-    const [message, setMessage] = useState('')
     const [amount, setAmount] = useState('')
-    const bankID = localStorage.getItem("bankID")
+    const bankID = localStorage.get("bankID") || {}
     // Bankend:
     const updateBalance = () =>{
       const newBalance = (Number(balance) + Number(amount)).toString()
@@ -31,9 +28,9 @@ const UploadCheque = () =>{
       .catch(error => {
         console.error('Error occurred:', error);
         if (error.response && error.response.status === 401) {
-          setMessage("Invalid credentials");
+          alert("Invalid credentials");
         } else {
-          setMessage("Error validating credentials");
+          alert("Error validating credentials");
         }
       })
     }
@@ -49,9 +46,9 @@ const UploadCheque = () =>{
       })
       .catch(error =>{
         if(error.response && error.response.status === 401){
-          setMessage("Invalid credentials")
+          alert("Invalid credentials")
         } else{
-          setMessage("Error validating credentials")
+          alert("Error validating credentials")
         }
       })
     }

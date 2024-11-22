@@ -1,11 +1,31 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useState } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, ProSidebarProvider } from 'react-pro-sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse,faMoneyBillTransfer,faUpload,faClockRotateLeft} from "@fortawesome/free-solid-svg-icons";
 
 const SideNav = ({style={}}) => {
   const navigate = useNavigate();
+  const bankID = localStorage.getItem("bankID")
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  axios.get('http://localhost:4000/account-settings',{
+    params: {bankID: bankID }
+  })
+  .then(response =>{
+    if(response.data.success){
+      setFirstName(response.data.firstName)
+      setLastName(response.data.lastName)
+    }
+  })
+  .catch(error =>{
+    if(error.response && error.response.status === 401){
+      setMessage("Invalid credentials")
+    } 
+    else{
+      alert("Error validating credentials")
+    }
+  })
   return (
     <div style={{position:"fixed"}}>
     <ProSidebarProvider>
@@ -14,7 +34,7 @@ const SideNav = ({style={}}) => {
           backgroundColor: 'black',
         },
       }} style={{ height: '100vh', width: '250px', left: 0,backgroundColor:"black"}}>
-        <h2 style={{color:"white"}}>Customer Name</h2>
+        <h2 style={{color:"white"}}>{firstName} {lastName}</h2>
         <Menu menuItemStyles={{
           button: {
             backgroundColor: 'transparent', 
