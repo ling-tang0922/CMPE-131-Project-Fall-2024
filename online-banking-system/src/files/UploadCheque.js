@@ -13,7 +13,7 @@ const UploadCheque = () =>{
     const [balance, setBalance] = useState('')
     const [message, setMessage] = useState('')
     const [amount, setAmount] = useState('')
-    const {bankID} = location.state || {}
+    const bankID = localStorage.getItem("bankID")
     // Bankend:
     const updateBalance = () =>{
       const newBalance = (Number(balance) + Number(amount)).toString()

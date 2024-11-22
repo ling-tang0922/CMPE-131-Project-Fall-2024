@@ -3,9 +3,7 @@ import './ATMLoginForm.css';
 import NavBar from "../components/ATMNavBar";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
-/*
-***Backend
-*/
+
 const ATMLoginForm = () => {
     const navigate = useNavigate()
     const [bankID, setBankID] = useState('')

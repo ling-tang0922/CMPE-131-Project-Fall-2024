@@ -26,7 +26,7 @@ db.connect((err)=>{
 // Request Validation of Credentials (Customer/Employee Login)
 // Get Function
 app.get('/validate-credentials-userLogin', async (req,res)=>{
-    const {username, password, type, bankID, bankPin} = req.query
+    const {username, password, type} = req.query
 
     db.query('SELECT bankID FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results)=>{
         if(error){
@@ -80,7 +80,9 @@ app.get("/account-settings", async (req, res)=>{
                 password: results[0].password,
                 transactrionHistory:  results[0].transactrionHistory,
                 bankPin: results[0].bankPin,
-                role: results[0].role
+                role: results[0].role,
+                firstName: results[0].firstName,
+                lastName: results[0].lastName
             });
         }else {
             res.status(401).send({success:false})
@@ -106,7 +108,7 @@ app.put('/UpdateAccountBalance', async (req, res)=>{
 // Request Modification of Email
 // Put Function
 app.put('/UpdateEmail', async (req, res)=>{
-    const{bankID, newEmail} = req.query
+    const{bankID, newEmail} = req.body
     db.query('UPDATE accounts SET email = ? WHERE bankID = ?', [newEmail, bankID], (error, results)=>{
         if(error){
             console.error('Error updating Email:', error)
@@ -120,7 +122,7 @@ app.put('/UpdateEmail', async (req, res)=>{
 // Request Modification of Username
 // Put Function
 app.put('/UpdateUsername', async (req, res)=>{
-    const{bankID, newUsername} = req.query
+    const{bankID, newUsername} = req.body
     db.query('UPDATE accounts SET username = ? WHERE bankID = ?', [newUsername, bankID], (error, results)=>{
         if(error){
             console.error('Error updating Username:', error)
@@ -134,7 +136,7 @@ app.put('/UpdateUsername', async (req, res)=>{
 // Request Modification of Password
 // Put Function
 app.put('/UpdatePassword', async (req, res)=>{
-    const{bankID, newPassword} = req.query
+    const{bankID, newPassword} = req.body
     db.query('UPDATE accounts SET password = ? WHERE bankID = ?', [newPassword, bankID], (error, results)=>{
         if(error){
             console.error('Error updating Password:', error)
@@ -148,7 +150,7 @@ app.put('/UpdatePassword', async (req, res)=>{
 // Request Modification of Bank Pin
 // Put Function
 app.put('/UpdateBankPin', async (req, res)=>{
-    const{bankID, newBankPin} = req.query
+    const{bankID, newBankPin} = req.body
     db.query('UPDATE accounts SET bankPin = ? WHERE bankID = ?', [newBankPin, bankID], (error, results)=>{
         if(error){
             console.error('Error updating account balance:', error)

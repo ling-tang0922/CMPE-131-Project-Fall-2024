@@ -6,6 +6,7 @@ import { faMoneyBill, faUpload, faMoneyBillTransfer} from "@fortawesome/free-sol
 import { useNavigate, useLocation} from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import SideNav from "../components/SideNav";
 
 const CustomerDashboard = () => {
     const navigate = useNavigate()
@@ -18,7 +19,7 @@ const CustomerDashboard = () => {
     const [message, setMessage] = useState('')
     const [transactionHistory, setTransactions] = useState('')
     const location = useLocation();
-    const {bankID} = location.state
+    const bankID = localStorage.getItem("bankID")
     //Backend:
     const fetchAccountDetails = () => {
         axios.get('http://localhost:4000/account-settings',{
@@ -41,7 +42,7 @@ const CustomerDashboard = () => {
             }
         })
     }
-    
+
     fetchAccountDetails()
     //
     const toggleDropdown = () => {
@@ -170,7 +171,7 @@ const CustomerDashboard = () => {
                     <div style={{ flex: 1, margin: "0 10px" }}>
                         <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faMoneyBill} />Deposit Bills</h2>
                         <div>1. Enter amount.<br/>2. Verify and Acknowledge.</div>
-                        <Button onClick={() => { navigate('/DepositBills'); }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Add Cash!</Button>
+                        <Button onClick={() => { navigate('/DepositBills', {state: {bankID}}); }} style={{ backgroundColor: 'black', color: 'white', marginTop: "20px", width: "80%" }} colorTheme="success" variation="primary">Add Cash!</Button>
                     </div>
                     <div style={{ flex: 1, margin: "0 10px" }}>
                         <h2><FontAwesomeIcon style={{ margin: "0 10" }} icon={faUpload} />Deposit Check</h2>

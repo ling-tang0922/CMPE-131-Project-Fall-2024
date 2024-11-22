@@ -62,7 +62,9 @@ const CustomerLogin = () => {
       console.log('Response received:', response.data);
       if (response.data.success) {
         const bankID = response.data.bankID;
-        navigate('/DashBoard', { state: { bankID } });
+        localStorage.setItem("bankID", bankID);
+
+        navigate('/DashBoard');
       }
     })
 

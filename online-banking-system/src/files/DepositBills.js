@@ -36,7 +36,7 @@ const DepositBills = () =>{
     fetchBalance()
 
     const handleDeposit = () =>{
-        const amountNum = parseFloat(amount);
+        const amountNum = parseFloat(confirmAmount);
         if(!termsAgreed){
             alert("You must agree to the terms and conditions")
             return
@@ -52,7 +52,7 @@ const DepositBills = () =>{
         const newBalance = (balance + amountNum)
 
         axios.put('http://localhost:4000/UpdateAccountBalance',{
-            params: {bankID: bankID, newBalance: newBalance}
+            bankID: bankID, newBalance: newBalance
         })
         .then(response => {
             console.log('Response recieved:', response.data)
