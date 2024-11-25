@@ -18,7 +18,6 @@ const CustomerDashboard = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [message, setMessage] = useState('')
     const [transactionHistory, setTransactions] = useState('')
-    const location = useLocation();
     const bankID = localStorage.get("bankID") || {}
     //Backend:
     axios.get('http://localhost:4000/transaction-history',{

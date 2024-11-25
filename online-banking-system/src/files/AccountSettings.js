@@ -15,7 +15,7 @@ const AccountSettings = () => {
     const bankID = localStorage.get("bankID") || {}
     const [email, setEmail] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
-
+    
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
 

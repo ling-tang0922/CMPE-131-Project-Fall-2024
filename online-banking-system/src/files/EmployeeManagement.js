@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import { useNavigate } from "react-router-dom";
+import React, {useState} from "react";
 import "./modal.css"; 
 
 const EmployeeManagement = () => {
@@ -37,7 +37,7 @@ const EmployeeManagement = () => {
         }));
     };
     const signOut = () => {
-        localStorage.set('bankID', '')
+        localStorage.set('bankID', null)
         navigate('/')
     }
     const handleSubmit = (e) => {

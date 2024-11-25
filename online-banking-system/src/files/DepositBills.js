@@ -2,7 +2,6 @@ import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
 import React, { useState, useEffect} from "react";
 import axios from "axios";
-import {useLocation} from 'react-router-dom'
 
 const DepositBills = () =>{
     const [amount, setAmount] = useState('')
@@ -12,9 +11,11 @@ const DepositBills = () =>{
     const bankID = localStorage.get("bankID") || {}
     
     const fetchBalance = () =>{
+        ///
         axios.get('http://localhost:4000/account-settings', {
             params:{bankID: bankID}
         })
+        ///
         .then(response =>{
             console.log('Response recieved:', response.data)
             if(response.data.success){
@@ -22,6 +23,7 @@ const DepositBills = () =>{
                 setBalance(accountBalance)
             }
         })
+        ///
         .catch(error => {
             console.error('Error occurred:', error);
             if (error.response && error.response.status === 401) {
@@ -30,6 +32,7 @@ const DepositBills = () =>{
               alert("Error validating credentials");
             }
           })
+          ///
     }
     fetchBalance()
 

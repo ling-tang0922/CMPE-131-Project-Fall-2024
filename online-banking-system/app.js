@@ -27,7 +27,7 @@ db.connect((err)=>{
 // Get Function
 app.get('/validate-credentials-userLogin', async (req,res)=>{
     const {username, password, type} = req.query
-
+    const {bankID} = localStorage.get('bankID')
     db.query('SELECT bankID FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results)=>{
         if(error){
             console.error('Error validating credentials')
@@ -62,8 +62,9 @@ app.get('/validate-credentials-ATMLogin', async (req,res)=>{
 // Request Account Settings
 // Get Function
 app.get("/account-settings", async (req, res)=>{
+    ///
     const {bankID, PhoneNumber} = req.query
-    console.log(bankID)
+    ///
     db.query('SELECT * FROM accounts WHERE bankID = ? OR PhoneNumber = ?', [bankID, PhoneNumber], (error, results)=>{
         if(error){
             console.error(`Error fetching Account Settings`)
@@ -84,6 +85,7 @@ app.get("/account-settings", async (req, res)=>{
                 firstName: results[0].firstName,
                 lastName: results[0].lastName
             });
+            ///
         }else {
             res.status(401).send({success:false})
         }
@@ -225,7 +227,7 @@ app.get("/totalTransactionHistory", async (req, res)=>{
 app.post("/new-account", async (req, res)=>{
     const { username, password, firstName, lastName, phoneNumber, email, initialBalance, bankID} = req.body
 
-    db.query('INSERT INTO customer (username, password, firstName, lastName, PhoneNumber, email, balance) VALUES(?, ?, ?, ?, ?, ?, ?)',
+    db.query('INSERT INTO accounts (username, password, firstName, lastName, PhoneNumber, email, balance) VALUES(?, ?, ?, ?, ?, ?, ?)',
     [username, password, firstName, lastName, phoneNumber, email, initialBalance], (error, results) =>{
         if(error){
             console.error('Error creating new account:', error)

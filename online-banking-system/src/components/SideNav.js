@@ -1,8 +1,9 @@
 import React from 'react';
-import { useNavigate, useState } from "react-router-dom";
+import { useNavigate, useState } from "react";
 import { Sidebar, Menu, MenuItem, ProSidebarProvider } from 'react-pro-sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse,faMoneyBillTransfer,faUpload,faClockRotateLeft} from "@fortawesome/free-solid-svg-icons";
+import axios from 'axios';
 
 const SideNav = ({style={}}) => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const SideNav = ({style={}}) => {
   })
   .catch(error =>{
     if(error.response && error.response.status === 401){
-      setMessage("Invalid credentials")
+      alert("Invalid credentials")
     } 
     else{
       alert("Error validating credentials")

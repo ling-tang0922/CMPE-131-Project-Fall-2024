@@ -2,6 +2,7 @@ import { Divider, Table, TableCell, TableHead, TableRow, TableBody, SelectField 
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ManagerDashboard = () => {
     const navigate = useNavigate();
