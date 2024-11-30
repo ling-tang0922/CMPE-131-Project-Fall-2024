@@ -18,7 +18,7 @@ import AccountSettings from './files/AccountSettings';
 import EmployeeLogin from './files/EmployeeLogin';
 import EmployeeDashboard from './files/EmployeeDashboard';
 import TransactionHistoryManager from './files/TransactionHistoryManager';
-
+import EmployeeManagement from './files/EmployeeManagement'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>

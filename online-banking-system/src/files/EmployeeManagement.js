@@ -3,27 +3,32 @@ import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import { useNavigate } from "react-router-dom";
 import React, {useState} from "react";
 import "./modal.css"; 
+import axios from "axios";
 
 const EmployeeManagement = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("ascending");
     const [employees, setEmployees] = useState({});
-    axios.get('http://localhost:4000/account-settings-role',{
-      params: {role: 'employee'}
-    })
-    .then(response=>{
-      if(response.data.success){
-        setEmployees(response.data)
-      }
-    })
-    .catch(error=>{
-      if(error.response && error.response.status === 401){
-        setMessage("Invalid credentials")
-      }else{
-        setMessage("Error validating credentials")
-      }
-    })
+    const [role, setRole] = useState('')
+    const fetchAccounts = () => {
+        axios.get('http://localhost:4000/account-settings-role',{
+            params: {role: 'employee'}
+        })
+        .then(response=>{
+            if(response.data.success){
+                setEmployees(response.data)
+            }
+        })
+        .catch(error=>{
+            if(error.response && error.response.status === 401){
+                alert("Invalid credentials")
+            }else{
+                alert("Error validating credentials")
+            }
+        })
+    }
+    fetchAccounts()
     const [modalOpen, setModalOpen] = useState(false);
     const [newEmployee, setNewEmployee] = useState({});
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -37,8 +42,18 @@ const EmployeeManagement = () => {
         }));
     };
     const signOut = () => {
-        localStorage.set('bankID', null)
+        sessionStorage.removeItem('bankID')
         navigate('/')
+    }
+    const changeAccount = () => {
+        sessionStorage.removeItem('bankID')
+        if(role === 'customer'){
+            navigate('/CustomerLogin')
+        }
+        else if(role === 'employee' || role === 'manager'){
+            navigate('/EmployeeLogin')
+        }
+            
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -46,6 +61,21 @@ const EmployeeManagement = () => {
             setEmployees((prev) => [...prev, newEmployee]);
             setModalOpen(false);
             alert("Employee added successfully!");
+            axios.get('http://localhost:4000/account-settings-role',{
+                params: {role: 'employee'}
+            })
+            .then(response=>{
+                if(response.data.success){
+                    alert("Employee added successfully")
+                }
+            })
+            .catch(error=>{
+                if(error.response && error.response.status === 401){
+                    alert("Invalid credentials")
+                }else{
+                    alert("Error inputting credentials")
+                }
+            })
         } else {
             alert("Please fill in all fields.");
         }
@@ -109,7 +139,7 @@ const EmployeeManagement = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/dashboard')}
+                                        onClick={changeAccount}
                                     >
                                         Change Account
                                     </li>
@@ -117,7 +147,7 @@ const EmployeeManagement = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => signOut()}
+                                        onClick={signOut}
                                     >
                                         Log Out
                                     </li>

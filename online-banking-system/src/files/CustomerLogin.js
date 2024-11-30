@@ -39,6 +39,7 @@ const getStartedMSG = (
 
 
 const CustomerLogin = () => {
+
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("Login");
   const [firstName, setFirstName] = useState("")
@@ -49,21 +50,19 @@ const CustomerLogin = () => {
   const [confirmPassword, setConfirmPass] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [initialBalance, setBalance] = useState("")
-  const [message, setMessage] = useState("")
   const [newBankID, setNewBankID] = useState('')
-  
+  const type = 'customer'
   // Backend:
   const handleLogin = () => {
     axios.get('http://localhost:4000/validate-credentials-userLogin', {
-      params: { username: username, password: password, type: 'customer', bankID: null, bankPin: null }
+      params: { username: username, password: password, type: type}
     })
     
     .then(response => {
       console.log('Response received:', response.data);
       if (response.data.success) {
         const bankID = response.data.bankID
-        localStorage.setItem("bankID", bankID)
-
+        sessionStorage.setItem("bankID", bankID)
         navigate('/DashBoard');
       }
     })
@@ -71,9 +70,9 @@ const CustomerLogin = () => {
     .catch(error => {
       console.error('Error occurred:', error);
       if (error.response && error.response.status === 401) {
-        setMessage("Invalid credentials");
+        alert("Invalid credentials");
       } else {
-        setMessage("Error validating credentials");
+        alert("Error validating credentials");
       }
     })
   }
@@ -95,12 +94,12 @@ const CustomerLogin = () => {
 
   const handleSignUp = () => {
     if(!username || !password || !firstName || !lastName || !phoneNumber || !email){
-      setMessage("All fields are required")
+      alert("All fields are required")
       return
     }
 
     else if(password !== confirmPassword){
-      setMessage("Passwords don't match")
+      alert("Passwords don't match")
       return
     }
     
@@ -119,14 +118,14 @@ const CustomerLogin = () => {
 
       .then(response =>{
         if(response.data.success){
-          setMessage("Account Created")
+          alert("Account Created")
           const bankID = response.data.bankID
           navigate('/Dashboard', {state : {bankID}})
         }
       })
       
       .catch(error =>{
-        setMessage("Error creating new account")
+        alert("Error creating new account")
         console.error('Error occured:', error)
       })
     }

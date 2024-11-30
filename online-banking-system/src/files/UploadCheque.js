@@ -10,7 +10,7 @@ const UploadCheque = () =>{
     const hiddenInput = React.useRef(null);
     const [balance, setBalance] = useState('')
     const [amount, setAmount] = useState('')
-    const bankID = localStorage.get("bankID") || {}
+    const bankID = sessionStorage.getItem("bankID") || {}
     // Bankend:
     const updateBalance = () =>{
       const newBalance = (Number(balance) + Number(amount)).toString()

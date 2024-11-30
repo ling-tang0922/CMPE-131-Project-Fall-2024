@@ -9,9 +9,8 @@ const ATMLoginForm = () => {
     const [bankID, setBankID] = useState('')
     const [bankPin, setBankPin] = useState('')
     const [focusedField, setFocusedField] = useState('bankID')
-    const [message, setMessage] = useState('')
-    const handleLogin = (e) => {
-        e.preventDefault()
+   
+    const handleLogin = () => {
         axios.get('http://localhost:4000/validate-credentials-ATMLogin',{
           params: {bankID: bankID, bankPin: bankPin }
         })
@@ -23,9 +22,9 @@ const ATMLoginForm = () => {
         })
         .catch(error =>{
           if(error.response && error.response.status === 401){
-            setMessage("Invalid credentials")
+            alert("Invalid credentials")
           } else{
-            setMessage("Error validating credentials")
+            alert("Error validating credentials")
           }
         })
       };

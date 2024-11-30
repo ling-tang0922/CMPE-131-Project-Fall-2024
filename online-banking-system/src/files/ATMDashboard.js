@@ -1,56 +1,65 @@
-import React, { useState, useLocation, useEffect} from "react";
+import React, { useState} from "react";
 import ATMNavBar from "../components/ATMDashboardNavBar";
 import './ATMDashboard.css';
+import { Navigate } from "react-router-dom";
 const axios = require('axios')
 
 const ATMDashboard = () => {
-    const location = useLocation()
+
     const [amount, setAmount] = useState('')
-    const [message, setMessage] = useState('')
     const [balance, setBalance] = useState(0)
 
-    const bankID = localStorage.get("bankID") || {}
-    useEffect(() => {
-        const fetchBalance = async () => {
-            try {
-                const response = await axios.get('http://localhost:4000/account-balance', {
-                    params: { bankID: bankID },
-                });
-                setBalance(response.data.balance);
-            } catch (error) {
-                console.error("Error fetching account balance:", error);
-                setMessage("Error fetching account balance.");
+    const bankID = sessionStorage.getItem("bankID") || {}
+    const fetchAccountSettings= () =>{
+        axios.get('http://localhost:4000/account-settings', {
+            params:{bankID: bankID}
+        })
+        .then(response =>{
+            console.log('Response recieved:', response.data)
+            if(response.data.success){
+                setBalance(response.data.accountBalance)
             }
-        };
-        fetchBalance();
-    }, [bankID]);
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            if (error.response && error.response.status === 401) {
+              alert("Invalid credentials");
+            } else {
+              alert("Error validating credentials");
+            }
+          })
+    }
+    fetchAccountSettings()
 
-    const handleWithdraw = async (e) => {
+    const handleWithdrawl = async (e) => {
         e.preventDefault();
         const amountNum = parseFloat(amount);
         // Simple validation for withdrawal
         if (amountNum <= 0 || isNaN(amountNum)) {
-            setMessage("Please enter a valid amount.");
+            alert("Please enter a valid amount.");
         } else if (amountNum > balance) {
-            setMessage("Insufficient funds.");
+            alert("Insufficient funds.");
         } else {
             const newBalance = (balance - amountNum)
-            try {
-                // Update balance on the server
-                await axios.put('http://localhost:4000/account-balance', {
-                    bankID: bankID,
-                    balance: newBalance,
-                    reqType: "customer",
-                });
-                
-                setBalance(newBalance);
-                setMessage(`You have withdrawn $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
-                setAmount(""); // Clear the input
-            } catch (error) {
-                console.error("Error updating account balance:", error);
-                setMessage("Error updating account balance.");
-            }
-
+            
+            axios.put('http://localhost:4000/UpdateAccountBalance', {
+                params: {bankID: bankID, newBalance: newBalance}
+            })
+            .then(response =>{
+                console.log('Response recieved:', response.data)
+                if(response.data.success){
+                    alert('Balance Updated')
+                    Navigate('/Dashboard')
+                }
+            })
+            .catch(error => {
+                console.error('Error occurred:', error);
+                if (error.response && error.response.status === 401) {
+                  alert("Invalid credentials");
+                } else {
+                  alert("Error validating credentials");
+                }
+              })
              
         }
     };
@@ -68,7 +77,7 @@ const ATMDashboard = () => {
             <ATMNavBar />
             <h2>ATM Withdrawal</h2>
             <p>Available Balance: ${balance.toFixed(2)}</p>
-            <form onSubmit={handleWithdraw}>
+            <form onSubmit={handleWithdrawl}>
                 <div className="input-box">
                     <input
                         type="text"
@@ -79,7 +88,7 @@ const ATMDashboard = () => {
                 </div>
                 <button type="submit">Withdraw</button>
             </form>
-            {message && <p>{message}</p>}
+            
 
             {/* Keypad */}
             <div className="keypad">

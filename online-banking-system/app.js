@@ -27,7 +27,6 @@ db.connect((err)=>{
 // Get Function
 app.get('/validate-credentials-userLogin', async (req,res)=>{
     const {username, password, type} = req.query
-    const {bankID} = localStorage.get('bankID')
     db.query('SELECT bankID FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results)=>{
         if(error){
             console.error('Error validating credentials')
@@ -45,7 +44,6 @@ app.get('/validate-credentials-userLogin', async (req,res)=>{
 // Get Function
 app.get('/validate-credentials-ATMLogin', async (req,res)=>{
     const {bankID, bankPin} = req.query
-
     db.query('SELECT bankID FROM accounts WHERE bankID = ? AND bankPin = ?', [bankID, bankPin], (error, results)=>{
         if(error){
             console.error('Error validating credentials')
@@ -199,13 +197,14 @@ app.put("/", async (req, res)=>{
 // Get Function
 app.get("/transaction-history", async (req, res)=>{
     const {bankID} = req.query
-    db.query('SELECT * FROM transactionHistory WHERE id = ?', [bankID], (error, results)=>{
+    db.query('SELECT * FROM transaction_history WHERE bankID = ?', [bankID], (error, results)=>{
         if(error){
             console.error('Error fetching transaction history:', error)
             return res.status(500).send("Error fetching transaction history")
         }
         if(results.length > 0){
-            res.send(`${results[0].transactrionHistory}`)
+            const transactionHistory = results
+            res.json(transactionHistory)
         }
     })
 })

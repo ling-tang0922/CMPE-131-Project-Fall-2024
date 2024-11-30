@@ -21,7 +21,7 @@
     "react-native-safe-area-context": "^4.14.0",
     "react-native-screens": "^4.1.0",
     "react-pro-sidebar": "^1.1.0",
-    "react-router-dom": "^6.28.0",
+    "react-router-dom": "^7.0.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

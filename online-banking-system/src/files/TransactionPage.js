@@ -2,17 +2,17 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import WindowWrapper from '../components/WindowWrapper';
 
-const TransactionPage = () => {
+const TransactionHistory = () => {
     // State to hold transactions
     const [transactions, setTransactions] = useState([]);
-    const bankID = localStorage.get("bankID") || {}
+    const bankID = sessionStorage.getItem("bankID") || {}
     // Fetch transactions from the API
-    axios.get('http://localhost:4000/transactionHistory',{
+    axios.get('http://localhost:4000/transaction-history',{
             params: {bankID: bankID }
         })
         .then(response =>{
             if(response.data.success){
-                setTransactions(response.data.transactionHistory)
+                setTransactions(response.data)
             }
         })
         .catch(error =>{
@@ -59,4 +59,4 @@ const TransactionPage = () => {
     );
 };
 
-export default TransactionPage;
+export default TransactionHistory;

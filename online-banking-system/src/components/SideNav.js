@@ -1,16 +1,17 @@
-import React from 'react';
-import { useNavigate, useState } from "react";
+import React, { useState } from "react";
+import { useNavigate} from "react-router-dom";
 import { Sidebar, Menu, MenuItem, ProSidebarProvider } from 'react-pro-sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse,faMoneyBillTransfer,faUpload,faClockRotateLeft} from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 
-const SideNav = ({style={}}) => {
+const SideNav = () => {
   const navigate = useNavigate();
-  const bankID = localStorage.getItem("bankID")
+  const bankID = sessionStorage.getItem("bankID")
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  axios.get('http://localhost:4000/account-settings',{
+  const fetchAccountSettings = () => {
+    axios.get('http://localhost:4000/account-settings',{
     params: {bankID: bankID }
   })
   .then(response =>{
@@ -27,6 +28,10 @@ const SideNav = ({style={}}) => {
       alert("Error validating credentials")
     }
   })
+
+  }
+  fetchAccountSettings()
+  
   return (
     <div style={{position:"fixed"}}>
     <ProSidebarProvider>
@@ -46,10 +51,10 @@ const SideNav = ({style={}}) => {
             },
           },
         }}>
-          <MenuItem onClick={()=>{navigate('/dashboard')}}  style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faHouse} />Dashboard</MenuItem>
+          <MenuItem onClick={()=>{navigate('/Dashboard')}}  style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faHouse} />Dashboard</MenuItem>
           <MenuItem onClick={()=>{navigate('/UploadCheque')}} style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faUpload} />Deposit Check</MenuItem>
           <MenuItem onClick={()=>{navigate('/transferFunds')}} style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faMoneyBillTransfer} />Transfer Funds</MenuItem>
-          <MenuItem onClick={()=>{navigate('/transactionHistory')}} style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faClockRotateLeft} />Transaction History</MenuItem>        
+          <MenuItem onClick={()=>{navigate('/TransactionHistory')}} style={{color:"white"}}><FontAwesomeIcon style={{ margin: "0 10", color: "white" }} icon={faClockRotateLeft} />Transaction History</MenuItem>        
         </Menu>
       </Sidebar></ProSidebarProvider></div>)
 };

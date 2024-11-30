@@ -2,6 +2,7 @@ import { Button, Divider, TextField } from "@aws-amplify/ui-react";
 import WindowWrapper from "../components/WindowWrapper";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AccountSettings = () => {
     const navigate = useNavigate();
@@ -12,13 +13,55 @@ const AccountSettings = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
-    const bankID = localStorage.get("bankID") || {}
+    const bankID = sessionStorage.get('bankID') || {}
+    const [role, setRole] = useState('')
     const [email, setEmail] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
 
+
+    const fetchAccountSettings= () =>{
+        axios.get('http://localhost:4000/account-settings', {
+            params:{bankID: bankID}
+        })
+        .then(response =>{
+            console.log('Response recieved:', response.data)
+            if(response.data.success){
+                setAccountStatus(response.data.accountStatus)
+                setFirstName(response.data.firstName)
+                setLastName(response.data.lastName)
+                setUsername(response.data.username)
+                setEmail(response.data.email)
+                setPhoneNumber(response.data.PhoneNumber)
+                setRole(response.data.role)
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            if (error.response && error.response.status === 401) {
+              alert("Invalid credentials");
+            } else {
+              alert("Error validating credentials");
+            }
+          })
+    }
+    fetchAccountSettings()
+    const signOut = () => {
+        sessionStorage.removeItem('bankID')
+        navigate('/')
+    }
+    const changeAccount = () => {
+        sessionStorage.removeItem('bankID')
+        if(role === 'customer'){
+            navigate('/CustomerLogin')
+        }
+        else if(role === 'employee' || role === 'manager'){
+            navigate('/EmployeeLogin')
+        }
+            
+    }
     const clickOutside = (event) => {
         const dropdown = document.getElementById('dropdown');
         const pfp = document.getElementById('profile-pic');
@@ -26,7 +69,7 @@ const AccountSettings = () => {
             closeDropdown();
         }
     };
-
+    
     const handlePasswordChange = () => {
         if (newPassword !== confirmPassword) {
             alert('Passwords do not match.');
@@ -82,7 +125,7 @@ const AccountSettings = () => {
                                         }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/accountsettings')}
+                                        onClick={() => navigate('/AccountSettings')}
                                     >
                                         Account Settings
                                     </li>
@@ -94,7 +137,7 @@ const AccountSettings = () => {
                                         }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/dashboard')}
+                                        onClick={changeAccount}
                                     >
                                         Change Account
                                     </li>
@@ -106,7 +149,7 @@ const AccountSettings = () => {
                                         }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/')}
+                                        onClick={signOut}
                                     >
                                         Log Out
                                     </li>
@@ -219,4 +262,4 @@ const AccountSettings = () => {
     );
 };
 
-export default AccountSettings;
+export default AccountSettings

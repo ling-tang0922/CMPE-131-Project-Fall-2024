@@ -1,0 +1,53 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 10px;   
+    width: 50%;
+    max-width: 500px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    border: none;    
+    box-shadow: none; 
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select,
+.modal-content button {
+    border: none;      
+    outline: none;    
+    box-shadow: black;  
+    padding: 0;        
+    margin: 0;         
+}
+
+.modal-close {
+    font-size: 36px;
+    color: inherit;
+    position: fixed;
+    right: 24px;
+    top: 24px;
+    cursor: pointer;
+    z-index: 1050;
+}
+
+.employee-management-title {
+    font-size: 35px;
+    color: #57C43F;
+    font-weight: bold;
+    text-align: left;
+}

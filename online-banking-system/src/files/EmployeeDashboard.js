@@ -4,31 +4,46 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
-const ManagerDashboard = () => {
+const EmployeeDashobard = () => {
     const navigate = useNavigate()
     const [searchTerm, setSearchTerm] = useState('');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
-    const bankID = localStorage.get("bankID") || {}
+    const [role, setRole] = useState('')
+    const bankID = sessionStorage.getItem("bankID") || {}
     
     // Sample
     const [accounts, setAccounts] = useState([])
-    axios.get('http://localhost:4000/totalTransactionHistory')
-    .then(response=>{
-        if(response.data.success){
-          setAccounts(response.data)
-        }
-    })
-    .catch(error=>{
-        if(error.response && error.response.status === 401){
-          alert("Invalid credentials")
-        }else{
-          alert("Error validating credentials")
-        }
-    })
+    const fetchTotalTransactionHistory = () => {
+        axios.get('http://localhost:4000/totalTransactionHistory')
+        .then(response=>{
+            if(response.data.success){
+              setAccounts(response.data)
+            }
+        })
+        .catch(error=>{
+            if(error.response && error.response.status === 401){
+              alert("Invalid credentials")
+            }else{
+              alert("Error validating credentials")
+            }
+        })
+    }
+    fetchTotalTransactionHistory()
+   
     const signOut = () => {
-        localStorage.set('bankID', '')
+        sessionStorage.removeItem('bankID')
         navigate('/')
+    }
+    const changeAccount = () => {
+        sessionStorage.removeItem('bankID')
+        if(role === 'customer'){
+            navigate('/CustomerLogin')
+        }
+        else if(role === 'employee' || role === 'manager'){
+            navigate('/EmployeeLogin')
+        }
+            
     }
     const deleteAccount = (bankID) => {
         axios.get('http://localhost:4000/delete-account',{
@@ -132,7 +147,7 @@ const ManagerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/dashboard')}
+                                        onClick={changeAccount}
                                     >
                                         Change Account
                                     </li>
@@ -140,7 +155,7 @@ const ManagerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => signOut()}
+                                        onClick={signOut}
                                     >
                                         Log Out
                                     </li>
@@ -240,4 +255,4 @@ const ManagerDashboard = () => {
     );
 };
 
-export default ManagerDashboard;
+export default EmployeeDashobard;

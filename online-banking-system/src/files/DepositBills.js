@@ -1,6 +1,7 @@
 import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
 import React, { useState, useEffect} from "react";
+import { useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const DepositBills = () =>{
@@ -8,7 +9,8 @@ const DepositBills = () =>{
     const [confirmAmount, setConfirmAmount] = useState('')
     const [termsAgreed, setTermsAgreed] = useState('')
     const [balance, setBalance] = useState(0)
-    const bankID = localStorage.get("bankID") || {}
+    const bankID = sessionStorage.getItem("bankID") || null
+    
     
     const fetchBalance = () =>{
         ///

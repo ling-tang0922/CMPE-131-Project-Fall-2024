@@ -3,12 +3,12 @@ import WindowWrapper from "../components/WindowWrapper";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faUpload, faMoneyBillTransfer} from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, useLocation} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {faBuildingColumns} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import SideNav from "../components/SideNav";
 
-const CustomerDashboard = () => {
+
+const CustomerDashboard = ({style={}}) => {
     const navigate = useNavigate()
     
     const [balance, setBalance] = useState('')
@@ -16,26 +16,26 @@ const CustomerDashboard = () => {
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
     const [dropdownOpen, setDropdownOpen] = useState(false)
-    const [message, setMessage] = useState('')
-    const [transactionHistory, setTransactions] = useState('')
-    const bankID = localStorage.get("bankID") || {}
+    const [transactionHistory, setTransactions] = useState([])
+    const [role, setRole] = useState('')
+    const bankID = sessionStorage.getItem("bankID") || {}
     //Backend:
     axios.get('http://localhost:4000/transaction-history',{
             params: {bankID: bankID }
-        })
-        .then(response =>{
-            if(response.data.success){
-                setTransactions(response.data)
-            }
-        })
-        .catch(error =>{
-            if(error.response && error.response.status === 401){
-                setMessage("Invalid credentials")
-            } 
-            else{
-                setMessage("Error validating credentials")
-            }
-        })
+    })
+    .then(response =>{
+        if(response.data.success){
+            setTransactions(response.data)
+        }
+    })
+    .catch(error =>{
+        if(error.response && error.response.status === 401){
+            alert("Invalid credentials")
+        } 
+        else{
+            alert("Error validating credentials")
+        }
+    })
     const fetchAccountDetails = () => {
         axios.get('http://localhost:4000/account-settings',{
             params: {bankID: bankID }
@@ -46,14 +46,15 @@ const CustomerDashboard = () => {
                 setBalance(response.data.accountBalance)
                 setFirstName(response.data.firstName)
                 setLastName(response.data.lastName)
+                setRole(response.data.role)
             }
         })
         .catch(error =>{
             if(error.response && error.response.status === 401){
-                setMessage("Invalid credentials")
+                alert("Invalid credentials")
             } 
             else{
-                setMessage("Error validating credentials")
+                alert("Error validating credentials")
             }
         })
     }
@@ -75,9 +76,20 @@ const CustomerDashboard = () => {
             closeDropdown()
         }
     }
+
     const signOut = () => {
-        localStorage.set('bankID', '')
+        sessionStorage.removeItem('bankID')
         navigate('/')
+    }
+    const changeAccount = () => {
+        sessionStorage.removeItem('bankID')
+        if(role === 'customer'){
+            navigate('/CustomerLogin')
+        }
+        else if(role === 'employee' || role === 'manager'){
+            navigate('/EmployeeLogin')
+        }
+            
     }
     useEffect(() => {
         window.addEventListener('click', clickOutside);
@@ -128,7 +140,7 @@ const CustomerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }} 
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'} 
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/employeedashboard')} //only if the customer is an employee
+                                        onClick={changeAccount} //only if the customer is an employee
                                     >
                                         Change Account
                                     </li>
@@ -136,7 +148,7 @@ const CustomerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }} 
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'} 
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => signOut()}
+                                        onClick={signOut}
                                     >
                                         Log Out
                                     </li>
@@ -215,6 +227,7 @@ const CustomerDashboard = () => {
                                     <TableCell as="th">Account ID</TableCell>
                                 </TableRow>
                             </TableHead>
+                            
                             <TableBody>
                                 {transactionHistory.slice(0, 4).map((transaction, index) => (
                                     <TableRow key={index}>

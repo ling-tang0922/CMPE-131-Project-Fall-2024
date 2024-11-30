@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const ManagerDashboard = () => {
+const TransactionHistoryManager = () => {
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
-    const bankID = localStorage.get("bankID") || {}
+    const bankID = sessionStorage.getItem("bankID") || {}
     const [accounts, setAccounts] = useState('')
+    const [role, setRole] = useState('')
     axios.get('http://localhost:4000/totalTransactionHistory',{
             params: {bankID: bankID }
         })
@@ -26,7 +27,20 @@ const ManagerDashboard = () => {
             alert("Error validating credentials")
         }
     })
-   
+    const signOut = () => {
+        sessionStorage.removeItem('bankID')
+        navigate('/')
+    }
+    const changeAccount = () => {
+        sessionStorage.removeItem('bankID')
+        if(role === 'customer'){
+            navigate('/CustomerLogin')
+        }
+        else if(role === 'employee' || role === 'manager'){
+            navigate('/EmployeeLogin')
+        }
+            
+    }
     const sortChange = (event) => {
         setSortOrder(event.target.value);
     };
@@ -90,7 +104,7 @@ const ManagerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/dashboard')}
+                                        onClick={changeAccount}
                                     >
                                         Change Account
                                     </li>
@@ -98,7 +112,7 @@ const ManagerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/')}
+                                        onClick={signOut}
                                     >
                                         Log Out
                                     </li>
@@ -151,4 +165,4 @@ const ManagerDashboard = () => {
     );
 };
 
-export default ManagerDashboard;
+export default TransactionHistoryManager;

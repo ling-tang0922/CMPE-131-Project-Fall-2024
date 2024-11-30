@@ -2,8 +2,8 @@ import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react";
 import WindowWrapper from "../components/WindowWrapper";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay} from "@fortawesome/free-solid-svg-icons";
-import React, {useState, useEffect} from "react";
-import { useLocation } from "react-router-dom";
+import React, {useState} from "react";
+
 import axios from "axios";
 
 const TransferFunds = () =>{
@@ -11,52 +11,9 @@ const TransferFunds = () =>{
     const [recieverBalance, setRecieverBalance] = useState('')
     const [amount, setAmount] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
-    const bankID = localStorage.get("bankID") || {}
+    const bankID = sessionStorage.getItem("bankID") || {}
     const [recieverBankID, setRecieverBankID] = useState('')
     // Backend:
-    const fetchBalance = async () =>{
-        axios.get('http://localhost:4000/account-settings',{
-            params: {bankdID : bankID, PhoneNumber: null}
-        })
-        .then(response =>{
-            console.log('Response recieved:', response.data)
-            if(response.data.success){
-                const balance = response.data.accountBalance
-                setSenderBalance(balance)
-            }
-        })
-        .catch(error => {
-            console.error('Error occured:', error)
-            if (error.response && error.response.status === 401) {
-                alert("Invalid credentials");
-            } else {
-                alert("Error validating credentials");
-            }
-        })
-
-        axios.get('http://localhost:4000/account-settings',{
-            params: {bankdID : null, PhoneNumber: phoneNumber}
-        })
-        .then(response =>{
-            console.log('Response recieved:', response.data)
-            if(response.data.success){
-                const balance = response.data.accountBalance
-                const bankID = response.data.bankID
-                setRecieverBalance(balance)
-                setRecieverBankID(bankID)
-            }
-        })
-        .catch(error => {
-            console.error('Error occured:', error)
-            if (error.response && error.response.status === 401) {
-                alert("Invalid credentials");
-            } else {
-                alert("Error validating credentials");
-            }
-        })
-    }
-    fetchBalance()
-
     const handleTransfer = async () =>{
         const senderNewBalance = Number(senderBalance) - Number(amount)
         const recieverNewBalance = Number(recieverBalance) + Number(amount)
