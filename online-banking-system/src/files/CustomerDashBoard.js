@@ -20,23 +20,24 @@ const CustomerDashboard = ({style={}}) => {
     const [role, setRole] = useState('')
     const bankID = sessionStorage.getItem("bankID") || {}
     //Backend:
-    axios.get('http://localhost:4000/transaction-history',{
+    useEffect(() => {
+        axios.get('http://localhost:4000/transaction-history',{
             params: {bankID: bankID }
-    })
-    .then(response =>{
-        if(response.data.success){
-            setTransactions(response.data)
-        }
-    })
-    .catch(error =>{
-        if(error.response && error.response.status === 401){
-            alert("Invalid credentials")
-        } 
-        else{
-            alert("Error validating credentials")
-        }
-    })
-    const fetchAccountDetails = () => {
+        })
+        .then(response =>{
+            if(response.data.success){
+                setTransactions(response.data.history)
+            }
+        })
+        .catch(error =>{
+            if(error.response && error.response.status === 401){
+                alert("Invalid credentials")
+            } 
+            else{
+                alert("Error validating credentials")
+            }
+        })
+
         axios.get('http://localhost:4000/account-settings',{
             params: {bankID: bankID }
         })
@@ -57,9 +58,8 @@ const CustomerDashboard = ({style={}}) => {
                 alert("Error validating credentials")
             }
         })
-    }
+    }, [])
 
-    fetchAccountDetails()
     //
     const toggleDropdown = () => {
         setDropdownOpen(prev => !prev)
@@ -227,14 +227,13 @@ const CustomerDashboard = ({style={}}) => {
                                     <TableCell as="th">Account ID</TableCell>
                                 </TableRow>
                             </TableHead>
-                            
                             <TableBody>
                                 {transactionHistory.slice(0, 4).map((transaction, index) => (
                                     <TableRow key={index}>
-                                        <TableCell>{transaction.dateTime}</TableCell>
+                                        <TableCell>{transaction.date}</TableCell>
                                         <TableCell>{transaction.type}</TableCell>
-                                        <TableCell>{transaction.amount}</TableCell>
-                                        <TableCell>{bankID}</TableCell>
+                                        <TableCell>{transaction.transaction}</TableCell>
+                                        <TableCell>{transaction.bankID}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

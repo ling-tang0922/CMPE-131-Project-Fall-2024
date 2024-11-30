@@ -1,7 +1,6 @@
 import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
-import React, { useState, useEffect} from "react";
-import { useNavigate} from "react-router-dom";
+import React, { useState } from "react";
 import axios from "axios";
 
 const DepositBills = () =>{

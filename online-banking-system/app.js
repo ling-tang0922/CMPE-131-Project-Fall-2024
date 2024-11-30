@@ -203,8 +203,7 @@ app.get("/transaction-history", async (req, res)=>{
             return res.status(500).send("Error fetching transaction history")
         }
         if(results.length > 0){
-            const transactionHistory = results
-            res.json(transactionHistory)
+           res.send({success: true, history: results})
         }
     })
 })
@@ -232,7 +231,7 @@ app.post("/new-account", async (req, res)=>{
             console.error('Error creating new account:', error)
             return res.status(500).send({error: "Error creating new account"})
         }
-        res.status(201).send({success: true, bankID: results.data.accountId})
+        res.status(201).send({success: true, bankID: results.bankID})
         
     })
 })

@@ -11,6 +11,9 @@ const TransactionHistoryManager = () => {
     const bankID = sessionStorage.getItem("bankID") || {}
     const [accounts, setAccounts] = useState('')
     const [role, setRole] = useState('')
+    useEffect(() => {
+        
+    })
     axios.get('http://localhost:4000/totalTransactionHistory',{
             params: {bankID: bankID }
         })

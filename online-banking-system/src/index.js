@@ -9,7 +9,7 @@ import CustomerLogin from './files/CustomerLogin';
 import ATMLoginForm from './files/ATMLoginForm';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CustomerDashboard from './files/CustomerDashBoard';
-import TransactionPage from './files/TransactionPage';
+import TransactionHistory from './files/TransactionHistory';
 import ATMDashboard from './files/ATMDashboard';
 import DepositCash from './files/DepositBills';
 import TransferFunds from './files/TransferFunds';
@@ -30,7 +30,7 @@ root.render(
     <Route path="/Dashboard" element={<CustomerDashboard/>} />
     <Route path="/ATMLoginForm" element={<ATMLoginForm />} />
     <Route path="/ATMDashboard" element={<ATMDashboard />} />
-    <Route path="/TransactionHistory" element={<TransactionPage />} />
+    <Route path="/TransactionHistory" element={<TransactionHistory />} />
     <Route path="/DepositBills" element={<DepositCash />} />
     <Route path="/transferFunds" element={<TransferFunds />} />
     <Route path="/uploadCheque" element={<UploadCheque />} />

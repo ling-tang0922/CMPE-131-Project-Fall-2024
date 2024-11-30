@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 const EmployeeLogin = () => {
   const[username, setUsername] = useState('')
   const[password, setPassword] = useState('')
-  const[message, setMessage] = useState('')
   const navigate = useNavigate()
   // Backend: 
   const handleLogin = () =>{

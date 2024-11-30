@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import WindowWrapper from '../components/WindowWrapper';
 
@@ -7,12 +7,13 @@ const TransactionHistory = () => {
     const [transactions, setTransactions] = useState([]);
     const bankID = sessionStorage.getItem("bankID") || {}
     // Fetch transactions from the API
-    axios.get('http://localhost:4000/transaction-history',{
+    useEffect(() => {
+        axios.get('http://localhost:4000/transaction-history',{
             params: {bankID: bankID }
         })
         .then(response =>{
             if(response.data.success){
-                setTransactions(response.data)
+                setTransactions(response.data.history)
             }
         })
         .catch(error =>{
@@ -23,6 +24,8 @@ const TransactionHistory = () => {
                 alert("Error validating credentials")
             }
         })
+    }, [])
+   
 
     return (
         <WindowWrapper showSideNav={true}>
@@ -45,10 +48,10 @@ const TransactionHistory = () => {
                         ) : (
                             transactions.map((transaction, index) => (
                                 <tr key={index}>
-                                    <td>{transaction.dateTime}</td>
-                                    <td>{transaction.type}</td>
-                                    <td>{transaction.amount}</td>
-                                    <td>{transaction.balanceAfter}</td>
+                                    <td>{transaction.date}</td>
+                                    <td>{}</td>
+                                    <td>{transaction.transaction}</td>
+                                    <td>{transaction.accountBalance}</td>
                                 </tr>
                             ))
                         )}
