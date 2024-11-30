@@ -1,16 +1,27 @@
-import React, { useState } from "react";
-import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField } from "@aws-amplify/ui-react";
+import React, { useState, useEffect } from "react";
+import {
+    Button,
+    Divider,
+    Table,
+    TableCell,
+    TableHead,
+    TableRow,
+    TableBody,
+    TextField,
+    SelectField,
+} from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import { useNavigate } from "react-router-dom";
-import "./modal.css"; 
+import "./modal.css";
+
 
 const EmployeeManagement = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("ascending");
     const [employees, setEmployees] = useState([
-        { first: 'John', last: 'Doe', email: 'john.doe@example.com', username: 'johndoe', password: 'password123' },
-        { first: 'Jane', last: 'Smith', email: 'jane.smith@example.com', username: 'janesmith', password: 'password456' },
+        { first: "John", last: "Doe", email: "john.doe@example.com", username: "johndoe", password: "password123" },
+        { first: "Jane", last: "Smith", email: "jane.smith@example.com", username: "janesmith", password: "password456" },
     ]);
     const [modalOpen, setModalOpen] = useState(false);
     const [newEmployee, setNewEmployee] = useState({
@@ -20,9 +31,21 @@ const EmployeeManagement = () => {
         username: "",
         password: "",
     });
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [profilePic, setProfilePic] = useState('default_profile_pic.png'); // Set a default profile picture
 
+    // Filter and sort employees
+    const filteredEmployees = employees
+        .filter((employee) =>
+            employee.username.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .sort((a, b) =>
+            sortOrder === "ascending"
+                ? a.first.localeCompare(b.first)
+                : b.first.localeCompare(a.first)
+        );
+        const [dropdownOpen, setDropdownOpen] = useState(false);
+        const [profilePic, setProfilePic] = useState("default_profile_pic.png"); // Default profile picture
+    
+    // Handle new employee form input
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewEmployee((prev) => ({
@@ -31,6 +54,7 @@ const EmployeeManagement = () => {
         }));
     };
 
+    // Handle adding a new employee
     const handleSubmit = (e) => {
         e.preventDefault();
         if (newEmployee.first && newEmployee.last && newEmployee.email && newEmployee.username && newEmployee.password) {
@@ -42,34 +66,31 @@ const EmployeeManagement = () => {
         }
     };
 
-    // Toggle dropdown visibility
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
 
-    // Close dropdown if clicked outside
     const clickOutside = (event) => {
         const dropdown = document.getElementById('dropdown');
-        const profilePicElement = document.getElementById('profile-pic');
-        if (dropdown && !dropdown.contains(event.target) && !profilePicElement.contains(event.target)) {
+        const profilePic = document.getElementById('profile-pic');
+        if (dropdown && !dropdown.contains(event.target) && !profilePic.contains(event.target)) {
             closeDropdown();
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         window.addEventListener('click', clickOutside);
         return () => window.removeEventListener('click', clickOutside);
     }, []);
 
     return (
         <WindowWrapperEmployee showSideNavEmployee={true}>
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
+            <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: "transparent" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold", textAlign: "left" }}>Employee Management</h1>
-                    
                     <div style={{ position: "relative", marginRight: "20px" }}>
                         <img
                             id="profile-pic"
-                            src={profilePic} 
+                            src="default.png"
                             alt="User Profile"
                             style={{ height: "50px", width: "50px", borderRadius: "50%", cursor: "pointer" }}
                             onClick={toggleDropdown}
@@ -117,8 +138,10 @@ const EmployeeManagement = () => {
                         )}
                     </div>
                 </div>
+                
                 <Divider />
                 <div style={{ marginTop: "30px", display: "flex", alignItems: "center", marginBottom: "20px" }}>
+                    {/* Search Bar */}
                     <TextField
                         label="Search Employees"
                         placeholder="Enter username"
@@ -126,6 +149,8 @@ const EmployeeManagement = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{ marginRight: "20px", width: "300px" }}
                     />
+
+                    {/* Sort Dropdown */}
                     <SelectField
                         label="Sort by First Name"
                         value={sortOrder}
@@ -136,7 +161,9 @@ const EmployeeManagement = () => {
                         <option value="descending">Z-A</option>
                     </SelectField>
                 </div>
-                <Table highlightOnHover={true} style={{ backgroundColor: '#FFFFFF', borderRadius: '8px' }}>
+
+                {/* Employee Table */}
+                <Table highlightOnHover={true} style={{ backgroundColor: "#FFFFFF", borderRadius: "8px" }}>
                     <TableHead>
                         <TableRow>
                             <TableCell>First Name</TableCell>
@@ -148,7 +175,7 @@ const EmployeeManagement = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {employees.map((employee, index) => (
+                        {filteredEmployees.map((employee, index) => (
                             <TableRow key={index}>
                                 <TableCell>{employee.first}</TableCell>
                                 <TableCell>{employee.last}</TableCell>
@@ -156,7 +183,12 @@ const EmployeeManagement = () => {
                                 <TableCell>{employee.username}</TableCell>
                                 <TableCell>{employee.password}</TableCell>
                                 <TableCell>
-                                    <Button variation="destructive" onClick={() => setEmployees(employees.filter(emp => emp.username !== employee.username))}>
+                                    <Button
+                                        variation="destructive"
+                                        onClick={() =>
+                                            setEmployees(employees.filter((emp) => emp.username !== employee.username))
+                                        }
+                                    >
                                         Remove
                                     </Button>
                                 </TableCell>
@@ -164,7 +196,11 @@ const EmployeeManagement = () => {
                         ))}
                     </TableBody>
                 </Table>
-                <Button variation="primary" onClick={() => setModalOpen(true)} style={{ marginTop: '20px', backgroundColor: '#57C43F' }}>
+                <Button
+                    variation="primary"
+                    onClick={() => setModalOpen(true)}
+                    style={{ marginTop: "20px", backgroundColor: "#57C43F" }}
+                >
                     Add Employee
                 </Button>
 
@@ -174,11 +210,42 @@ const EmployeeManagement = () => {
                         <div className="modal-content">
                             <h2>Add Employee</h2>
                             <form onSubmit={handleSubmit}>
-                                <TextField label="First Name" name="first" value={newEmployee.first} onChange={handleInputChange} className="modal-input" />
-                                <TextField label="Last Name" name="last" value={newEmployee.last} onChange={handleInputChange} className="modal-input" />
-                                <TextField label="Email" name="email" value={newEmployee.email} onChange={handleInputChange} className="modal-input" />
-                                <TextField label="Username" name="username" value={newEmployee.username} onChange={handleInputChange} className="modal-input" />
-                                <TextField label="Password" name="password" type="password" value={newEmployee.password} onChange={handleInputChange} className="modal-input" />
+                                <TextField
+                                    label="First Name"
+                                    name="first"
+                                    value={newEmployee.first}
+                                    onChange={handleInputChange}
+                                    className="modal-input"
+                                />
+                                <TextField
+                                    label="Last Name"
+                                    name="last"
+                                    value={newEmployee.last}
+                                    onChange={handleInputChange}
+                                    className="modal-input"
+                                />
+                                <TextField
+                                    label="Email"
+                                    name="email"
+                                    value={newEmployee.email}
+                                    onChange={handleInputChange}
+                                    className="modal-input"
+                                />
+                                <TextField
+                                    label="Username"
+                                    name="username"
+                                    value={newEmployee.username}
+                                    onChange={handleInputChange}
+                                    className="modal-input"
+                                />
+                                <TextField
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    value={newEmployee.password}
+                                    onChange={handleInputChange}
+                                    className="modal-input"
+                                />
                                 <div className="modal-button-container">
                                     <Button type="submit" variation="primary">Add</Button>
                                     <Button onClick={() => setModalOpen(false)} className="modal-close">Cancel</Button>
@@ -193,6 +260,7 @@ const EmployeeManagement = () => {
 };
 
 export default EmployeeManagement;
+
 
 
 
