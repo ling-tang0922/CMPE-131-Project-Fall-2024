@@ -19,10 +19,54 @@ const TransferFunds = () =>{
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString();
     // Backend:
+    const verifyInputs = () =>{
+        if(!phoneNumber || !verifyPhoneNumber || phoneNumber !== verifyPhoneNumber){
+            alert("Provided phone numbers don't match.")
+            return false
+        }
+        if(!amount){
+            alert("Please enter an amount.")
+            return false
+        }
+        if(Number(amount) <= 0){
+            alert("Please enter a valid amount.")
+            return false
+        }
+        if(Number(amount) > Number(senderBalance)){
+            alert("Insufficient funds.")
+            return false
+        }
+        alert(phoneNumber)
+        axios.get('http://localhost:4000/account-settings',{
+            params: {bankID: null, PhoneNumber: phoneNumber}
+            
+        })
+        .then(response =>{
+            console.log('Response recieved:', response.data)
+            if(response.data.success){
+                setRecieverBankID(response.data.bankID)
+                setRecieverBalance(response.data.accountBalance)
+                handleTransfer()
+            }
+             else {
+                console.error('No matching account found');
+                alert('No matching account found');
+            }
+        })
+        .catch(error =>{
+            console.error('Error occured:', error)
+            if (error.response && error.response.status === 401) {
+                alert("Invalid Phone Number");
 
+            } else {
+                alert("Error Phone Number");
+            }
+        })
+    }
     const handleTransfer = async () =>{
         const senderNewBalance = Number(senderBalance) - Number(amount)
         const recieverNewBalance = Number(recieverBalance) + Number(amount)
+
         axios.put('http://localhost:4000/UpdateAccountBalance', {
             bankID: bankID, newBalance: senderNewBalance
         })
@@ -99,7 +143,6 @@ const TransferFunds = () =>{
         .then(response => {
             if(response.data.success){
               console.log('Response recieved:', response.data);
-              alert("Transfer handled successfully");
               navigate('/Dashboard');
             }
         })
@@ -111,50 +154,10 @@ const TransferFunds = () =>{
               alert("Error validating input values");
             }
         })
+        window.location.reload()
     }
 
-    const verifyInputs = () =>{
-        if(!phoneNumber || !verifyPhoneNumber || phoneNumber !== verifyPhoneNumber){
-            alert("Provided phone numbers don't match.")
-            return false
-        }
-        if(!amount){
-            alert("Please enter an amount.")
-            return false
-        }
-        if(Number(amount) <= 0){
-            alert("Please enter a valid amount.")
-            return false
-        }
-        if(Number(amount) > Number(senderBalance)){
-            alert("Insufficient funds.")
-            return false
-        }
-        axios.get('http://localhost:4000/account-settings',{
-            params: {bankID: null, PhoneNumber: phoneNumber}
-        })
-        .then(response =>{
-            console.log('Response recieved:', response.data)
-            if(response.data.success){
-                setRecieverBankID(response.data.bankID)
-                setRecieverBalance(response.data.accountBalance)
-                handleTransfer()
-            }
-             else {
-                console.error('No matching account found');
-                alert('No matching account found');
-            }
-        })
-        .catch(error =>{
-            console.error('Error occured:', error)
-            if (error.response && error.response.status === 401) {
-                alert("Invalid Phone Number");
-
-            } else {
-                alert("Error Phone Number");
-            }
-        })
-    }
+    
     //
     return(<WindowWrapper showSideNav={true}>
         <div>

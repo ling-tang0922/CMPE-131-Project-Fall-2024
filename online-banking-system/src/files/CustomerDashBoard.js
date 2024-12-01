@@ -19,6 +19,7 @@ const CustomerDashboard = ({style={}}) => {
     const role = sessionStorage.getItem('role') || 'customer';
     const bankID = sessionStorage.getItem('bankID') || '';
     //Backend:
+    
     useEffect(() => {
         axios.get('http://localhost:4000/transaction-history',{
             params: {bankID: bankID }
