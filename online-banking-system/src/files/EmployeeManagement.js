@@ -13,7 +13,7 @@ import {
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import { useNavigate } from "react-router-dom";
 import "./modal.css";
-
+import ManagerAccountSettings from "./ManagerAccountSettings";
 
 const EmployeeManagement = () => {
     const navigate = useNavigate();
@@ -113,17 +113,9 @@ const EmployeeManagement = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/accountsettings')}
+                                        onClick={() => navigate('/ManagerAccountSettings')}
                                     >
                                         Account Settings
-                                    </li>
-                                    <li
-                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/dashboard')}
-                                    >
-                                        Change Account
                                     </li>
                                     <li
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}

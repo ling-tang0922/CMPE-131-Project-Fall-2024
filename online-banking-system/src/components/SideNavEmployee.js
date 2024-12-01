@@ -32,7 +32,7 @@ const SideNavEmployee = ({style={}}) => {
               <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faUser} />
               Employees
             </MenuItem>
-            <MenuItem onClick={() => {navigate('/settings')}} style={{color:"white"}}>
+            <MenuItem onClick={() => {navigate('/ManagerAccountSettings')}} style={{color:"white"}}>
               <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faCog} />
               Settings
             </MenuItem>

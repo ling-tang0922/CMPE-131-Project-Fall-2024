@@ -2,6 +2,7 @@ import { Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, S
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ManagerAccountSettings from "./ManagerAccountSettings";
 
 const ManagerDashboard = () => {
     const navigate = useNavigate();
@@ -80,17 +81,9 @@ const ManagerDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/accountsettings')}
+                                        onClick={() => navigate('/ManagerAccountSettings')}
                                     >
                                         Account Settings
-                                    </li>
-                                    <li
-                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/dashboard')}
-                                    >
-                                        Change Account
                                     </li>
                                     <li
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}

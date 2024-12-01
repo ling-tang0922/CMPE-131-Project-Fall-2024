@@ -19,6 +19,7 @@ import EmployeeLogin from './files/EmployeeLogin';
 import EmployeeDashboard from './files/EmployeeDashboard';
 import TransactionHistoryManager from './files/TransactionHistoryManager';
 import EmployeeManagement from './files/EmployeeManagement';
+import ManagerAccountSettings from './files/ManagerAccountSettings';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -39,6 +40,7 @@ root.render(
     <Route path="/AccountSettings" element={<AccountSettings/>} />
     <Route path="/TransactionHistoryManager" element={<TransactionHistoryManager/>} />
     <Route path="/EmployeeManagement" element={<EmployeeManagement/>} />
+    <Route path="/ManagerAccountSettings" element={<ManagerAccountSettings/>} />
     </Routes>
   </Router>
   
