@@ -48,11 +48,14 @@ const CustomerLogin = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPass] = useState("")
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [initialBalance, setBalance] = useState("")
-  const [newBankID, setNewBankID] = useState('')
+  const [PhoneNumber, setPhoneNumber] = useState("")
+  const [bankID, setBankID] = useState("")
+  
   const type = 'customer'
   // Backend:
+  const generatePin = () => {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  };
   const handleLogin = () => {
     axios.get('http://localhost:4000/validate-credentials-userLogin', {
       params: { username: username, password: password, type: type}
@@ -61,8 +64,16 @@ const CustomerLogin = () => {
     .then(response => {
       console.log('Response received:', response.data);
       if (response.data.success) {
-        const bankID = response.data.bankID
-        sessionStorage.setItem("bankID", bankID)
+        sessionStorage.setItem('bankID', response.data.bankID);
+        sessionStorage.setItem('email', response.data.email);
+        sessionStorage.setItem('firstName', response.data.firstName);
+        sessionStorage.setItem('lastName', response.data.lastName);
+        sessionStorage.setItem('PhoneNumber', response.data.PhoneNumber);
+        sessionStorage.setItem('accountBalance', response.data.accountBalance);
+        sessionStorage.setItem('username', response.data.username);
+        sessionStorage.setItem('password', response.data.password);
+        sessionStorage.setItem('bankPin', response.data.bankPin);
+        sessionStorage.setItem('role', response.data.role);
         navigate('/DashBoard');
       }
     })
@@ -77,60 +88,78 @@ const CustomerLogin = () => {
     })
   }
 
-  const generateID = () =>{
-    const IDcheck = 'e' + (Math.floor(1000 + Math.random() * 9000)).toString()
-    axios.get('http://localhost:4000/account-settings',{
-      params: {bankID: IDcheck }
-    })
-    .then(response =>{
-      if(response.data.success){
-        generateID()
-      }
-    })
-    .catch(error =>{
-      setNewBankID(IDcheck)
-    })
-  }
+  const generateID = () => {
+    return new Promise((resolve, reject) => {
+        const IDcheck = 'e' + (Math.floor(1000 + Math.random() * 9000)).toString();
+        axios.get('http://localhost:4000/account-settings', {
+            params: { bankID: IDcheck }
+        })
+        .then(response => {
+            if (response.data.success) {
+                // If the ID exists, generate a new one
+                generateID().then(resolve).catch(reject);
+            } else {
+                // If the ID does not exist, resolve with the new ID
+                resolve(IDcheck);
+            }
+        })
+        .catch(error => {
+            // Handle errors gracefully
+            console.error('Error checking ID:', error);
+            // Assuming that an error means the ID does not exist
+            resolve(IDcheck);
+        });
+    });
+};
 
   const handleSignUp = () => {
-    if(!username || !password || !firstName || !lastName || !phoneNumber || !email){
-      alert("All fields are required")
-      return
+    if (!username || !password || !firstName || !lastName || !PhoneNumber || !email) {
+        alert("All fields are required");
+        return;
     }
 
-    else if(password !== confirmPassword){
-      alert("Passwords don't match")
-      return
+    if (password !== confirmPassword) {
+        alert("Passwords don't match");
+        return;
     }
-    
-    else{
-      generateID()
-      axios.post('http://localhost:4000/new-account',{
-        username: username,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        email: email,
-        intitialBalance: initialBalance || 0,
-        bankID: newBankID
-      })
-
-      .then(response =>{
-        if(response.data.success){
-          alert("Account Created")
-          const bankID = response.data.bankID
-          navigate('/Dashboard', {state : {bankID}})
-        }
-      })
-      
-      .catch(error =>{
-        alert("Error creating new account")
-        console.error('Error occured:', error)
-      })
-    }
-
-  };
+    alert(PhoneNumber)
+    const bankPin = generatePin();
+    generateID().then(newBankID => {
+        axios.post('http://localhost:4000/new-account', {
+            username: username,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            PhoneNumber: PhoneNumber,
+            email: email,
+            accountBalance: 0,
+            bankID: newBankID,
+            bankPin: bankPin,
+            role: 'customer'
+        })
+        .then(response => {
+            if (response.data.success) {
+                alert("Account Created");
+                alert('Your Phone Number is: ' + response.data.PhoneNumber);
+                sessionStorage.setItem('bankID', newBankID);
+                sessionStorage.setItem('email', email);
+                sessionStorage.setItem('firstName', firstName);
+                sessionStorage.setItem('lastName', lastName);
+                sessionStorage.setItem('PhoneNumber', PhoneNumber);
+                sessionStorage.setItem('accountBalance', 0);
+                sessionStorage.setItem('username', username);
+                navigate('/DashBoard');
+            }
+        })
+        .catch(error => {
+            alert("Error creating new account");
+            console.error('Error occurred:', error);
+        });
+    }).catch(error => {
+        alert("Error generating bank ID");
+        console.error('Error occurred:', error);
+    });
+};
   //
   return (
     <WindowWrapper>
@@ -411,14 +440,24 @@ const CustomerLogin = () => {
                           style={{ paddingLeft: "35px" }}
                         />
                       </div>
-
-                      <PhoneNumberField
-                        defaultDialCode="+1"
+                      <Label htmlFor="first_name">Phone Number:</Label>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          position: "relative",
+                        }}
+                      >
+                      <input
+                        type="tel"
                         label="Phone number:"
-                        onChange={(e)=>setPhoneNumber(e.target.value)}
+                        value={PhoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="234-567-8910"
-                        errorMessage="Enter a Valid Phone Number"
+                        aria-label="Phone number"
+                        required
                       />
+                      </div>
                       <Button onClick={handleSignUp} variation="primary" colorTheme="success">
                         Sign Up
                       </Button>

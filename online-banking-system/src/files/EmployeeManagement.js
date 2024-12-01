@@ -10,7 +10,7 @@ const EmployeeManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("ascending");
     const [employees, setEmployees] = useState({});
-    const [role, setRole] = useState('')
+    const role = sessionStorage.getItem("role")
     const fetchAccounts = () => {
         axios.get('http://localhost:4000/account-settings-role',{
             params: {role: 'employee'}

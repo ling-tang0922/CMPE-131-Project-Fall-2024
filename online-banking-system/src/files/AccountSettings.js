@@ -6,54 +6,46 @@ import axios from "axios";
 
 const AccountSettings = () => {
     const navigate = useNavigate();
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [accountStatus, setAccountStatus] = useState('open');
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [username, setUsername] = useState('')
-    const bankID = sessionStorage.getItem('bankID') || {}
-    const [role, setRole] = useState('')
-    const [email, setEmail] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
+const [dropdownOpen, setDropdownOpen] = useState(false);
+const [newPassword, setNewPassword] = useState('');
+const [confirmPassword, setConfirmPassword] = useState('');
+const [accountStatus, setAccountStatus] = useState('open');
+const firstName = sessionStorage.getItem('firstName')
+const lastName = sessionStorage.getItem('lastName');
+const username = sessionStorage.getItem('username');
+const bankID = sessionStorage.getItem('bankID') || '';
+const role = sessionStorage.getItem('role');
+const email = sessionStorage.getItem('email');
+const phoneNumber = sessionStorage.getItem('PhoneNumber');
     
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
 
-
-    const fetchAccountSettings= () =>{
-        axios.get('http://localhost:4000/account-settings', {
-            params:{bankID: bankID}
-        })
-        .then(response =>{
-            console.log('Response recieved:', response.data)
-            if(response.data.success){
-                setAccountStatus(response.data.accountStatus)
-                setFirstName(response.data.firstName)
-                setLastName(response.data.lastName)
-                setUsername(response.data.username)
-                setEmail(response.data.email)
-                setPhoneNumber(response.data.PhoneNumber)
-                setRole(response.data.role)
-            }
-        })
-        .catch(error => {
-            console.error('Error occurred:', error);
-            if (error.response && error.response.status === 401) {
-              alert("Invalid credentials");
-            } else {
-              alert("Error validating credentials");
-            }
-          })
-    }
-    fetchAccountSettings()
     const signOut = () => {
-        sessionStorage.removeItem('bankID')
-        navigate('/')
+        sessionStorage.removeItem('balance');
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem('bankID');
+        sessionStorage.removeItem('email');
+        sessionStorage.removeItem('phoneNumber');
+        sessionStorage.removeItem('accountBalance');
+        sessionStorage.removeItem('bankPin');
+        navigate('/');
     }
+
     const changeAccount = () => {
-        sessionStorage.removeItem('bankID')
+        sessionStorage.removeItem('balance');
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem('bankID');
+        sessionStorage.removeItem('email');
+        sessionStorage.removeItem('phoneNumber');
+        sessionStorage.removeItem('accountBalance');
+        sessionStorage.removeItem('bankPin');
         if(role === 'customer'){
             navigate('/CustomerLogin')
         }

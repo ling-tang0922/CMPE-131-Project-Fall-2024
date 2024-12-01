@@ -1,41 +1,18 @@
 import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const DepositBills = () =>{
+    const navigate = useNavigate()
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString();
     const [amount, setAmount] = useState('')
     const [confirmAmount, setConfirmAmount] = useState('')
     const [termsAgreed, setTermsAgreed] = useState('')
-    const [balance, setBalance] = useState(0)
+    const balance = sessionStorage.getItem("accountBalance") || 0
     const bankID = sessionStorage.getItem("bankID") || null
-    
-    
-    const fetchBalance = () =>{
-        ///
-        axios.get('http://localhost:4000/account-settings', {
-            params:{bankID: bankID}
-        })
-        ///
-        .then(response =>{
-            console.log('Response recieved:', response.data)
-            if(response.data.success){
-                const accountBalance = response.data.accountBalance
-                setBalance(accountBalance)
-            }
-        })
-        ///
-        .catch(error => {
-            console.error('Error occurred:', error);
-            if (error.response && error.response.status === 401) {
-              alert("Invalid credentials");
-            } else {
-              alert("Error validating credentials");
-            }
-          })
-          ///
-    }
-    fetchBalance()
 
     const handleDeposit = () =>{
         const amountNum = parseFloat(confirmAmount);
@@ -51,7 +28,7 @@ const DepositBills = () =>{
             alert("Please enter a valid deposit amount.")
             return
         }
-        const newBalance = (balance + amountNum)
+        const newBalance = (Number(balance) + Number(amountNum))
 
         axios.put('http://localhost:4000/UpdateAccountBalance',{
             bankID: bankID, newBalance: newBalance
@@ -59,6 +36,7 @@ const DepositBills = () =>{
         .then(response => {
             console.log('Response recieved:', response.data)
             if(response.data.success){
+                sessionStorage.setItem("accountBalance", newBalance)
                 alert('Success!')
             }
         })
@@ -70,9 +48,30 @@ const DepositBills = () =>{
               alert("Error validating credentials");
             }
         })
-
-        alert(`You have deposited $${amountNum}. Your new balance is $${newBalance.toFixed(2)}.`);
-        setAmount(""); // Clear the input
+        axios.post('http://localhost:4000/add-transaction',{
+            transactionID: '', 
+            bankID: bankID, 
+            accountBalance: newBalance, 
+            transaction: amount, 
+            connectedAccount: 'N/A', 
+            date: formattedDate, 
+            type: 'Cash Deposit'
+        })
+        .then(response => {
+            
+            if(response.data.success){
+                console.log('Response recieved:', response.data)
+                navigate('/dashboard')
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            if (error.response && error.response.status === 401) {
+              alert("Invalid input values");
+            } else {
+              alert("Error validating input values");
+            }
+        })
     }
     return(<WindowWrapper showSideNav={true}>
         <div>

@@ -27,13 +27,26 @@ db.connect((err)=>{
 // Get Function
 app.get('/validate-credentials-userLogin', async (req,res)=>{
     const {username, password, type} = req.query
-    db.query('SELECT bankID FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results)=>{
+    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results)=>{
         if(error){
             console.error('Error validating credentials')
             return res.status(500).send("Error validating credentials")
         }
         if(results.length > 0){
-            res.send({success : true, bankID: results[0].bankID})
+            res.send({
+                success: true,
+                bankID: results[0].bankID,
+                email: results[0].email,
+                firstName: results[0].firstName,
+                lastName: results[0].lastName,
+                PhoneNumber: results[0].PhoneNumber,
+                accountBalance: results[0].accountBalance,
+                username: results[0].username,
+                password: results[0].password,
+                bankPin: results[0].bankPin,
+                role: results[0].role
+                
+            })
         } else{
             res.status(401).send({success: false})
         }
@@ -85,7 +98,7 @@ app.get("/account-settings", async (req, res)=>{
             });
             ///
         }else {
-            res.status(401).send({success:false})
+            res.send({success:false})
         }
     })
 })
@@ -207,15 +220,28 @@ app.get("/transaction-history", async (req, res)=>{
         }
     })
 })
-
-app.get("/totalTransactionHistory", async (req, res)=>{
-    db.query('SELECT * FROM transactionHistory', (error, results)=>{
+app.get("/allAccounts-employee", async (req, res)=>{
+    db.query('SELECT * FROM accounts WHERE role = ?',['customer'], (error, results)=>{
         if(error){
             console.error('Error fetching transaction history:', error)
             return res.status(500).send("Error fetching transaction history")
         }
         if(results.length > 0){
-            res.send(`${results[0].transactrionHistory}`)
+            res.send({success: true, accountsToDisplay: results})
+        }
+        else{
+            res.send({success: false})
+        }
+    })
+})
+app.get("/totalTransactionHistory", async (req, res)=>{
+    db.query('SELECT * FROM transaction_history', (error, results)=>{
+        if(error){
+            console.error('Error fetching transaction history:', error)
+            return res.status(500).send("Error fetching transaction history")
+        }
+        if(results.length > 0){
+            res.send({success: true, history: results})
         }
     })
 })
@@ -223,15 +249,29 @@ app.get("/totalTransactionHistory", async (req, res)=>{
 // Request to Store New Account Information
 // Post Function
 app.post("/new-account", async (req, res)=>{
-    const { username, password, firstName, lastName, phoneNumber, email, initialBalance, bankID} = req.body
+    const {bankID, email, firstName, lastName, PhoneNumber, accountBalance, username, password, bankPin, role} = req.body
 
-    db.query('INSERT INTO accounts (username, password, firstName, lastName, PhoneNumber, email, balance) VALUES(?, ?, ?, ?, ?, ?, ?)',
-    [username, password, firstName, lastName, phoneNumber, email, initialBalance], (error, results) =>{
+    db.query('INSERT INTO accounts (bankID, email, firstName, lastName, PhoneNumber, accountBalance, username, password, bankPin, role) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [bankID, email, firstName, lastName, PhoneNumber, accountBalance, username, password, bankPin, role], (error, results) =>{
         if(error){
             console.error('Error creating new account:', error)
             return res.status(500).send({error: "Error creating new account"})
         }
-        res.status(201).send({success: true, bankID: results.bankID})
+        res.status(201).send({success: true, bankID: bankID, PhoneNumber: PhoneNumber})
+        
+    })
+})
+
+app.post('/add-transaction', async (req, res)=>{
+    const { transactionID, bankID, accountBalance, transaction, connectedAccount, date, type} = req.body
+
+    db.query('INSERT INTO transaction_history (transactionID, bankID, accountBalance, transaction, connectedAccount, date, type) VALUES(?, ?, ?, ?, ?, ?, ?)',
+    [transactionID, bankID, accountBalance, transaction, connectedAccount, date, type], (error) =>{
+        if(error){
+            console.error('Error creating new transaction record:', error)
+            return res.status(500).send({error: "Error creating transaction record"})
+        }
+        res.status(201).send({ success: true });
         
     })
 })
@@ -239,7 +279,7 @@ app.post("/new-account", async (req, res)=>{
 // Request Deletion of Account
 // Delete Function
 app.delete("/delete-account", async (req, res)=>{
-    const{bankID} = req.query
+    const{bankID} = req.body
     db.query('DELETE FROM accounts WHERE bankID = ?', [bankID], (error, results)=>{
         if(error){
             console.error('Error deleting existing account')
@@ -249,8 +289,8 @@ app.delete("/delete-account", async (req, res)=>{
     })
 })
 app.delete('/deleteAccountHistory', async (req, res)=>{
-    const {bankID} = req.query
-    db.query('DELETE FROM transactionHistory WHERE bankID = ?', [bankID], (error, results)=>{
+    const {bankID} = req.body
+    db.query('DELETE FROM transaction_history WHERE bankID = ?', [bankID], (error, results)=>{
         if(error){
             console.error('Error deleting existing account')
             return res.status(500).send("Error deleting existing account")

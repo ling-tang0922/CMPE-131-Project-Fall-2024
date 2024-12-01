@@ -17,20 +17,29 @@ const EmployeeLogin = () => {
   const navigate = useNavigate()
   // Backend: 
   const handleLogin = () =>{
-    axios.get('http://localhost:4000/validate-credentials',{
+    axios.get('http://localhost:4000/validate-credentials-userLogin',{
       params: {username: username, password: password, type: 'employee'}
     })
     .then(response=>{
       if(response.data.success){
-        const bankID = response.data.bankID
-        navigate('/EmployeeDashboard', {state: {bankID}})
+        sessionStorage.setItem('bankID', response.data.bankID);
+        sessionStorage.setItem('email', response.data.email);
+        sessionStorage.setItem('firstName', response.data.firstName);
+        sessionStorage.setItem('lastName', response.data.lastName);
+        sessionStorage.setItem('PhoneNumber', response.data.PhoneNumber);
+        sessionStorage.setItem('accountBalance', response.data.accountBalance);
+        sessionStorage.setItem('username', response.data.username);
+        sessionStorage.setItem('password', response.data.password);
+        sessionStorage.setItem('bankPin', response.data.bankPin);
+        sessionStorage.setItem('role', response.data.role);
+        navigate('/EmployeeDashboard')
       }
     })
     .catch(error=>{
       if(error.response && error.response.status === 401){
-        setMessage("Invalid credentials")
+        alert("Invalid credentials")
       }else{
-        setMessage("Error validating credentials")
+        alert("Error validating credentials")
       }
     })
   }

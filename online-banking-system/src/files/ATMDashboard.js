@@ -7,32 +7,11 @@ const axios = require('axios')
 const ATMDashboard = () => {
 
     const [amount, setAmount] = useState('')
-    const [balance, setBalance] = useState(0)
+    const balance = sessionStorage.getItem("accountBalance") || 0
 
     const bankID = sessionStorage.getItem("bankID") || {}
-    const fetchAccountSettings= () =>{
-        axios.get('http://localhost:4000/account-settings', {
-            params:{bankID: bankID}
-        })
-        .then(response =>{
-            console.log('Response recieved:', response.data)
-            if(response.data.success){
-                setBalance(response.data.accountBalance)
-            }
-        })
-        .catch(error => {
-            console.error('Error occurred:', error);
-            if (error.response && error.response.status === 401) {
-              alert("Invalid credentials");
-            } else {
-              alert("Error validating credentials");
-            }
-          })
-    }
-    fetchAccountSettings()
 
     const handleWithdrawl = async (e) => {
-        e.preventDefault();
         const amountNum = parseFloat(amount);
         // Simple validation for withdrawal
         if (amountNum <= 0 || isNaN(amountNum)) {

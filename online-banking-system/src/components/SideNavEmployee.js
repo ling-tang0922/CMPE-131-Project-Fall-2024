@@ -6,7 +6,9 @@ import { faUser, faClipboardList, faCog } from '@fortawesome/free-solid-svg-icon
 
 const SideNavEmployee = ({style={}}) => {
   const navigate = useNavigate();
-  const bankID = localStorage.getItem("bankID")
+  const bankID = sessionStorage.getItem("bankID")
+  const firstName = sessionStorage.getItem("firstName") || {}
+    const lastName = sessionStorage.getItem("lastName") || {}
   return (
     <div style={{position:"fixed"}}>
         <Sidebar rootStyles={{
@@ -14,7 +16,7 @@ const SideNavEmployee = ({style={}}) => {
             backgroundColor: 'black',
           },
         }} style={{ height: '100vh', width: '250px', left: 0, backgroundColor:"black"}}>
-          <h2 style={{color:"white"}}>Employee Name</h2>
+          <h2 style={{color:"white"}}>{firstName} {lastName}</h2>
           <Menu menuItemStyles={{
             button: {
               backgroundColor: 'transparent', 

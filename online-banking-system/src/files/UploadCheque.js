@@ -2,16 +2,21 @@ import { Button, Input,Label,CheckboxField,VisuallyHidden} from "@aws-amplify/ui
 import WindowWrapper from "../components/WindowWrapper";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay} from "@fortawesome/free-solid-svg-icons";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import { useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const UploadCheque = () =>{
+    const navigate = useNavigate()
     const [uploadedImage,setUploadedImage] = React.useState(null);
     const hiddenInput = React.useRef(null);
-    const [balance, setBalance] = useState('')
-    const [amount, setAmount] = useState('')
-    const bankID = sessionStorage.getItem("bankID") || {}
+    const balance = sessionStorage.getItem("accountBalance") || 0;
+    const [amount, setAmount] = useState('');
+    const bankID = sessionStorage.getItem("bankID") || {};
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString();
     // Bankend:
+
     const updateBalance = () =>{
       const newBalance = (Number(balance) + Number(amount)).toString()
       axios.put('http://localhost:4000/UpdateAccountBalance', {
@@ -22,6 +27,7 @@ const UploadCheque = () =>{
       .then(response => {
         console.log('Response received:', response.data);
         if (response.data.success) {
+          sessionStorage.setItem("accountBalance", newBalance);
           console.log('Updated')
         }
       })
@@ -33,27 +39,32 @@ const UploadCheque = () =>{
           alert("Error validating credentials");
         }
       })
-    }
 
-    const fetchAccountDetails = () => {
-      axios.get('http://localhost:4000/account-settings',{
-        params: {bankID: bankID }
+      axios.post('http://localhost:4000/add-transaction',{
+        transactionID: '', 
+        bankID: bankID, 
+        accountBalance: newBalance, 
+        transaction: amount, 
+        connectedAccount: 'N/A', 
+        date: formattedDate, 
+        type: 'Check Deposit'
       })
-      .then(response =>{
+      .then(response => {
         if(response.data.success){
-          setBalance(response.data.accountBalance)
+          console.log('Response recieved:', response.data);
+          alert("Check deposited successfully");
+          navigate('/Dashboard');
         }
       })
-      .catch(error =>{
-        if(error.response && error.response.status === 401){
-          alert("Invalid credentials")
-        } else{
-          alert("Error validating credentials")
+      .catch(error => {
+        console.error('Error occurred:', error);
+        if (error.response && error.response.status === 401) {
+          alert("Invalid input values");
+        } else {
+          alert("Error validating input values");
         }
       })
     }
-    fetchAccountDetails()
-    //
     const handleImageChange = (event) => {
       const file = event.target.files[0];
         if (file) {

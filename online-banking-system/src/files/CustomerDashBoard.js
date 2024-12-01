@@ -10,15 +10,14 @@ import axios from "axios";
 
 const CustomerDashboard = ({style={}}) => {
     const navigate = useNavigate()
-    
-    const [balance, setBalance] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [username, setUsername] = useState('')
-    const [dropdownOpen, setDropdownOpen] = useState(false)
-    const [transactionHistory, setTransactions] = useState([])
-    const [role, setRole] = useState('')
-    const bankID = sessionStorage.getItem("bankID") || {}
+    const balance = sessionStorage.getItem('accountBalance')
+    const firstName = sessionStorage.getItem('firstName')
+    const lastName = sessionStorage.getItem('lastName')
+    const username = sessionStorage.getItem('username')
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [transactionHistory, setTransactions] = useState([]);
+    const role = sessionStorage.getItem('role') || 'customer';
+    const bankID = sessionStorage.getItem('bankID') || '';
     //Backend:
     useEffect(() => {
         axios.get('http://localhost:4000/transaction-history',{
@@ -27,27 +26,6 @@ const CustomerDashboard = ({style={}}) => {
         .then(response =>{
             if(response.data.success){
                 setTransactions(response.data.history)
-            }
-        })
-        .catch(error =>{
-            if(error.response && error.response.status === 401){
-                alert("Invalid credentials")
-            } 
-            else{
-                alert("Error validating credentials")
-            }
-        })
-
-        axios.get('http://localhost:4000/account-settings',{
-            params: {bankID: bankID }
-        })
-        .then(response =>{
-            if(response.data.success){
-                setUsername(response.data.username)
-                setBalance(response.data.accountBalance)
-                setFirstName(response.data.firstName)
-                setLastName(response.data.lastName)
-                setRole(response.data.role)
             }
         })
         .catch(error =>{
@@ -78,17 +56,31 @@ const CustomerDashboard = ({style={}}) => {
     }
 
     const signOut = () => {
-        sessionStorage.removeItem('bankID')
-        navigate('/')
+        sessionStorage.removeItem('balance');
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem('bankID');
+        sessionStorage.removeItem('email');
+        sessionStorage.removeItem('PhoneNumber');
+        sessionStorage.removeItem('accountBalance');
+        sessionStorage.removeItem('bankPin');
+        navigate('/');
     }
+
     const changeAccount = () => {
-        sessionStorage.removeItem('bankID')
-        if(role === 'customer'){
-            navigate('/CustomerLogin')
-        }
-        else if(role === 'employee' || role === 'manager'){
-            navigate('/EmployeeLogin')
-        }
+        sessionStorage.removeItem('balance');
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem('bankID');
+        sessionStorage.removeItem('email');
+        sessionStorage.removeItem('PhoneNumber');
+        sessionStorage.removeItem('accountBalance');
+        sessionStorage.removeItem('bankPin');
+        navigate('/customerlogin');
             
     }
     useEffect(() => {
@@ -161,7 +153,7 @@ const CustomerDashboard = ({style={}}) => {
                 <Divider />
                 <Divider />
                 <div style={{ minHeight: "300px", margin: "20px 10px", fontSize: "25px", padding: "10px" }}>
-                    {username}'s' Account
+                    {username}'s Account
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <div style={{
                             minHeight: "200px",
@@ -221,18 +213,22 @@ const CustomerDashboard = ({style={}}) => {
                         >
                             <TableHead>
                                 <TableRow>
-                                    <TableCell as="th">Date and Time</TableCell>
+                                    <TableCell as="th">Transaction ID</TableCell>
+                                    <TableCell as="th">Date</TableCell>
                                     <TableCell as="th">Transaction Type</TableCell>
-                                    <TableCell as="th">Amount</TableCell>
-                                    <TableCell as="th">Account ID</TableCell>
+                                    <TableCell as="th">Transaction Amount</TableCell>
+                                    <TableCell as="th">Account Balance</TableCell>
+                                    <TableCell as="th">Bank ID</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {transactionHistory.slice(0, 4).map((transaction, index) => (
+                                {transactionHistory.slice(transactionHistory.length-4, transactionHistory.length).reverse().map((transaction, index) => (
                                     <TableRow key={index}>
+                                        <TableCell>{transaction.transactionID}</TableCell>
                                         <TableCell>{transaction.date}</TableCell>
                                         <TableCell>{transaction.type}</TableCell>
-                                        <TableCell>{transaction.transaction}</TableCell>
+                                        <TableCell>${transaction.transaction}</TableCell>
+                                        <TableCell>${transaction.accountBalance}</TableCell>
                                         <TableCell>{transaction.bankID}</TableCell>
                                     </TableRow>
                                 ))}

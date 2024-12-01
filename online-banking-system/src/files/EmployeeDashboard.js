@@ -4,21 +4,20 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
-const EmployeeDashobard = () => {
+const EmployeeDashboard = () => {
     const navigate = useNavigate()
     const [searchTerm, setSearchTerm] = useState('');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
-    const [role, setRole] = useState('')
-    const bankID = sessionStorage.getItem("bankID") || {}
-    
-    // Sample
+    const role = sessionStorage.getItem("role")
+    const bankID = sessionStorage.getItem("bankID")
     const [accounts, setAccounts] = useState([])
-    const fetchTotalTransactionHistory = () => {
-        axios.get('http://localhost:4000/totalTransactionHistory')
+    
+    useEffect(() => {
+        axios.get('http://localhost:4000/allAccounts-employee')
         .then(response=>{
             if(response.data.success){
-              setAccounts(response.data)
+              setAccounts(response.data.accountsToDisplay)
             }
         })
         .catch(error=>{
@@ -28,9 +27,11 @@ const EmployeeDashobard = () => {
               alert("Error validating credentials")
             }
         })
+    },[])
+    const storeIDandNavigate = (customerID) => {
+        sessionStorage.setItem("customerID", customerID)
+        navigate('/TransactionHistoryEmployee')
     }
-    fetchTotalTransactionHistory()
-   
     const signOut = () => {
         sessionStorage.removeItem('bankID')
         navigate('/')
@@ -46,12 +47,11 @@ const EmployeeDashobard = () => {
             
     }
     const deleteAccount = (bankID) => {
-        axios.get('http://localhost:4000/delete-account',{
-            params: {bankID}
+        axios.delete('http://localhost:4000/delete-account',{
+            data: {bankID}
         })
         .then(response=>{
             if(response.data.success){
-                alert('Account has been deleted')
             }
         })
         .catch(error=>{
@@ -62,12 +62,13 @@ const EmployeeDashobard = () => {
             }
         })
 
-        axios.get('http://localhost:4000/deleteAccountHistory',{
-            params: {bankID}
+        axios.delete('http://localhost:4000/deleteAccountHistory',{
+            data: {bankID}
         })
         .then(response=>{
             if(response.data.success){
-                alert('Account history has been cleard')
+                alert('Account history and data has been deleted')
+                window.location.reload()
             }
         })
         .catch(error=>{
@@ -87,10 +88,10 @@ const EmployeeDashobard = () => {
     };
 
     const filteredSorted = accounts
-        .filter(account => account.username.toLowerCase().includes(searchTerm.toLowerCase()))
-        .sort((a, b) => sortOrder === "ascending"
-            ? a.first.localeCompare(b.first)
-            : b.first.localeCompare(a.first));
+    .filter(account => account.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => sortOrder === "ascending"
+        ? a.firstName.localeCompare(b.firstName)
+        : b.firstName.localeCompare(a.firstName));
 
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
@@ -112,7 +113,7 @@ const EmployeeDashobard = () => {
         <WindowWrapperEmployee showSideNavEmployee={true}>
             <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Manager Dashboard</h1>
+                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Employee Dashboard</h1>
                     <div style={{ position: "relative", marginRight: "20px" }}>
                         <img
                             id="profile-pic"
@@ -192,14 +193,13 @@ const EmployeeDashobard = () => {
                             <TableRow>
                                 <TableCell as="th">First Name</TableCell>
                                 <TableCell as="th">Last Name</TableCell>
+                                <TableCell as="th">Phone Number</TableCell>
                                 <TableCell as="th">Email</TableCell>
                                 <TableCell as="th">Username</TableCell>
-                                <TableCell as="th">BankID</TableCell>
                                 <TableCell as="th">Password</TableCell>
-                                <TableCell as="th">Balance</TableCell>
-                                <TableCell as="th">Transaction History</TableCell>
+                                <TableCell as="th">BankID</TableCell>
+                                <TableCell as="th">Account Balance</TableCell>
                                 <TableCell as="th">Bank PIN</TableCell>
-                                <TableCell as="th"></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -207,11 +207,13 @@ const EmployeeDashobard = () => {
                                 <TableRow key={index}>
                                     <TableCell>{account.firstName}</TableCell>
                                     <TableCell>{account.lastName}</TableCell>
+                                    <TableCell>{account.PhoneNumber}</TableCell>
                                     <TableCell>{account.email}</TableCell>
                                     <TableCell>{account.username}</TableCell>
-                                    <TableCell>{account.bankID}</TableCell>
                                     <TableCell>{account.password}</TableCell>
-                                    <TableCell>{account.accountBalance}</TableCell>
+                                    <TableCell>{account.bankID}</TableCell>
+                                    <TableCell>${account.accountBalance}</TableCell>
+                                    <TableCell>{account.bankPin}</TableCell>
                                     <TableCell>
                                         <Button
                                             variation="link"
@@ -223,12 +225,11 @@ const EmployeeDashobard = () => {
                                                 cursor: 'pointer',
                                                 textAlign: 'center'
                                             }}
-                                            onClick={() => navigate('/transactionhistorymanager')}
+                                            onClick={() => storeIDandNavigate(account.bankID)}
                                         >
                                             View Transaction History
                                         </Button>
                                     </TableCell>
-                                    <TableCell>{account.bankPin}</TableCell>
                                     <TableCell>
                                         <Button 
                                             variation="destructive" 
@@ -255,4 +256,4 @@ const EmployeeDashobard = () => {
     );
 };
 
-export default EmployeeDashobard;
+export default EmployeeDashboard;

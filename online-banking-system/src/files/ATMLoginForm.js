@@ -16,8 +16,10 @@ const ATMLoginForm = () => {
         })
         .then(response =>{
           if(response.data.success){
-            const bankID = response.data.bankID
-            navigate('/DashBoard', {state: {bankID}})
+            sessionStorage.setItem('bankID', response.data.bankID)
+            sessionStorage.setItem('accountBalance', response.data.accountBalance)
+            sessionStorage.setItem('bankPin', response.data.bankPin)
+            navigate('/DashBoard')
           }
         })
         .catch(error =>{

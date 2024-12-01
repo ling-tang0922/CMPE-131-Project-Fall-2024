@@ -4,32 +4,35 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const TransactionHistoryManager = () => {
+const TransactionHistoryEmployee = () => {
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
     const bankID = sessionStorage.getItem("bankID") || {}
-    const [accounts, setAccounts] = useState('')
-    const [role, setRole] = useState('')
+    const [accounts, setAccounts] = useState([])
+    const role = sessionStorage.getItem("role") || {}
+    const customerID = sessionStorage.getItem("customerID")
+    const [accountHistory, setAccountHistory] = useState([])
     useEffect(() => {
-        
-    })
-    axios.get('http://localhost:4000/totalTransactionHistory',{
-            params: {bankID: bankID }
+        axios.get('http://localhost:4000/transaction-history',{
+            params: {bankID: customerID }
         })
-    .then(response =>{
-        if(response.data.success){
-            setAccounts(response.data.transactionHistory)
+        .then(response=>{
+            if(response.data.success){
+                setAccountHistory(response.data.history)
+               
+            }
         }
-    })
-    .catch(error =>{
-        if(error.response && error.response.status === 401){
-            alert("Invalid credentials")
-        } 
-        else{
-            alert("Error validating credentials")
+        )
+        .catch(error=>{
+            if(error.response && error.response.status === 401){
+                alert("Invalid credentials")
+            }else{
+                alert("Error validating credentials")
+            }
         }
-    })
+        )
+    }, [])
     const signOut = () => {
         sessionStorage.removeItem('bankID')
         navigate('/')
@@ -47,11 +50,11 @@ const TransactionHistoryManager = () => {
     const sortChange = (event) => {
         setSortOrder(event.target.value);
     };
-
+    /*
     const sortedAccounts = accounts.sort((a, b) => sortOrder === "ascending"
         ? a.date.localeCompare(b.date)
         : b.date.localeCompare(a.date));
-
+    */    
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
 
@@ -72,7 +75,7 @@ const TransactionHistoryManager = () => {
         <WindowWrapperEmployee showSideNavEmployee={true}>
             <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Manager Dashboard: User's Transaction History</h1>
+                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Employee Dashboard: User's Transaction History</h1>
                     <div style={{ position: "relative", marginRight: "20px" }}>
                         <img
                             id="profile-pic"
@@ -143,19 +146,23 @@ const TransactionHistoryManager = () => {
                     >
                         <TableHead>
                             <TableRow>
-                                <TableCell as="th">BankID</TableCell>
+                                <TableCell as="th">Transaction ID</TableCell>
+                                <TableCell as="th">Bank ID</TableCell>
                                 <TableCell as="th">Total Balance</TableCell>
                                 <TableCell as="th">Transaction</TableCell>
+                                <TableCell as="th">Type</TableCell>
                                 <TableCell as="th">Connected Account</TableCell>
                                 <TableCell as="th">Date</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sortedAccounts.map((account, index) => (
+                            {accountHistory.slice().reverse().map((account, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{account.bankIDuser}</TableCell>
-                                    <TableCell>{account.totalBalance}</TableCell>
+                                    <TableCell>{account.transactionID}</TableCell>
+                                    <TableCell>{account.bankID}</TableCell>
+                                    <TableCell>{account.accountBalance}</TableCell>
                                     <TableCell>{account.transaction}</TableCell>
+                                    <TableCell>{account.type}</TableCell>
                                     <TableCell>{account.connectedAccount}</TableCell>
                                     <TableCell>{account.date}</TableCell>
                                 </TableRow>
@@ -168,4 +175,4 @@ const TransactionHistoryManager = () => {
     );
 };
 
-export default TransactionHistoryManager;
+export default TransactionHistoryEmployee;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate} from "react-router-dom";
 import { Sidebar, Menu, MenuItem, ProSidebarProvider } from 'react-pro-sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,30 +7,8 @@ import axios from 'axios';
 
 const SideNav = () => {
   const navigate = useNavigate();
-  const bankID = sessionStorage.getItem("bankID")
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const fetchAccountSettings = () => {
-    axios.get('http://localhost:4000/account-settings',{
-    params: {bankID: bankID }
-  })
-  .then(response =>{
-    if(response.data.success){
-      setFirstName(response.data.firstName)
-      setLastName(response.data.lastName)
-    }
-  })
-  .catch(error =>{
-    if(error.response && error.response.status === 401){
-      alert("Invalid credentials")
-    } 
-    else{
-      alert("Error validating credentials")
-    }
-  })
-
-  }
-  fetchAccountSettings()
+  const firstName = sessionStorage.getItem("firstName")
+  const lastName = sessionStorage.getItem("lastName")
   
   return (
     <div style={{position:"fixed"}}>
