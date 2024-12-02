@@ -38,15 +38,14 @@ const TransferFunds = () =>{
         }
         alert(phoneNumber)
         axios.get('http://localhost:4000/account-settings',{
-            params: {bankID: null, PhoneNumber: phoneNumber}
+            params: {PhoneNumber: phoneNumber}
             
         })
         .then(response =>{
             console.log('Response recieved:', response.data)
             if(response.data.success){
-                setRecieverBankID(response.data.bankID)
-                setRecieverBalance(response.data.accountBalance)
-                handleTransfer()
+                console.log('Reciever BankID:', response.data.bankID)
+                handleTransfer(response.data.bankID, response.data.accountBalance)
             }
              else {
                 console.error('No matching account found');
@@ -63,7 +62,7 @@ const TransferFunds = () =>{
             }
         })
     }
-    const handleTransfer = async () =>{
+    const handleTransfer = (recieverBankID, recieverBalance) =>{
         const senderNewBalance = Number(senderBalance) - Number(amount)
         const recieverNewBalance = Number(recieverBalance) + Number(amount)
 
@@ -143,6 +142,7 @@ const TransferFunds = () =>{
         .then(response => {
             if(response.data.success){
               console.log('Response recieved:', response.data);
+              sessionStorage.setItem("accountBalance", senderNewBalance);
               navigate('/Dashboard');
             }
         })
@@ -154,7 +154,7 @@ const TransferFunds = () =>{
               alert("Error validating input values");
             }
         })
-        window.location.reload()
+        
     }
 
     
@@ -187,7 +187,7 @@ const TransferFunds = () =>{
                 placeholder="Enter Amount"/>   
                 </div>     
                 <CheckboxField  margin="10px" label="I agree to all terms and conditions"/>
-                <Button onClick={() => verifyInputs()} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Transfer Funds!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
+                <Button onClick={verifyInputs} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Transfer Funds!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
             </div>
         </div>
     </WindowWrapper>)

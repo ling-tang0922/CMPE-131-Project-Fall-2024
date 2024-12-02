@@ -37,7 +37,7 @@ const CustomerDashboard = ({style={}}) => {
                 alert("Error validating credentials")
             }
         })
-    }, [])
+    }, [balance])
 
     //
     const toggleDropdown = () => {
@@ -90,8 +90,6 @@ const CustomerDashboard = ({style={}}) => {
             window.removeEventListener('click', clickOutside);
         };
     }, []);
-
-    // Sample data
     
 
     return (
