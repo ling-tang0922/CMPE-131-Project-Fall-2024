@@ -6,22 +6,59 @@ import axios from "axios";
 
 const AccountSettings = () => {
     const navigate = useNavigate();
-const [dropdownOpen, setDropdownOpen] = useState(false);
-const [newPassword, setNewPassword] = useState('');
-const [confirmPassword, setConfirmPassword] = useState('');
-const [accountStatus, setAccountStatus] = useState('open');
-const firstName = sessionStorage.getItem('firstName')
-const lastName = sessionStorage.getItem('lastName');
-const username = sessionStorage.getItem('username');
-const bankID = sessionStorage.getItem('bankID') || '';
-const role = sessionStorage.getItem('role');
-const email = sessionStorage.getItem('email');
-const phoneNumber = sessionStorage.getItem('PhoneNumber');
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [accountStatus, setAccountStatus] = useState(sessionStorage.getItem('accountStatus'));
+    const firstName = sessionStorage.getItem('firstName')
+    const lastName = sessionStorage.getItem('lastName');
+    const username = sessionStorage.getItem('username');
+    const bankID = sessionStorage.getItem('bankID') || '';
+    const role = sessionStorage.getItem('role');
+    const email = sessionStorage.getItem('email');
+    const phoneNumber = sessionStorage.getItem('PhoneNumber');
+    const oldpassword = sessionStorage.getItem('password');
     
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
 
-    const signOut = () => {
+    const changePassword = () => {
+        alert(oldpassword + ' ' + newPassword + ' ' + confirmPassword)
+        if (newPassword !== confirmPassword) {
+            alert('Passwords do not match.');
+            return;
+        }
+        if (newPassword === '' || confirmPassword === '') {
+            alert('Please enter a password.');
+            return;
+        }
+        if(newPassword === oldpassword){
+            alert('New password cannot be the same as the old password.');
+            return;
+        }
+        axios.put('http://localhost:4000/UpdatePassword', {
+            bankID: bankID, password: newPassword,
+        })
+        .then(response => {
+            console.log('Response received:', response.data);
+            if (response.data.success) {
+                console.log(response.data.password)
+                sessionStorage.setItem('password', newPassword);
+                alert('Password has been updated successfully.');
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            if (error.response && error.response.status === 401) {
+                alert("Invalid credentials");
+            } else {
+                alert("Error validating credentials");
+            }
+        });
+    };
+
+
+        const signOut = () => {
         sessionStorage.removeItem('balance');
         sessionStorage.removeItem('firstName');
         sessionStorage.removeItem('lastName');
@@ -32,6 +69,7 @@ const phoneNumber = sessionStorage.getItem('PhoneNumber');
         sessionStorage.removeItem('phoneNumber');
         sessionStorage.removeItem('accountBalance');
         sessionStorage.removeItem('bankPin');
+        sessionStorage.removeItem('accountStatus');
         navigate('/');
     }
 
@@ -46,13 +84,8 @@ const phoneNumber = sessionStorage.getItem('PhoneNumber');
         sessionStorage.removeItem('phoneNumber');
         sessionStorage.removeItem('accountBalance');
         sessionStorage.removeItem('bankPin');
-        if(role === 'customer'){
-            navigate('/CustomerLogin')
-        }
-        else if(role === 'employee' || role === 'manager'){
-            navigate('/EmployeeLogin')
-        }
-            
+        sessionStorage.removeItem('accountStatus');
+        navigate('/CustomerLogin') 
     }
     const clickOutside = (event) => {
         const dropdown = document.getElementById('dropdown');
@@ -62,21 +95,26 @@ const phoneNumber = sessionStorage.getItem('PhoneNumber');
         }
     };
     
-    const handlePasswordChange = () => {
-        if (newPassword !== confirmPassword) {
-            alert('Passwords do not match.');
-            return;
-        }
-        else if(newPassword == 0 || confirmPassword == 0) {
-            alert('Please enter a password.');
-            return;
-        }
-        else {
-            alert('Password has been changed successfully.');
-        }
-    };
 
     const handleAccountStatus = () => {
+        axios.put('http://localhost:4000/UpdateAccountStatus', {
+            bankID: bankID, accountStatus: accountStatus === 'open' ? 'closed' : 'open'
+        })
+        .then(response => {
+            console.log('Response received:', response.data);
+            if (response.data.success) {
+                sessionStorage.setItem('accountStatus', response.data.accountStatus);
+                alert('Account status has been updated successfully.');
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred:', error);
+            if (error.response && error.response.status === 401) {
+                alert("Invalid credentials");
+            } else {
+                alert("Error validating credentials");
+            }
+        });
         setAccountStatus(accountStatus === 'open' ? 'closed' : 'open');
     };
 
@@ -213,7 +251,7 @@ const phoneNumber = sessionStorage.getItem('PhoneNumber');
                             }}
                             type="password"
                         />
-                        <Button onClick={handlePasswordChange} style={{
+                        <Button onClick={changePassword} style={{
                             backgroundColor: "#57C43F",
                             color: "white",
                             padding: "10px 20px",

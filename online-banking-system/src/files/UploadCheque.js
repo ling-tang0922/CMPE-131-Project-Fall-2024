@@ -2,9 +2,11 @@ import { Button, Input,Label,CheckboxField,VisuallyHidden} from "@aws-amplify/ui
 import WindowWrapper from "../components/WindowWrapper";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay} from "@fortawesome/free-solid-svg-icons";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { useNavigate} from "react-router-dom";
 import axios from "axios";
+
+
 
 const UploadCheque = () =>{
     const navigate = useNavigate()
@@ -12,12 +14,48 @@ const UploadCheque = () =>{
     const hiddenInput = React.useRef(null);
     const balance = sessionStorage.getItem("accountBalance") || 0;
     const [amount, setAmount] = useState('');
+    const [confirmAmount, setConfirmAmount] = useState('');
     const bankID = sessionStorage.getItem("bankID") || {};
+    const [termsAgreed, setTermsAgreed] = useState(false);
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString();
+    const accountStatus = sessionStorage.getItem("accountStatus")
+    const [imageSet, setImageSet] = useState(false);
     // Bankend:
+    const checkValues = () =>{
+      if(!amount){
+        alert("Please enter an amount.")
+        return false
+      }
+      if(Number(amount) <= 0){
+        alert("Please enter a valid amount.")
+        return false
+      }
+      if(amount !== confirmAmount){
+        alert("Amounts do not match.")
+        return false
+      }
+      if(Number(amount) > Number(balance)){
+        alert("Insufficient funds.")
+        return false
+      }
+      if(!termsAgreed){
+        alert("You must agree to the terms and conditions")
+        return false
+      }
+      if(!imageSet){
+        alert("Please upload the check.")
+        return false
+      }
+      updateBalance()
+
+    }
 
     const updateBalance = () =>{
+      if(accountStatus === 'closed'){
+        alert("Account is closed. Please open account to deposit cheque.")
+        return false
+      }
       const newBalance = (Number(balance) + Number(amount)).toString()
       axios.put('http://localhost:4000/UpdateAccountBalance', {
         bankID: bankID,
@@ -70,6 +108,7 @@ const UploadCheque = () =>{
         if (file) {
           const imageUrl = URL.createObjectURL(file);
           setUploadedImage(imageUrl);
+          setImageSet(true);
         }
       };
     const onFilePickerChange = (event) => {
@@ -115,19 +154,25 @@ const UploadCheque = () =>{
                 <Label>Amount: $</Label>
                 <Input  
                   placeholder="Enter Amount"
+                  value={amount}
+                  onChange={(e)=> setAmount(e.target.value)}
                   />   
                 </div>     
                 <div style={{margin:"30px 0"}}>
                 <Label>Verify Amount: $</Label>
                 <Input  
                   placeholder="Verify Amount"
-                  value={amount}
-                  onChange={(e)=> setAmount(e.target.value)}
+                  value={confirmAmount}
+                  onChange={(e)=> setConfirmAmount(e.target.value)}
                   />   
                 </div>
                 <p>Note: Make sure you have signed on the back side of the check</p>
-                <CheckboxField  margin="10px 0px" label="I agree to all terms and conditions"/>
-                <Button onClick={() => updateBalance()} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Deposit Check!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
+                <CheckboxField  
+                  margin="10px 0px" 
+                  checked={termsAgreed}
+                  onChange={(e) => setTermsAgreed(e.target.checked)}
+                  label="I agree to all terms and conditions"/>
+                <Button onClick={checkValues} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Deposit Check!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
             </div>
         </div>
     </WindowWrapper>)

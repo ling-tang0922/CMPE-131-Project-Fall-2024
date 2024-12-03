@@ -74,6 +74,7 @@ const CustomerLogin = () => {
         sessionStorage.setItem('password', response.data.password);
         sessionStorage.setItem('bankPin', response.data.bankPin);
         sessionStorage.setItem('role', response.data.role);
+        sessionStorage.setItem('accountStatus', response.data.accountStatus);
         navigate('/DashBoard');
       }
     })
@@ -148,6 +149,7 @@ const CustomerLogin = () => {
                 sessionStorage.setItem('PhoneNumber', PhoneNumber);
                 sessionStorage.setItem('accountBalance', 0);
                 sessionStorage.setItem('username', username);
+                sessionStorage.setItem('accountStatus', 'open')
                 navigate('/DashBoard');
             }
         })

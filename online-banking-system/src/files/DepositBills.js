@@ -13,20 +13,25 @@ const DepositBills = () =>{
     const [termsAgreed, setTermsAgreed] = useState('')
     const balance = sessionStorage.getItem("accountBalance") || 0
     const bankID = sessionStorage.getItem("bankID") || null
+    const accountStatus = sessionStorage.getItem("accountStatus")
 
     const handleDeposit = () =>{
+        if(accountStatus === 'closed'){
+            alert("Account is closed. Please open account to deposit.")
+            return false
+        }
         const amountNum = parseFloat(confirmAmount);
         if(!termsAgreed){
             alert("You must agree to the terms and conditions")
-            return
+            return false
         }
         if(amount !== confirmAmount){
             alert("Amounts do not match.")
-            return
+            return false
         }
         if(!amount || parseFloat(amount) <= 0){
             alert("Please enter a valid deposit amount.")
-            return
+            return false
         }
         const newBalance = (Number(balance) + Number(amountNum))
 

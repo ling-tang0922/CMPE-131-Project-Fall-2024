@@ -44,7 +44,8 @@ app.get('/validate-credentials-userLogin', async (req,res)=>{
                 username: results[0].username,
                 password: results[0].password,
                 bankPin: results[0].bankPin,
-                role: results[0].role
+                role: results[0].role,
+                accountStatus: results[0].accountStatus
                 
             })
         } else{
@@ -94,7 +95,8 @@ app.get("/account-settings", async (req, res)=>{
                 bankPin: results[0].bankPin,
                 role: results[0].role,
                 firstName: results[0].firstName,
-                lastName: results[0].lastName
+                lastName: results[0].lastName,
+                accountStatus: results[0].accountStatus
             });
             ///
         }else {
@@ -123,7 +125,8 @@ app.get("/account-settings-role", async (req, res)=>{
                 bankPin: results[0].bankPin,
                 role: results[0].role,
                 firstName: results[0].firstName,
-                lastName: results[0].lastName
+                lastName: results[0].lastName,
+                status: results[0].status
             });
         }else {
             res.status(401).send({success:false})
@@ -144,6 +147,20 @@ app.put('/UpdateAccountBalance', async (req, res)=>{
         res.send({success: true})
        
     })
+})
+
+app.put('/UpdateAccountStatus', async (req, res)=>{
+    const{bankID, accountStatus} = req.body
+    db.query('UPDATE accounts SET accountStatus = ? WHERE bankID = ?', [accountStatus, bankID], (error, results)=>{
+        if(error){
+            console.error('Error updating account status:', error)
+            res.status(404).send('Account not found')
+        }
+        console.log('Account Status Updated')
+        res.status(201).send({success: true})
+       
+    })
+
 })
 // Request Modification of Email
 // Put Function
@@ -176,14 +193,14 @@ app.put('/UpdateUsername', async (req, res)=>{
 // Request Modification of Password
 // Put Function
 app.put('/UpdatePassword', async (req, res)=>{
-    const{bankID, newPassword} = req.body
-    db.query('UPDATE accounts SET password = ? WHERE bankID = ?', [newPassword, bankID], (error, results)=>{
+    const{bankID, password} = req.body
+    db.query('UPDATE accounts SET password = ? WHERE bankID = ?', [password, bankID], (error, results)=>{
         if(error){
             console.error('Error updating Password:', error)
             res.status(404).send('Account not found')
         }
         
-        res.send({success: true})
+        res.send({success: true, password: password})
        
     })
 })

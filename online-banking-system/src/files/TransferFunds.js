@@ -10,14 +10,13 @@ import axios from "axios";
 const TransferFunds = () =>{
     const navigate = useNavigate()
     const senderBalance = sessionStorage.getItem("accountBalance") || 0
-    const [recieverBalance, setRecieverBalance] = useState('')
     const [amount, setAmount] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [verifyPhoneNumber, setVerifyPhoneNumber] = useState('')
     const bankID = sessionStorage.getItem("bankID") || {}
-    const [recieverBankID, setRecieverBankID] = useState('')
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString();
+    const senderAccountStatus = sessionStorage.getItem("accountStatus")
     // Backend:
     const verifyInputs = () =>{
         if(!phoneNumber || !verifyPhoneNumber || phoneNumber !== verifyPhoneNumber){
@@ -36,7 +35,9 @@ const TransferFunds = () =>{
             alert("Insufficient funds.")
             return false
         }
-        alert(phoneNumber)
+        if(senderAccountStatus === 'closed'){
+            alert("Your account is closed. Please open account to transfer funds.")
+        }
         axios.get('http://localhost:4000/account-settings',{
             params: {PhoneNumber: phoneNumber}
             
@@ -45,6 +46,10 @@ const TransferFunds = () =>{
             console.log('Response recieved:', response.data)
             if(response.data.success){
                 console.log('Reciever BankID:', response.data.bankID)
+                if(response.data.accountStatus === 'closed'){
+                    alert("Reciever account is closed. Please open account to transfer funds.")
+                    return false
+                }
                 handleTransfer(response.data.bankID, response.data.accountBalance)
             }
              else {
