@@ -25,15 +25,19 @@ db.connect((err)=>{
 
 // Request Validation of Credentials (Customer/Employee Login)
 // Get Function
-app.get('/validate-credentials-userLogin', async (req,res)=>{
-    const {username, password, type} = req.query
-    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results)=>{
-        if(error){
-            console.error('Error validating credentials')
-            return res.status(500).send("Error validating credentials")
+app.get('/validate-credentials-userLogin', async (req, res) => {
+    const { username, password, type } = req.query;
+
+
+    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results) => {
+        if (error) {
+            console.error('Error validating credentials');
+            return res.status(500).send("Error validating credentials");
         }
-        if(results.length > 0){
-            res.send({
+
+
+        if (results.length > 0) {
+            return res.send({
                 success: true,
                 bankID: results[0].bankID,
                 email: results[0].email,
@@ -44,15 +48,38 @@ app.get('/validate-credentials-userLogin', async (req,res)=>{
                 username: results[0].username,
                 password: results[0].password,
                 bankPin: results[0].bankPin,
-                role: results[0].role,
-                accountStatus: results[0].accountStatus
-                
+                role: results[0].role
+            });
+        } else {
+            db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'employee'], (error, results) => {
+                if (error) {
+                    console.error('Error validating credentials');
+                    return res.status(500).send("Error validating credentials");
+                }
+
+
+                if (results.length > 0) {
+                    return res.send({
+                        success: true,
+                        bankID: results[0].bankID,
+                        email: results[0].email,
+                        firstName: results[0].firstName,
+                        lastName: results[0].lastName,
+                        PhoneNumber: results[0].PhoneNumber,
+                        accountBalance: results[0].accountBalance,
+                        username: results[0].username,
+                        password: results[0].password,
+                        bankPin: results[0].bankPin,
+                        role: results[0].role
+                    });
+                } else {
+                    return res.status(401).send({ success: false });
+                }
             })
-        } else{
-            res.status(401).send({success: false})
         }
     })
 })
+
 
 // Request Validation of Credentials (ATM Login)
 // Get Function
