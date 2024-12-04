@@ -14,13 +14,12 @@ const DepositBills = () =>{
     const balance = sessionStorage.getItem("accountBalance") || 0
     const bankID = sessionStorage.getItem("bankID") || null
     const accountStatus = sessionStorage.getItem("accountStatus")
-
-    const handleDeposit = () =>{
+    const checkValues = () =>{
         if(accountStatus === 'closed'){
             alert("Account is closed. Please open account to deposit.")
             return false
         }
-        const amountNum = parseFloat(confirmAmount);
+        
         if(!termsAgreed){
             alert("You must agree to the terms and conditions")
             return false
@@ -33,6 +32,10 @@ const DepositBills = () =>{
             alert("Please enter a valid deposit amount.")
             return false
         }
+        handleDeposit()
+    }
+    const handleDeposit = () =>{
+        const amountNum = parseFloat(confirmAmount);
         const newBalance = (Number(balance) + Number(amountNum))
 
         axios.put('http://localhost:4000/UpdateAccountBalance',{
@@ -104,7 +107,7 @@ const DepositBills = () =>{
                     margin="10px" 
                     onChange={(e) => setTermsAgreed(e.target.checked)}
                     label="I agree to all terms and conditions"/>
-                <Button onClick={handleDeposit} 
+                <Button onClick={checkValues} 
                 colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Deposit!</Button>
             </div>
         </div>

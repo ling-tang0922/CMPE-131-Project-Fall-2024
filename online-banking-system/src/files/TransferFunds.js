@@ -23,22 +23,23 @@ const TransferFunds = () =>{
             alert("Provided phone numbers don't match.")
             return false
         }
-        if(!amount){
+        else if(!amount){
             alert("Please enter an amount.")
             return false
         }
-        if(Number(amount) <= 0){
+        else if(Number(amount) <= 0){
             alert("Please enter a valid amount.")
             return false
         }
-        if(Number(amount) > Number(senderBalance)){
+        else if(Number(amount) > Number(senderBalance)){
             alert("Insufficient funds.")
             return false
         }
-        if(senderAccountStatus === 'closed'){
+        else if(senderAccountStatus === 'closed'){
             alert("Your account is closed. Please open account to transfer funds.")
+            return false
         }
-        axios.get('http://localhost:4000/account-settings',{
+       else {axios.get('http://localhost:4000/account-settings',{
             params: {PhoneNumber: phoneNumber}
             
         })
@@ -66,6 +67,7 @@ const TransferFunds = () =>{
                 alert("Error Phone Number");
             }
         })
+    }
     }
     const handleTransfer = (recieverBankID, recieverBalance) =>{
         const senderNewBalance = Number(senderBalance) - Number(amount)

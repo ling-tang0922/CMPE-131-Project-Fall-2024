@@ -31,6 +31,14 @@ const UploadCheque = () =>{
         alert("Please enter an amount.")
         return false
       }
+      if(isUploaded === false || isUploaded2 === false){
+        alert("Please upload both sides of the check.")
+        return false
+      }
+      if(accountStatus === 'closed'){
+        alert("Account is closed. Please open account to deposit cheque.")
+        return false
+      }
       if(Number(amount) <= 0){
         alert("Please enter a valid amount.")
         return false
@@ -56,14 +64,7 @@ const UploadCheque = () =>{
     }
 
     const updateBalance = () =>{
-      if(isUploaded === false || isUploaded2 === false){
-        alert("Please upload both sides of the check.")
-        return false
-      }
-      if(accountStatus === 'closed'){
-        alert("Account is closed. Please open account to deposit cheque.")
-        return false
-      }
+      
       const newBalance = (Number(balance) + Number(amount)).toString()
       axios.put('http://localhost:4000/UpdateAccountBalance', {
         bankID: bankID,
