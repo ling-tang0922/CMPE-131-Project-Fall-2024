@@ -10,7 +10,8 @@ const ATMLoginForm = () => {
     const [bankPin, setBankPin] = useState('')
     const [focusedField, setFocusedField] = useState('bankID')
    
-    const handleLogin = () => {
+    const handleLogin = (e) => {
+        e.preventDefault();
         axios.get('http://localhost:4000/validate-credentials-ATMLogin',{
           params: {bankID: bankID, bankPin: bankPin }
         })
@@ -19,7 +20,7 @@ const ATMLoginForm = () => {
             sessionStorage.setItem('bankID', response.data.bankID)
             sessionStorage.setItem('accountBalance', response.data.accountBalance)
             sessionStorage.setItem('bankPin', response.data.bankPin)
-            navigate('/DashBoard')
+            navigate('/ATMDashBoard')
           }
         })
         .catch(error =>{
@@ -29,7 +30,7 @@ const ATMLoginForm = () => {
             alert("Error validating credentials")
           }
         })
-      };
+    };
     const handleKeyPress = (num) => {
         if (focusedField === 'bankPin') {
             if (bankPin.length < 4) {
@@ -64,7 +65,7 @@ const ATMLoginForm = () => {
     return (
         <div className='wrapper'>
             <NavBar />
-            <form onSubmit={handleLogin}>
+            <form >
                 <h1>Login</h1>
                 <div className="input-box">
                     <input
@@ -73,7 +74,6 @@ const ATMLoginForm = () => {
                         value={bankID}
                         onChange={(e) => setBankID(e.target.value)}
                         onFocus={() => setFocusedField('bankID')} 
-                        required
                     />
                 </div>
                 <div className="input-box">
@@ -83,10 +83,10 @@ const ATMLoginForm = () => {
                         value={bankPin}
                         onChange={(e) => setBankPin(e.target.value)}
                         onFocus={() => setFocusedField('bankPin')} 
-                        required
+                        
                     />
                 </div>
-                <button type="submit">Login</button>
+                <button onClick = {handleLogin} type="submit">Login</button>
             </form>
             <div className="keypad">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (

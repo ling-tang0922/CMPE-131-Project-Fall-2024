@@ -4,7 +4,7 @@ import { Sidebar, Menu, MenuItem} from 'react-pro-sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faClipboardList, faCog } from '@fortawesome/free-solid-svg-icons';
 
-const SideNavEmployee = ({style={}}) => {
+const SideNavManager = ({style={}}) => {
   const navigate = useNavigate();
   const bankID = sessionStorage.getItem("bankID")
   const firstName = sessionStorage.getItem("firstName") || {}
@@ -31,6 +31,10 @@ const SideNavEmployee = ({style={}}) => {
               <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faClipboardList} />
               Customer Info
             </MenuItem>
+            <MenuItem onClick={() => {navigate('/employeeManagement')}} style={{color:"white"}}>
+              <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faUser} />
+              Employees
+            </MenuItem>
             <MenuItem onClick={() => {navigate('/StaffSettings')}} style={{color:"white"}}>
               <FontAwesomeIcon style={{ margin: "0 10px", color: "white" }} icon={faCog} />
               Settings
@@ -41,4 +45,4 @@ const SideNavEmployee = ({style={}}) => {
   );
 };
 
-export default SideNavEmployee;
+export default SideNavManager;

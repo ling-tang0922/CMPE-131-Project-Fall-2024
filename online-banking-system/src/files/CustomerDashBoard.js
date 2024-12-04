@@ -18,6 +18,7 @@ const CustomerDashboard = ({style={}}) => {
     const [transactionHistory, setTransactions] = useState([]);
     const role = sessionStorage.getItem('role') || 'customer';
     const bankID = sessionStorage.getItem('bankID') || '';
+    const [profilePic, setProfilePic] = useState('default.png');
     //Backend:
     
     useEffect(() => {
@@ -100,7 +101,7 @@ const CustomerDashboard = ({style={}}) => {
                     <div style={{ position: "relative", marginRight: "20px", marginBottom: "10px" }}>
                         <img 
                             id="profile-pic"
-                            src="default.png" 
+                            src={profilePic} 
                             alt="User Profile" 
                             style={{ height: "50px", width: "50px", borderRadius: "50%", cursor: "pointer" }} 
                             onClick={toggleDropdown} 

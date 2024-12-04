@@ -11,7 +11,11 @@ import axios from "axios";
 const UploadCheque = () =>{
     const navigate = useNavigate()
     const [uploadedImage,setUploadedImage] = React.useState(null);
+    const [uploadedImage2, setUploadedImage2] = React.useState(null)
     const hiddenInput = React.useRef(null);
+    const hiddenInput2 = React.useRef(null);
+    const [isUploaded, setIsUploaded] = useState(false);
+    const [isUploaded2, setIsUploaded2] = useState(false); 
     const balance = sessionStorage.getItem("accountBalance") || 0;
     const [amount, setAmount] = useState('');
     const [confirmAmount, setConfirmAmount] = useState('');
@@ -52,6 +56,10 @@ const UploadCheque = () =>{
     }
 
     const updateBalance = () =>{
+      if(isUploaded === false || isUploaded2 === false){
+        alert("Please upload both sides of the check.")
+        return false
+      }
       if(accountStatus === 'closed'){
         alert("Account is closed. Please open account to deposit cheque.")
         return false
@@ -106,11 +114,21 @@ const UploadCheque = () =>{
     const handleImageChange = (event) => {
       const file = event.target.files[0];
         if (file) {
+          setIsUploaded(true);
           const imageUrl = URL.createObjectURL(file);
           setUploadedImage(imageUrl);
           setImageSet(true);
         }
       };
+    const handleImageChange2 = (event) => {
+      const file = event.target.files[0];
+        if (file) {
+          setIsUploaded2(true);
+          const imageUrl = URL.createObjectURL(file);
+          setUploadedImage2(imageUrl);
+          setImageSet(true);
+        }
+    }
     const onFilePickerChange = (event) => {
       const { files } = event.target;
       if (!files || files.length === 0) {
@@ -120,61 +138,88 @@ const UploadCheque = () =>{
     };
     
     
-    return(<WindowWrapper showSideNav={true}>
-        <div>
-            <div style={{"display":"flex",justifyContent:"center"}}>
-                <h1>Upload Check</h1>
-            </div>
+    return (
+      <WindowWrapper showSideNav={true}>
+          <div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                  <h1>Upload Check</h1>
+              </div>
 
-            <div style={{margin:"0 30%"}}>
-            {uploadedImage && (
-        <div>
-          <h3>Preview:</h3>
-          <img src={uploadedImage} alt="Preview" style={{ width: '100%', maxHeight: '300px' }} />
-        </div>
-      )}
-                <div>
-                <VisuallyHidden >
-                    <input
-                    type="file"
-                    accept="image/*"
-                    tabIndex={-1}
-                    ref={hiddenInput}
-                    onChange={handleImageChange}
-                    multiple={false}
-                    // accept={acceptedFileTypes.join(",")}
-                    />
-          </VisuallyHidden>
+              <div style={{ margin: "0 30%" }}>
+                  {uploadedImage && (
+                      <div>
+                          <h3>Front Side Preview:</h3>
+                          <img src={uploadedImage} alt="Front Side Preview" style={{ width: '100%', maxHeight: '300px' }} />
+                      </div>
+                  )}
+                  <div>
+                      <VisuallyHidden>
+                          <input
+                              type="file"
+                              accept="image/*"
+                              tabIndex={-1}
+                              ref={hiddenInput}
+                              onChange={handleImageChange}
+                              multiple={false}
+                          />
+                      </VisuallyHidden>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+                      <Button onClick={() => hiddenInput.current.click()}>+ Upload Front Side</Button>
+                  </div>
+
+                  {uploadedImage2 && (
+                      <div>
+                          <h3>Back Side Preview:</h3>
+                          <img src={uploadedImage2} alt="Back Side Preview" style={{ width: '100%', maxHeight: '300px' }} />
+                      </div>
+                  )}
+                  <div>
+                      <VisuallyHidden>
+                          <input
+                              type="file"
+                              accept="image/*"
+                              tabIndex={-1}
+                              ref={hiddenInput2}
+                              onChange={handleImageChange2}
+                              multiple={false}
+                          />
+                      </VisuallyHidden>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+                      <Button onClick={() => hiddenInput2.current.click()}>+ Upload Back Side</Button>
+                  </div>
+
+                  <div style={{ marginTop: "20px" }}>
+                      <Label>Amount: $</Label>
+                      <Input
+                          placeholder="Enter Amount"
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                      />
+                  </div>
+                  <div style={{ marginTop: "20px" }}>
+                      <Label>Confirm Amount: $</Label>
+                      <Input
+                          placeholder="Confirm Amount"
+                          value={confirmAmount}
+                          onChange={(e) => setConfirmAmount(e.target.value)}
+                      />
+                  </div>
+                  <p>Note: Make sure you have signed on the back side of the check</p>
+                  <CheckboxField
+                      margin="10px 0px"
+                      checked={termsAgreed}
+                      onChange={(e) => setTermsAgreed(e.target.checked)}
+                      label="I agree to all terms and conditions"
+                  />
+                  <Button onClick={checkValues} colorTheme="fill" style={{ backgroundColor: "black", color: "white" }} width="100%">
+                      Deposit Check!<FontAwesomeIcon style={{ marginLeft: "10px" }} icon={faPlay} />
+                  </Button>
+              </div>
           </div>
-                <div  style={{"display":"flex",justifyContent: "flex-end",marginTop:"20px"}}>
-                <Button onClick={()=>{hiddenInput.current.click()}}>+ Upload Check</Button>
-                </div>
-                <VisuallyHidden></VisuallyHidden>
-                <div style={{margin:"30px 0"}}>
-                <Label>Amount: $</Label>
-                <Input  
-                  placeholder="Enter Amount"
-                  value={amount}
-                  onChange={(e)=> setAmount(e.target.value)}
-                  />   
-                </div>     
-                <div style={{margin:"30px 0"}}>
-                <Label>Verify Amount: $</Label>
-                <Input  
-                  placeholder="Verify Amount"
-                  value={confirmAmount}
-                  onChange={(e)=> setConfirmAmount(e.target.value)}
-                  />   
-                </div>
-                <p>Note: Make sure you have signed on the back side of the check</p>
-                <CheckboxField  
-                  margin="10px 0px" 
-                  checked={termsAgreed}
-                  onChange={(e) => setTermsAgreed(e.target.checked)}
-                  label="I agree to all terms and conditions"/>
-                <Button onClick={checkValues} colorTheme="fill" style={{backgroundColor:"black",color:"white"}} width="100%">Deposit Check!<FontAwesomeIcon style={{marginLeft:"10px"}} icon={faPlay}></FontAwesomeIcon></Button>
-            </div>
-        </div>
-    </WindowWrapper>)
-} 
+      </WindowWrapper>
+  );
+};
+
 export default UploadCheque;

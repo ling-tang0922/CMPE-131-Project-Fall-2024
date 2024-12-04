@@ -58,7 +58,7 @@ const CustomerLogin = () => {
   };
   const handleLogin = () => {
     axios.get('http://localhost:4000/validate-credentials-userLogin', {
-      params: { username: username, password: password, type: type}
+      params: { username: username, password: password}
     })
     
     .then(response => {
@@ -123,7 +123,6 @@ const CustomerLogin = () => {
         alert("Passwords don't match");
         return;
     }
-    alert(PhoneNumber)
     const bankPin = generatePin();
     generateID().then(newBankID => {
         axios.post('http://localhost:4000/new-account', {
@@ -141,7 +140,6 @@ const CustomerLogin = () => {
         .then(response => {
             if (response.data.success) {
                 alert("Account Created");
-                alert('Your Phone Number is: ' + response.data.PhoneNumber);
                 sessionStorage.setItem('bankID', newBankID);
                 sessionStorage.setItem('email', email);
                 sessionStorage.setItem('firstName', firstName);
@@ -256,20 +254,6 @@ const CustomerLogin = () => {
                       <Button onClick={handleLogin} variation="primary" colorTheme="success">
                         Login
                       </Button>
-                    </Flex>
-
-                    <Flex
-                      direction="row"
-                      gap="small"
-                      style={{ marginTop: "3%", justifyContent: "flex-end" }}
-                    >
-                      <a href="/" style={{ fontSize: 15 }}>
-                        Forgot Username?
-                      </a>
-                      <Divider size="default" orientation="vertical" />
-                      <a href="/" style={{ fontSize: 15 }}>
-                        Forgot Password?
-                      </a>
                     </Flex>
                   </div>
                 ),

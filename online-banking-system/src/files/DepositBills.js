@@ -67,6 +67,7 @@ const DepositBills = () =>{
             if(response.data.success){
                 console.log('Response recieved:', response.data)
                 navigate('/dashboard')
+                window.location.reload()
             }
         })
         .catch(error => {

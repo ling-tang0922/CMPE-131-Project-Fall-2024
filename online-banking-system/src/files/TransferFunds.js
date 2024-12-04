@@ -148,6 +148,7 @@ const TransferFunds = () =>{
             if(response.data.success){
               console.log('Response recieved:', response.data);
               sessionStorage.setItem("accountBalance", senderNewBalance);
+              alert('Success!')
               navigate('/Dashboard');
             }
         })

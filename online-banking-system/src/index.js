@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import LandingPage from './files/LandingPage';
 import '@aws-amplify/ui-react/styles.css';
 import AboutUs from './files/AboutUs';
+import StaffSettings from './files/staffSettings';
 import CustomerLogin from './files/CustomerLogin';
 import ATMLoginForm from './files/ATMLoginForm';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -38,6 +39,7 @@ root.render(
     <Route path="/AccountSettings" element={<AccountSettings/>} />
     <Route path="/TransactionHistoryEmployee" element={<TransactionHistoryEmployee/>} />
     <Route path="/EmployeeManagement" element={<EmployeeManagement/>} />
+    <Route path="/staffSettings" element={<StaffSettings />} />
     </Routes>
   </Router>
   

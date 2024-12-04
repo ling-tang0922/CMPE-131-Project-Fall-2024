@@ -1,7 +1,8 @@
 import { Button, Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
+import WindowWrapperManager from "../components/WindowWrapperManager";
 import { useNavigate } from "react-router-dom";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./modal.css"; 
 import axios from "axios";
 
@@ -9,30 +10,29 @@ const EmployeeManagement = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("ascending");
-    const [employees, setEmployees] = useState({});
+    const [employees, setEmployees] = useState([]);
     const role = sessionStorage.getItem("role")
-    const fetchAccounts = () => {
-        axios.get('http://localhost:4000/account-settings-role',{
-            params: {role: 'employee'}
+    useEffect(() => {
+        axios.get('http://localhost:4000/allAccounts-employee', {
+            params: { role: 'employee' }
         })
-        .then(response=>{
-            if(response.data.success){
-                setEmployees(response.data)
+        .then(response => {
+            if (response.data.success) {
+                setEmployees(response.data.accountsToDisplay || []); // Ensure it's an array
             }
         })
-        .catch(error=>{
-            if(error.response && error.response.status === 401){
-                alert("Invalid credentials")
-            }else{
-                alert("Error validating credentials")
+        .catch(error => {
+            if (error.response && error.response.status === 401) {
+                alert("Invalid credentials");
+            } else {
+                alert("Error validating credentials");
             }
-        })
-    }
-    fetchAccounts()
+        });
+    }, []);
     const [modalOpen, setModalOpen] = useState(false);
     const [newEmployee, setNewEmployee] = useState({});
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [profilePic, setProfilePic] = useState('default_profile_pic.png'); // Set a default profile picture
+    const [profilePic, setProfilePic] = useState('default.png'); // Set a default profile picture
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -55,31 +55,96 @@ const EmployeeManagement = () => {
         }
             
     }
+    const deleteAccount = (bankID) => {
+        axios.delete('http://localhost:4000/delete-account', {
+            data: { bankID: bankID, role: 'employee' }
+        })
+        .then(response => {
+            if (response.data.success) {
+                alert("Account Deleted");
+                sessionStorage.removeItem('bankID')
+            }
+        })
+        .catch(error => {
+            alert("Error deleting account");
+            console.error('Error occurred:', error);
+        });
+
+        
+    }
+
+    const generateID = () => {
+        return new Promise((resolve, reject) => {
+            const IDcheck = 'e' + (Math.floor(1000 + Math.random() * 9000)).toString();
+            axios.get('http://localhost:4000/account-settings', {
+                params: { bankID: IDcheck }
+            })
+            .then(response => {
+                if (response.data.success) {
+                    // If the ID exists, generate a new one
+                    generateID().then(resolve).catch(reject);
+                } else {
+                    // If the ID does not exist, resolve with the new ID
+                    resolve(IDcheck);
+                }
+            })
+            .catch(error => {
+                // Handle errors gracefully
+                console.error('Error checking ID:', error);
+                // Assuming that an error means the ID does not exist
+                resolve(IDcheck);
+            });
+        });
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         if (newEmployee.first && newEmployee.last && newEmployee.email && newEmployee.username && newEmployee.password) {
             setEmployees((prev) => [...prev, newEmployee]);
             setModalOpen(false);
-            alert("Employee added successfully!");
-            axios.get('http://localhost:4000/account-settings-role',{
-                params: {role: 'employee'}
+            generateID().then(bankID => {axios.post('http://localhost:4000/new-account', {
+                username: newEmployee.username,
+                password: newEmployee.password,
+                firstName: newEmployee.first,
+                lastName: newEmployee.last,
+                PhoneNumber: '',
+                email: newEmployee.email,
+                accountBalance: 0,
+                bankID: bankID,
+                bankPin: '',
+                role: 'employee'
             })
-            .then(response=>{
-                if(response.data.success){
-                    alert("Employee added successfully")
+            .then(response => {
+                if (response.data.success) {
+                    alert("Account Created");
+                    setNewEmployee(prevState => ({
+                        ...prevState,
+                        bankID: response.data.bankID,
+                    }));
+                    window.location.reload();
                 }
             })
-            .catch(error=>{
-                if(error.response && error.response.status === 401){
-                    alert("Invalid credentials")
-                }else{
-                    alert("Error inputting credentials")
-                }
-            })
-        } else {
-            alert("Please fill in all fields.");
+            .catch(error => {
+                alert("Error creating new account");
+                console.error('Error occurred:', error);
+            });
+        })
+        } else{
+            alert("Please fill out all fields");
         }
     };
+    const searchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const sortChange = (event) => {
+        setSortOrder(event.target.value);
+    };
+
+    const filteredSorted = employees
+    .filter(employees => employees.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => sortOrder === "ascending"
+        ? a.firstName.localeCompare(b.firstName)
+        : b.firstName.localeCompare(a.firstName));
 
     // Toggle dropdown visibility
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
@@ -100,7 +165,7 @@ const EmployeeManagement = () => {
     }, []);
 
     return (
-        <WindowWrapperEmployee showSideNavEmployee={true}>
+        <WindowWrapperManager showSideNavEmployee={true}>
             <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold", textAlign: "left" }}>Employee Management</h1>
@@ -131,7 +196,7 @@ const EmployeeManagement = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/accountsettings')}
+                                        onClick={() => navigate('/staffSettings')}
                                     >
                                         Account Settings
                                     </li>
@@ -178,6 +243,7 @@ const EmployeeManagement = () => {
                 <Table highlightOnHover={true} style={{ backgroundColor: '#FFFFFF', borderRadius: '8px' }}>
                     <TableHead>
                         <TableRow>
+                            <TableCell>Bank ID</TableCell>
                             <TableCell>First Name</TableCell>
                             <TableCell>Last Name</TableCell>
                             <TableCell>Email</TableCell>
@@ -187,15 +253,16 @@ const EmployeeManagement = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {employees.map((employee, index) => (
+                        {filteredSorted.map((employee, index) => (
                             <TableRow key={index}>
-                                <TableCell>{employee.first}</TableCell>
-                                <TableCell>{employee.last}</TableCell>
+                                <TableCell>{employee.bankID}</TableCell>
+                                <TableCell>{employee.firstName}</TableCell>
+                                <TableCell>{employee.lastName}</TableCell>
                                 <TableCell>{employee.email}</TableCell>
                                 <TableCell>{employee.username}</TableCell>
                                 <TableCell>{employee.password}</TableCell>
                                 <TableCell>
-                                    <Button variation="destructive" onClick={() => setEmployees(employees.filter(emp => emp.username !== employee.username))}>
+                                    <Button variation="destructive" onClick={() => deleteAccount(employee.bankID)}>
                                         Remove
                                     </Button>
                                 </TableCell>
@@ -227,7 +294,7 @@ const EmployeeManagement = () => {
                     </div>
                 )}
             </div>
-        </WindowWrapperEmployee>
+        </WindowWrapperManager>
     );
 };
 

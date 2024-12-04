@@ -1,5 +1,5 @@
-import SideNavEmployee from "./SideNavEmployee";
-const WindowWrapperEmployee = ({ children, showSideNavEmployee = false }) => {
+import SideNavEmployee from "./SideNavManager";
+const WindowWrapperManager = ({ children, showSideNavEmployee = false }) => {
   const bankID = sessionStorage.getItem("bankID")
   return (
     <div
@@ -28,4 +28,4 @@ const WindowWrapperEmployee = ({ children, showSideNavEmployee = false }) => {
   );
 };
 
-export default WindowWrapperEmployee;
+export default WindowWrapperManager;

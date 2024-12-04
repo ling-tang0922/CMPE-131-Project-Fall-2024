@@ -1,7 +1,7 @@
 //a wrapper to all the components
 import SideNav from "./SideNav";
 const WindowWrapper = ({ children, showSideNav = false }) => {
-  const bankID = localStorage.getItem("bankID")
+  const bankID = sessionStorage.getItem("bankID")
   return (
     <div
       style={{

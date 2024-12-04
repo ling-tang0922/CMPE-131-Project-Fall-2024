@@ -26,10 +26,10 @@ db.connect((err)=>{
 // Request Validation of Credentials (Customer/Employee Login)
 // Get Function
 app.get('/validate-credentials-userLogin', async (req, res) => {
-    const { username, password, type } = req.query;
+    const { username, password} = req.query;
 
 
-    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, type], (error, results) => {
+    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'manager'], (error, results) => {
         if (error) {
             console.error('Error validating credentials');
             return res.status(500).send("Error validating credentials");
@@ -73,7 +73,31 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
                         role: results[0].role
                     });
                 } else {
-                    return res.status(401).send({ success: false });
+                    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'customer'], (error, results) => {
+                        if (error) {
+                            console.error('Error validating credentials');
+                            return res.status(500).send("Error validating credentials");
+                        }
+        
+        
+                        if (results.length > 0) {
+                            return res.send({
+                                success: true,
+                                bankID: results[0].bankID,
+                                email: results[0].email,
+                                firstName: results[0].firstName,
+                                lastName: results[0].lastName,
+                                PhoneNumber: results[0].PhoneNumber,
+                                accountBalance: results[0].accountBalance,
+                                username: results[0].username,
+                                password: results[0].password,
+                                bankPin: results[0].bankPin,
+                                role: results[0].role
+                            });
+                        } else {
+                            return res.status(401).send({ success: false });
+                        }
+                    })
                 }
             })
         }
@@ -85,13 +109,18 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
 // Get Function
 app.get('/validate-credentials-ATMLogin', async (req,res)=>{
     const {bankID, bankPin} = req.query
-    db.query('SELECT bankID FROM accounts WHERE bankID = ? AND bankPin = ?', [bankID, bankPin], (error, results)=>{
+    db.query('SELECT * FROM accounts WHERE bankID = ? AND bankPin = ?', [bankID, bankPin], (error, results)=>{
         if(error){
             console.error('Error validating credentials')
             return res.status(500).send("Error validating credentials")
         }
         if(results.length > 0){
-            res.send({success : true, bankID: results[0].bankID})
+            res.send({success : true, 
+            bankID: results[0].bankID,
+            accountBalance: results[0].accountBalance,
+            bankPin: results[0].bankPin
+
+            })
         } else{
             res.status(401).send({success: false})
         }
@@ -265,7 +294,8 @@ app.get("/transaction-history", async (req, res)=>{
     })
 })
 app.get("/allAccounts-employee", async (req, res)=>{
-    db.query('SELECT * FROM accounts WHERE role = ?',['customer'], (error, results)=>{
+    const {role} = req.query
+    db.query('SELECT * FROM accounts WHERE role = ?',[role], (error, results)=>{
         if(error){
             console.error('Error fetching transaction history:', error)
             return res.status(500).send("Error fetching transaction history")
@@ -323,8 +353,8 @@ app.post('/add-transaction', async (req, res)=>{
 // Request Deletion of Account
 // Delete Function
 app.delete("/delete-account", async (req, res)=>{
-    const{bankID} = req.body
-    db.query('DELETE FROM accounts WHERE bankID = ?', [bankID], (error, results)=>{
+    const{bankID, role} = req.body
+    db.query('DELETE FROM accounts WHERE bankID = ? AND role = ?' , [bankID, role], (error, results)=>{
         if(error){
             console.error('Error deleting existing account')
             return res.status(500).send("Error deleting existing account")

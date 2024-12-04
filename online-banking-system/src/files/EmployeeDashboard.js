@@ -1,5 +1,6 @@
 import { Divider, Table, TableCell, TableHead, TableRow, TableBody, TextField, SelectField, Button } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee"
+import WindowWrapperManager from "../components/WindowWrapperManager"
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -14,7 +15,9 @@ const EmployeeDashboard = () => {
     const [accounts, setAccounts] = useState([])
     
     useEffect(() => {
-        axios.get('http://localhost:4000/allAccounts-employee')
+        axios.get('http://localhost:4000/allAccounts-employee', {
+            params:{role: 'customer'}
+        })
         .then(response=>{
             if(response.data.success){
               setAccounts(response.data.accountsToDisplay)
@@ -48,7 +51,7 @@ const EmployeeDashboard = () => {
     }
     const deleteAccount = (bankID) => {
         axios.delete('http://localhost:4000/delete-account',{
-            data: {bankID}
+            data: {bankID: bankID, role: 'customer'}
         })
         .then(response=>{
             if(response.data.success){
@@ -108,12 +111,13 @@ const EmployeeDashboard = () => {
         window.addEventListener('click', clickOutside);
         return () => window.removeEventListener('click', clickOutside);
     }, []);
+    const WrapperComponent = role === 'manager' ? WindowWrapperManager : WindowWrapperEmployee;
 
     return (
-        <WindowWrapperEmployee showSideNavEmployee={true}>
+        <WrapperComponent showSideNavEmployee={true}>
             <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Employee Dashboard</h1>
+                    <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>{role} dashboard</h1>
                     <div style={{ position: "relative", marginRight: "20px" }}>
                         <img
                             id="profile-pic"
@@ -140,7 +144,7 @@ const EmployeeDashboard = () => {
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={() => navigate('/accountsettings')}
+                                        onClick={() => navigate('/StaffSettings')}
                                     >
                                         Account Settings
                                     </li>
@@ -252,7 +256,7 @@ const EmployeeDashboard = () => {
                     </Table>
                 </div>
             </div>
-        </WindowWrapperEmployee>
+        </WrapperComponent>
     );
 };
 
