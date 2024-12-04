@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
     const navigate = useNavigate();
-    const bankID = localStorage.getItem("bankID")
     return (
         <div style={{ position: "fixed", backgroundColor: "#CBF3C6", width: "100%" , padding: 0, zIndex: 1000}}>
             <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: "10vh", padding: "0" }}>

@@ -211,7 +211,6 @@ const StaffSettings = () => {
                         <div style={{ marginBottom: "5px" }}> <strong>Last Name: </strong>{lastName}</div>
                         <div style={{ marginBottom: "5px" }}> <strong>Username: </strong>{username}</div>
                         <div style={{ marginBottom: "5px" }}> <strong>Account ID: </strong>{bankID}</div>
-                        <div style={{ marginBottom: "5px" }}><strong>Phone: </strong>{phoneNumber}</div>
                     </div>
 
                     <div style={{

@@ -1,6 +1,5 @@
 import SideNavEmployee from "./SideNavEmployee";
 const WindowWrapperEmployee = ({ children, showSideNavEmployee = false }) => {
-  const bankID = sessionStorage.getItem("bankID")
   return (
     <div
       style={{

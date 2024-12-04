@@ -14,10 +14,10 @@ const AccountSettings = () => {
     const lastName = sessionStorage.getItem('lastName');
     const username = sessionStorage.getItem('username');
     const bankID = sessionStorage.getItem('bankID') || '';
-    const role = sessionStorage.getItem('role');
     const email = sessionStorage.getItem('email');
     const phoneNumber = sessionStorage.getItem('PhoneNumber');
     const oldpassword = sessionStorage.getItem('password');
+    const bankPin = sessionStorage.getItem('bankPin');
     
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);
@@ -212,6 +212,7 @@ const AccountSettings = () => {
                         <div style={{ marginBottom: "5px" }}> <strong>Account ID: </strong>{bankID}</div>
                         <div style={{ marginBottom: "5px" }}> <strong>Email: </strong>{email}</div>
                         <div style={{ marginBottom: "5px" }}><strong>Phone: </strong>{phoneNumber}</div>
+                        <div style={{ marginBottom: "5px" }}><strong>Bank PIN: </strong>{bankPin}</div>
                     </div>
 
                     <div style={{

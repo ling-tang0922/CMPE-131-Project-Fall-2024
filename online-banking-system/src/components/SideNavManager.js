@@ -6,7 +6,6 @@ import { faUser, faClipboardList, faCog } from '@fortawesome/free-solid-svg-icon
 
 const SideNavManager = ({style={}}) => {
   const navigate = useNavigate();
-  const bankID = sessionStorage.getItem("bankID")
   const firstName = sessionStorage.getItem("firstName") || {}
     const lastName = sessionStorage.getItem("lastName") || {}
   return (

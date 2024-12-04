@@ -16,9 +16,8 @@ const CustomerDashboard = ({style={}}) => {
     const username = sessionStorage.getItem('username')
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [transactionHistory, setTransactions] = useState([]);
-    const role = sessionStorage.getItem('role') || 'customer';
     const bankID = sessionStorage.getItem('bankID') || '';
-    const [profilePic, setProfilePic] = useState('default.png');
+    const profilePic = useState('default.png');
     //Backend:
     
     useEffect(() => {

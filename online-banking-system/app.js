@@ -308,6 +308,22 @@ app.get("/allAccounts-employee", async (req, res)=>{
         }
     })
 })
+app.get('/checkInputs', async (req, res)=>{
+    const {username, email, PhoneNumber} = req.query
+    db.query('SELECT * FROM accounts WHERE username = ? OR email = ? OR PhoneNumber = ?', [username, email, PhoneNumber], (error, results)=>{
+        if(error){
+            console.error('Error fetching transaction history:', error)
+            return res.status(500).send("Error fetching transaction history")
+        }
+        if(results.length > 0){
+            res.send({success: false})
+        }
+        else{
+            res.send({success: true})
+        }
+    })
+})
+
 app.get("/totalTransactionHistory", async (req, res)=>{
     db.query('SELECT * FROM transaction_history', (error, results)=>{
         if(error){

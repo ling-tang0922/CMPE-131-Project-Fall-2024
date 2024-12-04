@@ -9,10 +9,8 @@ import {
   Label,
   Flex,
   Button,
-  Tabs,
-  Divider,
-  PhoneNumberField,
-  AccountSettings,
+  Tabs
+  
 } from "@aws-amplify/ui-react";
 
 const welcomeMSG = (
@@ -49,14 +47,16 @@ const CustomerLogin = () => {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPass] = useState("")
   const [PhoneNumber, setPhoneNumber] = useState("")
-  const [bankID, setBankID] = useState("")
   
-  const type = 'customer'
+  
   // Backend:
   const generatePin = () => {
     return Math.floor(1000 + Math.random() * 9000).toString();
   };
   const handleLogin = () => {
+    
+
+
     axios.get('http://localhost:4000/validate-credentials-userLogin', {
       params: { username: username, password: password}
     })
@@ -112,17 +112,36 @@ const CustomerLogin = () => {
         });
     });
 };
-
-  const handleSignUp = () => {
+  const checkValues = () => {
     if (!username || !password || !firstName || !lastName || !PhoneNumber || !email) {
-        alert("All fields are required");
-        return;
+      alert("All fields are required");
+      return;
     }
 
     if (password !== confirmPassword) {
-        alert("Passwords don't match");
-        return;
+      alert("Passwords don't match");
+      return;
     }
+    axios.get('http://localhost:4000/checkInputs',{
+      params: { username: username, email: email, PhoneNumber: PhoneNumber}
+    })
+    .then(response => {
+      console.log('Response received:', response.data);
+      if (response.data.success) {
+        handleSignUp();
+      }
+      else{
+        alert("Use a unique Username, Email, and Phone Number");
+        return false
+      }
+    })
+    .catch(error => {
+      console.error('Error occurred:', error);
+      alert("Error getting accounts")
+    })
+  };
+  const handleSignUp = () => {
+    
     const bankPin = generatePin();
     generateID().then(newBankID => {
         axios.post('http://localhost:4000/new-account', {
@@ -444,7 +463,7 @@ const CustomerLogin = () => {
                         required
                       />
                       </div>
-                      <Button onClick={handleSignUp} variation="primary" colorTheme="success">
+                      <Button onClick={checkValues} variation="primary" colorTheme="success">
                         Sign Up
                       </Button>
                     </Flex>{" "}

@@ -1,6 +1,6 @@
 import { Button, Input,Label,CheckboxField} from "@aws-amplify/ui-react"
 import WindowWrapper from "../components/WindowWrapper"
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 

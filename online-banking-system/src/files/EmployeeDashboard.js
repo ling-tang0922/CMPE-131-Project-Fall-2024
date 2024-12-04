@@ -11,7 +11,6 @@ const EmployeeDashboard = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState("ascending");
     const role = sessionStorage.getItem("role")
-    const bankID = sessionStorage.getItem("bankID")
     const [accounts, setAccounts] = useState([])
     
     useEffect(() => {

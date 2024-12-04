@@ -1,31 +1,36 @@
+/* Container for the About Us section */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
-    max-width: 1200px;
-    margin: 0 auto;
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    height: 90vh; /* Set height to 90% of the viewport height */
+    max-width: 1200px; /* Set maximum width */
+    margin: 0 auto; /* Center the container horizontally */
 }
 
+/* Text section within the About Us container */
 .about-text {
-    flex: 1;
-    text-align: left;
+    flex: 1; /* Allow the text section to grow and fill available space */
+    text-align: left; /* Align text to the left */
 }
 
+/* Heading within the About Us text section */
 .about-text h2 {
-    color: #57C43F;
-    font-size: 75px;
-    font-weight: 800;
+    color: #57C43F; /* Set text color */
+    font-size: 75px; /* Set font size */
+    font-weight: 800; /* Set font weight */
 }
 
+/* Paragraph within the About Us text section */
 .about-text p {
-    font-size: 20px;
-    margin-top: 1.563rem;
-    color: #000000;
+    font-size: 20px; /* Set font size */
+    margin-top: 1.563rem; /* Set top margin */
+    color: #000000; /* Set text color */
 }
 
+/* Picture within the About Us container */
 .picture {
-    max-width: 35rem;
-    border-radius: 5px;
-    margin-right: 1rem;
+    max-width: 35rem; /* Set maximum width */
+    border-radius: 5px; /* Round the corners */
+    margin-right: 1rem; /* Set right margin */
 }
