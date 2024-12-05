@@ -50,9 +50,11 @@ const ATMLoginForm = () => {
     };
 
     const handleKeyDown = (e) => {
+        /*
         if (e.key === 'Backspace') {
             handleBackspace();
         }
+        */
     };
 
     useEffect(() => {
