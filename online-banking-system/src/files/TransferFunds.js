@@ -180,14 +180,14 @@ const TransferFunds = () =>{
             </div>
             <div style={{margin:"0 30%"}}>
                 <div style={{margin:"30px 0"}}>
-                <Label>Reciever Phone Number: $</Label>
+                <Label>Reciever Phone Number: </Label>
                 <Input
                 value={phoneNumber}
                 onChange={(e)=> setPhoneNumber(e.target.value)} 
                 placeholder="Enter Reciever Phone Number"/>   
                 </div>  
                 <div style={{margin:"30px 0"}}>
-                <Label>Verify Phone Number: $</Label>
+                <Label>Verify Phone Number: </Label>
                 <Input 
                 value={verifyPhoneNumber}
                 onChange={(e)=> setVerifyPhoneNumber(e.target.value)} 
