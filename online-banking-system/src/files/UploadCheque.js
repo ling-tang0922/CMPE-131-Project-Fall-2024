@@ -31,31 +31,31 @@ const UploadCheque = () =>{
         alert("Please enter an amount.")
         return false
       }
-      if(isUploaded === false || isUploaded2 === false){
+      else if(isUploaded === false || isUploaded2 === false){
         alert("Please upload both sides of the check.")
         return false
       }
-      if(accountStatus === 'closed'){
+      else if(accountStatus === 'closed'){
         alert("Account is closed. Please open account to deposit cheque.")
         return false
       }
-      if(Number(amount) <= 0){
+      else if(Number(amount) <= 0){
         alert("Please enter a valid amount.")
         return false
       }
-      if(amount !== confirmAmount){
+      else if(amount !== confirmAmount){
         alert("Amounts do not match.")
         return false
       }
-      if(!termsAgreed){
+      else if(!termsAgreed){
         alert("You must agree to the terms and conditions")
         return false
       }
-      if(!imageSet){
+      else if(!imageSet){
         alert("Please upload the check.")
         return false
       }
-      updateBalance()
+      else(updateBalance())
 
     }
 
