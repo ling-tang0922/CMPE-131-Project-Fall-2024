@@ -107,17 +107,17 @@ const EmployeeManagement = () => {
             });
         });
     }
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (newEmployee.first && newEmployee.last && newEmployee.email && newEmployee.username && newEmployee.password) {
+    const handleSubmit = () => {
+        
+        if (newEmployee.firstName && newEmployee.lastName && newEmployee.email && newEmployee.username && newEmployee.password && newEmployee.PhoneNumber) {
             setEmployees((prev) => [...prev, newEmployee]);
             setModalOpen(false);
             generateID().then(bankID => {axios.post('http://localhost:4000/new-account', {
                 username: newEmployee.username,
                 password: newEmployee.password,
-                firstName: newEmployee.first,
-                lastName: newEmployee.last,
-                PhoneNumber: '',
+                firstName: newEmployee.firstName,
+                lastName: newEmployee.lastName,
+                PhoneNumber: newEmployee.PhoneNumber,
                 email: newEmployee.email,
                 accountBalance: 0,
                 bankID: bankID,
@@ -251,6 +251,7 @@ const EmployeeManagement = () => {
                             <TableCell>First Name</TableCell>
                             <TableCell>Last Name</TableCell>
                             <TableCell>Email</TableCell>
+                            <TableCell>Phone Number</TableCell>
                             <TableCell>Username</TableCell>
                             <TableCell>Password</TableCell>
                             <TableCell>Actions</TableCell>
@@ -263,6 +264,7 @@ const EmployeeManagement = () => {
                                 <TableCell>{employee.firstName}</TableCell>
                                 <TableCell>{employee.lastName}</TableCell>
                                 <TableCell>{employee.email}</TableCell>
+                                <TableCell>{employee.PhoneNumber}</TableCell>
                                 <TableCell>{employee.username}</TableCell>
                                 <TableCell>{employee.password}</TableCell>
                                 <TableCell>
@@ -284,11 +286,13 @@ const EmployeeManagement = () => {
                         <div className="modal-content">
                             <h2>Add Employee</h2>
                             <form onSubmit={handleSubmit}>
-                                <TextField label="First Name" name="first" value={newEmployee.first} onChange={handleInputChange} className="modal-input" />
-                                <TextField label="Last Name" name="last" value={newEmployee.last} onChange={handleInputChange} className="modal-input" />
+                                <TextField label="First Name" name="firstName" value={newEmployee.first} onChange={handleInputChange} className="modal-input" />
+                                <TextField label="Last Name" name="lastName" value={newEmployee.last} onChange={handleInputChange} className="modal-input" />
                                 <TextField label="Email" name="email" value={newEmployee.email} onChange={handleInputChange} className="modal-input" />
+                                <TextField label="PhoneNumber" name="PhoneNumber" value={newEmployee.PhoneNumber} onChange={handleInputChange} className="modal-input" />
                                 <TextField label="Username" name="username" value={newEmployee.username} onChange={handleInputChange} className="modal-input" />
                                 <TextField label="Password" name="password" type="password" value={newEmployee.password} onChange={handleInputChange} className="modal-input" />
+                                
                                 <div className="modal-button-container">
                                     <Button type="submit" variation="primary">Add</Button>
                                     <Button onClick={() => setModalOpen(false)} className="modal-close">Cancel</Button>
