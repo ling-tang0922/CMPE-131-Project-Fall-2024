@@ -48,7 +48,8 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
                 username: results[0].username,
                 password: results[0].password,
                 bankPin: results[0].bankPin,
-                role: results[0].role
+                role: results[0].role,
+                accountStatus: results[0].accountStatus
             });
         } else {
             db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'employee'], (error, results) => {
@@ -70,7 +71,8 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
                         username: results[0].username,
                         password: results[0].password,
                         bankPin: results[0].bankPin,
-                        role: results[0].role
+                        role: results[0].role,
+                        accountStatus: results[0].accountStatus
                     });
                 } else {
                     db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'customer'], (error, results) => {
@@ -92,7 +94,8 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
                                 username: results[0].username,
                                 password: results[0].password,
                                 bankPin: results[0].bankPin,
-                                role: results[0].role
+                                role: results[0].role,
+                                accountStatus: results[0].accountStatus
                             });
                         } else {
                             return res.status(401).send({ success: false });

@@ -20,19 +20,22 @@ const DepositBills = () =>{
             return false
         }
         
-        if(!termsAgreed){
+        else if(!termsAgreed){
             alert("You must agree to the terms and conditions")
             return false
         }
-        if(amount !== confirmAmount){
+        else if(amount !== confirmAmount){
             alert("Amounts do not match.")
             return false
         }
-        if(!amount || parseFloat(amount) <= 0){
+        else if(!amount || parseFloat(amount) <= 0){
             alert("Please enter a valid deposit amount.")
             return false
         }
-        handleDeposit()
+        else{
+            handleDeposit()
+        }
+        
     }
     const handleDeposit = () =>{
         const amountNum = parseFloat(confirmAmount);
