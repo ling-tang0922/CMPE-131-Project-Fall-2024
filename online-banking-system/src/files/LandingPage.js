@@ -11,7 +11,6 @@ const LandingPage = () => {
         { url: "http://localhost:3000/image-4.jpg", title: "Urban Banking Made Easy", description: "Experience hassle-free banking in the city that never sleeps—anytime, anywhere." },
         { url: "http://localhost:3000/image-5.jpg", title: "Travel with Confidence", description: "Manage your finances internationally—transfer funds and check your balance wherever you are." }
     ];
-    
 
     const loadFont = () => {
         const link = document.createElement("link");
@@ -44,7 +43,37 @@ const LandingPage = () => {
         color: "#333",
         fontWeight: "500",
         letterSpacing: "0.5px",
-        textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)"
+        textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "300px"
+    };
+
+    const featureBoxStyle = {
+        margin: "20px 0px", 
+        boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)", 
+        display: "flex", 
+        flexDirection: "row", 
+        minHeight: "500px",
+        justifyContent: "space-between",
+    };
+
+    const featureContentStyle = {
+        flex: "2",
+        padding: "10px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center", 
+        alignItems: "center",
+        textAlign: "center",
+    };
+
+    const featureImageStyle = {
+        width: "800px", 
+        height: "500px", 
+        objectFit: "cover", 
     };
 
     const featureTitleStyle = {
@@ -52,13 +81,11 @@ const LandingPage = () => {
         fontWeight: "bold",
         color: "green",
         marginBottom: "10px",
-        textAlign: "center"
     };
 
     const featureDescStyle = {
         fontSize: "33px",
         color: "#555",
-        textAlign: "center",
         marginTop: "0",
     };
 
@@ -85,39 +112,42 @@ const LandingPage = () => {
                 </div>
 
                 <div style={{ margin: "10px" }}>
-                    <div style={{ margin: "20px 0px", boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)", display: "flex", flexDirection: "row" }}>
-                        <div style={{ width: "800px", height: "500px" }}>
+                    <div style={featureBoxStyle}>
+                        <div style={featureImageStyle}>
                             <img style={{ objectFit: "cover", height: "100%", width: "100%" }} src="/BankSignUp.jpg" alt="Easy Account Setup" />
                         </div>
-                        <div style={{ flex: "2", padding: "10px" }}>
+                        <div style={featureContentStyle}>
                             <h3 style={featureTitleStyle}>Easy Account Setup</h3>
                             <p style={featureDescStyle}>Quickly register for your online banking account in just a few minutes.</p>
                         </div>
                     </div>
-                    <div style={{ margin: "20px 0px", boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)", display: "flex", flexDirection: "row" }}>
-                        <div style={{ flex: "2", padding: "10px" }}>
+
+                    <div style={featureBoxStyle}>
+                        <div style={featureContentStyle}>
                             <h3 style={featureTitleStyle}>Seamless Fund Transfers</h3>
                             <p style={featureDescStyle}>Transfer money effortlessly to friends or family within our bank.</p>
                         </div>
-                        <div style={{ width: "800px", height: "500px" }}>
+                        <div style={featureImageStyle}>
                             <img style={{ objectFit: "cover", height: "100%", width: "100%" }} src="/TransferFunds.jpg" alt="Seamless Fund Transfers" />
                         </div>
                     </div>
-                    <div style={{ margin: "20px 0px", boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)", display: "flex", flexDirection: "row" }}>
-                        <div style={{ width: "800px", height: "500px" }}>
+
+                    <div style={featureBoxStyle}>
+                        <div style={featureImageStyle}>
                             <img style={{ objectFit: "cover", height: "100%", width: "100%" }} src="/ElectronicCheckDeposit.jpg" alt="Electronic Check Deposit" />
                         </div>
-                        <div style={{ flex: "2", padding: "10px" }}>
+                        <div style={featureContentStyle}>
                             <h3 style={featureTitleStyle}>Electronic Check Deposit</h3>
                             <p style={featureDescStyle}>Conveniently deposit checks by simply uploading images from your device.</p>
                         </div>
                     </div>
-                    <div style={{ margin: "20px 0px", boxShadow: "5px 5px 15px 5px rgba(0, 0, 0, 0.3)", display: "flex", flexDirection: "row" }}>
-                        <div style={{ flex: "2", padding: "10px" }}>
+
+                    <div style={featureBoxStyle}>
+                        <div style={featureContentStyle}>
                             <h3 style={featureTitleStyle}>Secure ATM Withdrawals</h3>
                             <p style={featureDescStyle}>Withdraw cash at ATMs using your secure login credentials.</p>
                         </div>
-                        <div style={{ width: "800px", height: "500px" }}>
+                        <div style={featureImageStyle}>
                             <img style={{ objectFit: "cover", height: "100%", width: "100%" }} src="/OnlineATMPhoto.gif" alt="Secure ATM Withdrawals" />
                         </div>
                     </div>
