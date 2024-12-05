@@ -22,7 +22,7 @@ const EmployeeLogin = () => {
     })
     .then(response=>{
       if(response.data.success){
-        if(response.data.role !== 'employee' || response.data.role === 'customer'){
+        if(response.data.role !== 'employee' || response.data.role === 'manager'){
           alert("Invalid credentials")
           return
         }
