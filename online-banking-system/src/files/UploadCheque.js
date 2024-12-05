@@ -47,10 +47,6 @@ const UploadCheque = () =>{
         alert("Amounts do not match.")
         return false
       }
-      if(Number(amount) > Number(balance)){
-        alert("Insufficient funds.")
-        return false
-      }
       if(!termsAgreed){
         alert("You must agree to the terms and conditions")
         return false
