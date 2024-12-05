@@ -167,6 +167,7 @@ const CustomerLogin = () => {
                 sessionStorage.setItem('accountBalance', 0);
                 sessionStorage.setItem('username', username);
                 sessionStorage.setItem('accountStatus', 'open')
+                sessionStorage.setItem('bankPin', bankPin);
                 navigate('/DashBoard');
             }
         })
