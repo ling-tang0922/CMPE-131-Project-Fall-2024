@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CiUser, CiLock, CiMail, CiSquareChevRight } from "react-icons/ci";
+import { CiUser, CiLock, CiMail, CiSquareChevRight, CiPhone } from "react-icons/ci";
 import WindowWrapper from "../components/WindowWrapper";
 import axios from "axios";
 import NavBar from "../components/NavBar"
@@ -454,7 +454,16 @@ const CustomerLogin = () => {
                           position: "relative",
                         }}
                       >
+                      <CiPhone
+                          style={{
+                            marginLeft: "10px",
+                            marginBottom: "1px",
+                            fontSize: "1.3rem",
+                            position: "absolute",
+                          }}
+                        />
                       <input
+                        style={{ paddingLeft: "35px" }}
                         type="tel"
                         label="Phone number:"
                         value={PhoneNumber}

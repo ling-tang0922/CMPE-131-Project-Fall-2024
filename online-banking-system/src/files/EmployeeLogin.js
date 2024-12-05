@@ -22,17 +22,23 @@ const EmployeeLogin = () => {
     })
     .then(response=>{
       if(response.data.success){
-        sessionStorage.setItem('bankID', response.data.bankID);
-        sessionStorage.setItem('email', response.data.email);
-        sessionStorage.setItem('firstName', response.data.firstName);
-        sessionStorage.setItem('lastName', response.data.lastName);
-        sessionStorage.setItem('PhoneNumber', response.data.PhoneNumber);
-        sessionStorage.setItem('accountBalance', response.data.accountBalance);
-        sessionStorage.setItem('username', response.data.username);
-        sessionStorage.setItem('password', response.data.password);
-        sessionStorage.setItem('bankPin', response.data.bankPin);
-        sessionStorage.setItem('role', response.data.role);
-        navigate('/EmployeeDashboard')
+        if(response.data.role !== 'employee' || response.data.role === 'customer'){
+          alert("Invalid credentials")
+          return
+        }
+        else{
+          sessionStorage.setItem('bankID', response.data.bankID);
+          sessionStorage.setItem('email', response.data.email);
+          sessionStorage.setItem('firstName', response.data.firstName);
+          sessionStorage.setItem('lastName', response.data.lastName);
+          sessionStorage.setItem('PhoneNumber', response.data.PhoneNumber);
+          sessionStorage.setItem('accountBalance', response.data.accountBalance);
+          sessionStorage.setItem('username', response.data.username);
+          sessionStorage.setItem('password', response.data.password);
+          sessionStorage.setItem('bankPin', response.data.bankPin);
+          sessionStorage.setItem('role', response.data.role);
+          navigate('/EmployeeDashboard')
+        }
       }
     })
     .catch(error=>{
