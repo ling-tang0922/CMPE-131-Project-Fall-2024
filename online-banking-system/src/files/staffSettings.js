@@ -160,18 +160,7 @@ const StaffSettings = () => {
                                     >
                                         Account Settings
                                     </li>
-                                    <li
-                                        style={{
-                                            padding: "10px",
-                                            cursor: "pointer",
-                                            borderRadius: "10%"
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={changeAccount}
-                                    >
-                                        Change Account
-                                    </li>
+                                    
                                     <li
                                         style={{
                                             padding: "10px",
