@@ -22,11 +22,7 @@ const EmployeeLogin = () => {
     })
     .then(response=>{
       if(response.data.success){
-        if(response.data.role !== 'employee' || response.data.role === 'manager'){
-          alert("Invalid credentials")
-          return
-        }
-        else{
+        if(response.data.role === 'employee' || response.data.role === 'manager'){
           sessionStorage.setItem('bankID', response.data.bankID);
           sessionStorage.setItem('email', response.data.email);
           sessionStorage.setItem('firstName', response.data.firstName);
@@ -38,6 +34,9 @@ const EmployeeLogin = () => {
           sessionStorage.setItem('bankPin', response.data.bankPin);
           sessionStorage.setItem('role', response.data.role);
           navigate('/EmployeeDashboard')
+        }
+        else{
+          alert("Invalid credentials")
         }
       }
     })
