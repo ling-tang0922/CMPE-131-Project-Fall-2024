@@ -121,12 +121,16 @@ const CustomerLogin = () => {
       alert("All fields are required");
       return;
     }
+    else if (PhoneNumber.length !== 10) {
+      alert("Enter a valid phone number");
+      return;
+    }
 
-    if (password !== confirmPassword) {
+    else if (password !== confirmPassword) {
       alert("Passwords don't match");
       return;
     }
-    axios.get('http://localhost:4000/checkInputs',{
+    else{ axios.get('http://localhost:4000/checkInputs',{
       params: { username: username, email: email, PhoneNumber: PhoneNumber}
     })
     .then(response => {
@@ -143,7 +147,9 @@ const CustomerLogin = () => {
       console.error('Error occurred:', error);
       alert("Error getting accounts")
     })
-  };
+  }
+}
+
   const handleSignUp = () => {
     
     const bankPin = generatePin();

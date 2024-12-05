@@ -43,6 +43,18 @@ const EmployeeManagement = () => {
     const [newEmployee, setNewEmployee] = useState({});
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [profilePic, setProfilePic] = useState('default.png'); // Set a default profile picture
+    const verifyInputs = () => {
+        if (!newEmployee.firstName || !newEmployee.lastName || !newEmployee.email || !newEmployee.username || !newEmployee.password || !newEmployee.PhoneNumber) {
+            alert("Please fill out all fields");
+            return false;
+        }
+        else if (newEmployee.PhoneNumber.length !== 10) {
+            alert("Phone number must be 10 digits");
+            return false;
+        }
+        handleSubmit()
+    }
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -55,16 +67,9 @@ const EmployeeManagement = () => {
         sessionStorage.removeItem('bankID')
         navigate('/')
     }
-    const changeAccount = () => {
-        sessionStorage.removeItem('bankID')
-        if(role === 'customer'){
-            navigate('/CustomerLogin')
-        }
-        else if(role === 'employee' || role === 'manager'){
-            navigate('/EmployeeLogin')
-        }
-            
-    }
+    const generatePin = () => {
+        return Math.floor(1000 + Math.random() * 9000).toString();
+      };
     const deleteAccount = (bankID) => {
         axios.delete('http://localhost:4000/delete-account', {
             data: { bankID: bankID, role: 'employee' }
@@ -121,7 +126,7 @@ const EmployeeManagement = () => {
                 email: newEmployee.email,
                 accountBalance: 0,
                 bankID: bankID,
-                bankPin: '',
+                bankPin: generatePin(),
                 role: 'employee'
             })
             .then(response => {
@@ -254,6 +259,7 @@ const EmployeeManagement = () => {
                             <TableCell>Phone Number</TableCell>
                             <TableCell>Username</TableCell>
                             <TableCell>Password</TableCell>
+                            <TableCell>Bank Pin</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
@@ -267,6 +273,7 @@ const EmployeeManagement = () => {
                                 <TableCell>{employee.PhoneNumber}</TableCell>
                                 <TableCell>{employee.username}</TableCell>
                                 <TableCell>{employee.password}</TableCell>
+                                <TableCell>{employee.bankPin}</TableCell>
                                 <TableCell>
                                     <Button variation="destructive" onClick={() => deleteAccount(employee.bankID)}>
                                         Remove
@@ -285,7 +292,7 @@ const EmployeeManagement = () => {
                     <div className="modal-backdrop">
                         <div className="modal-content">
                             <h2>Add Employee</h2>
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={verifyInputs}>
                                 <TextField label="First Name" name="firstName" value={newEmployee.first} onChange={handleInputChange} className="modal-input" />
                                 <TextField label="Last Name" name="lastName" value={newEmployee.last} onChange={handleInputChange} className="modal-input" />
                                 <TextField label="Email" name="email" value={newEmployee.email} onChange={handleInputChange} className="modal-input" />
