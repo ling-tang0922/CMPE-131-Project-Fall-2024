@@ -32,7 +32,7 @@ const DepositBills = () =>{
             alert("Please enter a valid deposit amount.")
             return false
         }
-        else(handleDeposit())
+        handleDeposit()
     }
     const handleDeposit = () =>{
         const amountNum = parseFloat(confirmAmount);

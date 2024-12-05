@@ -29,7 +29,7 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
     const { username, password} = req.query;
 
 
-    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'manager'], (error, results) => {
+    db.query('SELECT * FROM accounts WHERE username = ? AND BINARY password = ? AND role = ?', [username, password, 'manager'], (error, results) => {
         if (error) {
             console.error('Error validating credentials');
             return res.status(500).send("Error validating credentials");
@@ -48,10 +48,11 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
                 username: results[0].username,
                 password: results[0].password,
                 bankPin: results[0].bankPin,
-                role: results[0].role
+                role: results[0].role,
+                accountStatus: results[0].accountStatus
             });
         } else {
-            db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'employee'], (error, results) => {
+            db.query('SELECT * FROM accounts WHERE username = ? AND BINARY password = ? AND role = ?', [username, password, 'employee'], (error, results) => {
                 if (error) {
                     console.error('Error validating credentials');
                     return res.status(500).send("Error validating credentials");
@@ -70,10 +71,11 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
                         username: results[0].username,
                         password: results[0].password,
                         bankPin: results[0].bankPin,
-                        role: results[0].role
+                        role: results[0].role,
+                        accountStatus: results[0].accountStatus
                     });
                 } else {
-                    db.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?', [username, password, 'customer'], (error, results) => {
+                    db.query('SELECT * FROM accounts WHERE username = ? AND BINARY password = ? AND role = ?', [username, password, 'customer'], (error, results) => {
                         if (error) {
                             console.error('Error validating credentials');
                             return res.status(500).send("Error validating credentials");
@@ -92,7 +94,8 @@ app.get('/validate-credentials-userLogin', async (req, res) => {
                                 username: results[0].username,
                                 password: results[0].password,
                                 bankPin: results[0].bankPin,
-                                role: results[0].role
+                                role: results[0].role,
+                                accountStatus: results[0].accountStatus
                             });
                         } else {
                             return res.status(401).send({ success: false });

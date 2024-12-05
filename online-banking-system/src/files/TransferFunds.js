@@ -45,7 +45,7 @@ const TransferFunds = () =>{
             alert("Your account is closed. Please open account to transfer funds.")
             return false
         }
-       else {axios.get('http://localhost:4000/account-settings',{
+        else {axios.get('http://localhost:4000/account-settings',{
             params: {PhoneNumber: phoneNumber}
             
         })
@@ -57,7 +57,9 @@ const TransferFunds = () =>{
                     alert("Reciever account is closed. Please open account to transfer funds.")
                     return false
                 }
-                handleTransfer(response.data.bankID, response.data.accountBalance)
+                else {
+                    handleTransfer(response.data.bankID, response.data.accountBalance)
+                }
             }
              else {
                 console.error('No matching account found');

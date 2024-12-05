@@ -1,5 +1,6 @@
 import { Divider, Table, TableCell, TableHead, TableRow, TableBody, SelectField } from "@aws-amplify/ui-react";
 import WindowWrapperEmployee from "../components/WindowWrapperEmployee";
+import WindowWrapperManager from "../components/WindowWrapperManager";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -70,9 +71,10 @@ const TransactionHistoryEmployee = () => {
         window.addEventListener('click', clickOutside);
         return () => window.removeEventListener('click', clickOutside);
     }, []);
+    const WrapperComponent = role === 'manager' ? WindowWrapperManager : WindowWrapperEmployee;
 
     return (
-        <WindowWrapperEmployee showSideNavEmployee={true}>
+        <WrapperComponent showSideNavEmployee={true}>
             <div style={{ padding: "20px", display: "flex", flexDirection: "column", backgroundColor: 'transparent' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <h1 style={{ fontSize: "35px", color: "#57C43F", fontWeight: "bold" }}>Employee Dashboard: User's Transaction History</h1>
@@ -106,14 +108,7 @@ const TransactionHistoryEmployee = () => {
                                     >
                                         Account Settings
                                     </li>
-                                    <li
-                                        style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                        onClick={changeAccount}
-                                    >
-                                        Change Account
-                                    </li>
+                                   
                                     <li
                                         style={{ padding: "10px", cursor: "pointer", borderRadius: "10%" }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#C1F2B0'}
@@ -171,7 +166,7 @@ const TransactionHistoryEmployee = () => {
                     </Table>
                 </div>
             </div>
-        </WindowWrapperEmployee>
+        </WrapperComponent>
     );
 };
 

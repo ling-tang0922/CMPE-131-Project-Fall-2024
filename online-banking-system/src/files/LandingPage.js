@@ -67,7 +67,7 @@ const LandingPage = () => {
         flexDirection: "column",
         justifyContent: "center", 
         alignItems: "center",
-        textAlign: "center",
+        textAlign: "center", 
     };
 
     const featureImageStyle = {
@@ -158,7 +158,3 @@ const LandingPage = () => {
 }
 
 export default LandingPage;
-
-
-
-

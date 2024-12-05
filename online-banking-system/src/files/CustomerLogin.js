@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CiUser, CiLock, CiMail, CiSquareChevRight, CiPhone } from "react-icons/ci";
 import WindowWrapper from "../components/WindowWrapper";
 import axios from "axios";
@@ -47,16 +47,19 @@ const CustomerLogin = () => {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPass] = useState("")
   const [PhoneNumber, setPhoneNumber] = useState("")
-  
+  useEffect(() => {
+    console.log(password)
+  }, [password])
   
   // Backend:
   const generatePin = () => {
     return Math.floor(1000 + Math.random() * 9000).toString();
   };
+
   const handleLogin = () => {
     
 
-
+    console.log(password)
     axios.get('http://localhost:4000/validate-credentials-userLogin', {
       params: { username: username, password: password}
     })
@@ -64,6 +67,7 @@ const CustomerLogin = () => {
     .then(response => {
       console.log('Response received:', response.data);
       if (response.data.success) {
+        console.log(password)
         sessionStorage.setItem('bankID', response.data.bankID);
         sessionStorage.setItem('email', response.data.email);
         sessionStorage.setItem('firstName', response.data.firstName);
