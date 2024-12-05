@@ -10,6 +10,7 @@ import axios from "axios";
 const TransferFunds = () =>{
     const navigate = useNavigate()
     const senderBalance = sessionStorage.getItem("accountBalance") || 0
+    const senderPhoneNumber = sessionStorage.getItem("PhoneNumber")
     const [amount, setAmount] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [verifyPhoneNumber, setVerifyPhoneNumber] = useState('')
@@ -19,8 +20,13 @@ const TransferFunds = () =>{
     const senderAccountStatus = sessionStorage.getItem("accountStatus")
     // Backend:
     const verifyInputs = () =>{
+        
         if(!phoneNumber || !verifyPhoneNumber || phoneNumber !== verifyPhoneNumber){
             alert("Provided phone numbers don't match.")
+            return false
+        }
+        else if(phoneNumber === senderPhoneNumber){
+            alert("You can't transfer funds to yourself.")
             return false
         }
         else if(!amount){

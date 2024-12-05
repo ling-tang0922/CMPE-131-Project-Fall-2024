@@ -213,7 +213,7 @@ app.put('/UpdateAccountStatus', async (req, res)=>{
             res.status(404).send('Account not found')
         }
         console.log('Account Status Updated')
-        res.status(201).send({success: true})
+        res.status(201).send({success: true, accountStatus: accountStatus})
        
     })
 

@@ -12,6 +12,7 @@ const EmployeeManagement = () => {
     const [sortOrder, setSortOrder] = useState("ascending");
     const [employees, setEmployees] = useState([]);
     const role = sessionStorage.getItem("role")
+    const [filteredSorted, setFilteredSorted] = useState([]);
     useEffect(() => {
         axios.get('http://localhost:4000/allAccounts-employee', {
             params: { role: 'employee' }
@@ -28,7 +29,16 @@ const EmployeeManagement = () => {
                 alert("Error validating credentials");
             }
         });
+
+        
     }, []);
+    useEffect(() => {
+        setFilteredSorted(employees
+            .filter(employees => employees.username.toLowerCase().includes(searchTerm.toLowerCase()))
+            .sort((a, b) => sortOrder === "ascending"
+                ? a.firstName.localeCompare(b.firstName)
+                : b.firstName.localeCompare(a.firstName)));
+    }, [searchTerm, sortOrder, employees]);
     const [modalOpen, setModalOpen] = useState(false);
     const [newEmployee, setNewEmployee] = useState({});
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -63,6 +73,7 @@ const EmployeeManagement = () => {
             if (response.data.success) {
                 alert("Account Deleted");
                 sessionStorage.removeItem('bankID')
+                window.location.reload();
             }
         })
         .catch(error => {
@@ -139,13 +150,13 @@ const EmployeeManagement = () => {
     const sortChange = (event) => {
         setSortOrder(event.target.value);
     };
-
+    /*
     const filteredSorted = employees
     .filter(employees => employees.username.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => sortOrder === "ascending"
         ? a.firstName.localeCompare(b.firstName)
         : b.firstName.localeCompare(a.firstName));
-
+    */
     // Toggle dropdown visibility
     const toggleDropdown = () => setDropdownOpen(prev => !prev);
     const closeDropdown = () => setDropdownOpen(false);

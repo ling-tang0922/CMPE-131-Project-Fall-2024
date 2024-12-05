@@ -12,7 +12,7 @@ const DepositBills = () =>{
     const [confirmAmount, setConfirmAmount] = useState('')
     const [termsAgreed, setTermsAgreed] = useState('')
     const balance = sessionStorage.getItem("accountBalance") || 0
-    const bankID = sessionStorage.getItem("bankID") || null
+    const bankID = sessionStorage.getItem("bankID")
     const accountStatus = sessionStorage.getItem("accountStatus")
     const checkValues = () =>{
         if(accountStatus === 'closed'){
