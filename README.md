@@ -2,8 +2,6 @@
 Team 1
 # eBankify User Guide
 
-Welcome to the eBankify user guide! This document provides instructions for navigating the site, accessing features, and understanding the core functionalities available to customers, employees, and managers.
-
 ## Home Page
 The main page for this site is the homepage, promoting our services and functions. On the top of the page is the navigation bar, clicking on the logo takes you to the same homepage. The bar also contains links to the following:
 - About Us
@@ -65,7 +63,6 @@ Scroll down on your dashboard to view recent transactions. To access your full t
 
 ### Account Settings
 In the top-right corner of your dashboard, there is a drop-down menu with the following options:
-- **Change Account**: Switch to your employee account (if applicable).
 - **Logout**: Log out of the customer account.
 - **Account Settings**: View or update your account details, including changing your password or managing your account status.
 
