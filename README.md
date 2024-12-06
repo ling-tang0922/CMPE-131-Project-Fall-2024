@@ -104,3 +104,10 @@ Our database is hosted through **AWS (Amazon Web Services)**, allowing for secur
 
 - The AWS database is remotely opened and closed as needed.
 - An **SQL file** containing the latest database information will be provided for reference and integration.
+
+## Dependencies
+To start the local host, make sure to insert these commands before running:
+- npm install
+- cd ./online-banking-system
+- npm start
+
